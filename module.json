@@ -1,0 +1,16 @@
+{
+  "name": "DisposableBasic",
+  "alias": "disposablebasic",
+  "description": "Disposable Virtual Airline Pack (Basic)",
+  "keywords": [],
+  "active": 0,
+  "order": 9001,
+  "providers": [
+    "Modules\\DisposableBasic\\Providers\\DB_ServiceProvider"
+  ],
+  "aliases": {},
+  "files": [
+    "db_helpers.php"
+  ],
+  "requires": []
+}
