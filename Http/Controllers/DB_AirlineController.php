@@ -11,7 +11,7 @@ use App\Models\Enums\PirepState;
 use Modules\DisposableBasic\Services\DB_StatServices;
 use League\ISO3166\ISO3166;
 
-class DB_AirlinesController extends Controller
+class DB_AirlineController extends Controller
 {
   // Airlines
   public function index()
@@ -58,7 +58,8 @@ class DB_AirlinesController extends Controller
       $pirep_where['airline_id'] = $airline->id;
       $pirep_where[] = ['state', '!=', PirepState::IN_PROGRESS];
 
-      $pireps = Pirep::with('aircraft.subfleet', 'dpt_airport', 'arr_airport')->where('airline_id', $airline->id)->where($pirep_where)->orderby('submitted_at', 'desc')->paginate(100);
+      $eager_load = array('aircraft.subfleet', 'dpt_airport', 'arr_airport');
+      $pireps = Pirep::with($eager_load)->where('airline_id', $airline->id)->where($pirep_where)->orderby('submitted_at', 'desc')->paginate(100);
 
       $StatSvc = app(DB_StatServices::class);
 
@@ -76,6 +77,7 @@ class DB_AirlinesController extends Controller
         'stats_b'   => $stats_basic,
         'stats_p'   => $stats_pirep,
         'subfleets' => $subfleets,
+        'units'     => array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight')),
         'users'     => $users,
       ]);
     }

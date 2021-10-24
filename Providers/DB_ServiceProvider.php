@@ -41,51 +41,44 @@ class DB_ServiceProvider extends ServiceProvider
     // Frontend
     Route::group([
       'as'         => 'DBasic.',
-      'prefix'     => '',
       'middleware' => ['web'],
       'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
+      'prefix'     => '',
     ], function () {
       Route::group([
         'middleware' => ['auth'],
       ], function () {
         // Airlines
-        Route::get('dairlines', 'DB_AirlinesController@index')->name('airlines');
-        Route::get('dairlines/{icao}', 'DB_AirlinesController@show')->name('airline');
+        Route::get('dairlines', 'DB_AirlineController@index')->name('airlines');
+        Route::get('dairlines/{icao}', 'DB_AirlineController@show')->name('airline');
         // Awards
-        Route::get('dawards', 'DB_AwardsController@index')->name('awards');
+        Route::get('dawards', 'DB_AwardController@index')->name('awards');
         // Fleet
         Route::get('dfleet', 'DB_FleetController@index')->name('fleet');
         Route::get('dfleet/{subfleet_type}', 'DB_FleetController@subfleet')->name('subfleet');
         Route::get('daircraft/{ac_reg}', 'DB_FleetController@aircraft')->name('aircraft');
         // Hubs
-        Route::get('dhubs', 'DB_HubsController@index')->name('hubs');
-        Route::get('dhubs/{icao}', 'DB_HubsController@show')->name('hub');
+        Route::get('dhubs', 'DB_HubController@index')->name('hubs');
+        Route::get('dhubs/{icao}', 'DB_HubController@show')->name('hub');
         // News
         Route::get('dnews', 'DB_NewsController@index')->name('news');
         // Ranks
-        Route::get('dranks', 'DB_RanksController@index')->name('ranks');
+        Route::get('dranks', 'DB_RankController@index')->name('ranks');
         // Roster
         Route::get('droster', 'DB_RosterController@index')->name('roster');
         // Pireps
-        Route::get('dpireps', 'DB_PirepsController@index')->name('pireps');
-        // Stats
-        Route::get('dstats', 'DB_StatsController@index')->name('stats');
+        Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
+        // Statistics
+        Route::get('dstats', 'DB_StatisticController@index')->name('stats');
       });
-      /*
-      Route::group([],
-      function () {
-        // Public Routes
-        Route::get('dstats', 'DB_StatsController@public')->name('stats.public');
-      });
-      */
     });
 
     // Admin
     Route::group([
       'as'         => 'DBasic.',
-      'prefix'     => 'admin',
       'middleware' => ['web', 'role:admin'],
       'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
+      'prefix'     => 'admin',
     ], function () {
       Route::group([],
         function () {

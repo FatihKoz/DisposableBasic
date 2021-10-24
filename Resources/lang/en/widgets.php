@@ -5,8 +5,11 @@ return [
   'activeb' => 'Active Bookings',
   // ActiveUsers
   'activeu' => 'Active Users',
-  // Aircraft List
+  // AircraftList
   'ac_list' => 'Aircraft List',
+  // AirportAssets
+  'maintenance' => 'Maintenance in progress...',
+  'useronleave' => 'Pilot is on leave',
   // AirportInfo
   'airport_info' => 'Airport Information',
   'go'           => 'Go',

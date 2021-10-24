@@ -41,6 +41,7 @@ class DB_FleetController extends Controller
   // Aircraft
   public function aircraft($ac_reg)
   {
+    $units = array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight'));
     $aircraft = Aircraft::with('subfleet.airline')->where('registration', $ac_reg)->first();
 
     if (!$aircraft) {
@@ -50,7 +51,8 @@ class DB_FleetController extends Controller
 
     // Latest Pireps
     $where = array('aircraft_id' => $aircraft->id, 'state' => 2, 'status' => 'ONB');
-    $pireps = Pirep::with('dpt_airport', 'arr_airport', 'user', 'airline')->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
+    $eager_load = array('dpt_airport', 'arr_airport', 'user', 'airline');
+    $pireps = Pirep::with($eager_load)->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
 
     // Aircraft or Subfleet Image
     $image_ac = strtolower('image/aircraft/'.$aircraft->registration.'.jpg');
@@ -64,14 +66,14 @@ class DB_FleetController extends Controller
 
     // Passenger Weight
     $pax_weight = setting('simbrief.noncharter_pax_weight');
-    if (setting('units.weight') === 'kg') { $pax_weight = round($pax_weight / 2.20462262185, 2) ;}
+    if ($units['weight'] === 'kg') { $pax_weight = round($pax_weight / 2.20462262185, 2) ;}
 
     return view('DBasic::fleet.show',[
       'aircraft'   => $aircraft,
       'image'      => isset($image) ? $image : null,
       'pax_weight' => $pax_weight,
       'pireps'     => $pireps,
-      'units'      => array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight')),
+      'units'      => $units,
     ]);
   }
 }

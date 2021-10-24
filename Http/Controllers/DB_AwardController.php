@@ -5,7 +5,7 @@ namespace Modules\DisposableBasic\Http\Controllers;
 use App\Contracts\Controller;
 use App\Models\Award;
 
-class DB_AwardsController extends Controller
+class DB_AwardController extends Controller
 {
   // Awards
   public function index()

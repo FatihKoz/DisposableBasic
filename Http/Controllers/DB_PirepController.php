@@ -6,12 +6,13 @@ use App\Contracts\Controller;
 use App\Models\Pirep;
 use App\Models\Enums\PirepState;
 
-class DB_PirepsController extends Controller
+class DB_PirepController extends Controller
 {
   // Pireps (except inProgress)
   public function index()
   {
-    $pireps = Pirep::with('user', 'aircraft', 'airline', 'dpt_airport', 'arr_airport')->where('state', '!=', PirepState::IN_PROGRESS)->orderby('submitted_at', 'desc')->paginate(50);
+    $eager_load = array('user', 'aircraft', 'airline', 'dpt_airport', 'arr_airport');
+    $pireps = Pirep::with($eager_load)->where('state', '!=', PirepState::IN_PROGRESS)->orderby('submitted_at', 'desc')->paginate(50);
 
     return view('DBasic::pireps.index',[
       'pireps' => $pireps,

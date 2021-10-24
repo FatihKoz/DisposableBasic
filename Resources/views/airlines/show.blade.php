@@ -48,7 +48,7 @@
       <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1 p-0">
-            @lang('DBasic::common.adetails')
+            @lang('DBasic::common.aldetails')
             <i class="fas fa-info float-end m-1"></i>
           </h5>
         </div>

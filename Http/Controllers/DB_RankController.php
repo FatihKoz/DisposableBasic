@@ -5,7 +5,7 @@ namespace Modules\DisposableBasic\Http\Controllers;
 use App\Contracts\Controller;
 use App\Models\Rank;
 
-class DB_RanksController extends Controller
+class DB_RankController extends Controller
 {
   // Ranks
   public function index()

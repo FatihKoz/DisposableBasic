@@ -6,7 +6,7 @@ use App\Contracts\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\DisposableBasic\Services\DB_StatServices;
 
-class DB_StatsController extends Controller
+class DB_StatisticController extends Controller
 {
   // Stats
   public function index()

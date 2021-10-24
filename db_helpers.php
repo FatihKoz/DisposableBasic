@@ -12,7 +12,6 @@ if (!function_exists('DB_CheckModule')) {
   function DB_CheckModule($module_name)
   {
     $phpvms_module = Module::find($module_name);
-
     $is_enabled = ($phpvms_module) ? $phpvms_module->isEnabled() : false;
 
     return $is_enabled;
@@ -22,15 +21,13 @@ if (!function_exists('DB_CheckModule')) {
 // Convert Distance
 // Return string
 if (!function_exists('DB_ConvertDistance')) {
-  function DB_ConvertDistance($value, $target_unit = null) 
+  function DB_ConvertDistance($value, $target_unit = null)
   {
     $target_unit = isset($target_unit) ? $target_unit : setting('units.distance');
 
-    if ($target_unit === 'km') {
-      $value = $value * 1.852;
-    } elseif ($target_unit === 'mi') {
-      $value = $value * 1.15078;
-    }
+    if ($target_unit === 'km') { $value = $value * 1.852; }
+    elseif ($target_unit === 'mi') { $value = $value * 1.15078; }
+
     $value = number_format($value).' '.$target_unit;
 
     return $value;
@@ -40,11 +37,11 @@ if (!function_exists('DB_ConvertDistance')) {
 // Convert Minutes
 // Return string
 if (!function_exists('DB_ConvertMinutes')) {
-  function DB_ConvertMinutes($minutes, $format = '%02d:%02d') 
+  function DB_ConvertMinutes($minutes, $format = '%02d:%02d')
   {
     $minutes = intval($minutes);
+    if ($minutes < 1 || blank($minutes)) { return null; }
 
-    if ($minutes < 1) { return $minutes; }
     $hours = floor($minutes / 60);
     $minutes = ($minutes % 60);
 
@@ -57,11 +54,10 @@ if (!function_exists('DB_ConvertMinutes')) {
 if (!function_exists('DB_ConvertWeight')) {
   function DB_ConvertWeight($value = 0, $target_unit = null)
   {
+    if (blank($value)) { return null; }
     $target_unit = isset($target_unit) ? $target_unit : setting('units.weight');
 
-    if ($target_unit === 'kg') {
-      $value = $value / 2.20462262185;
-    }
+    if ($target_unit === 'kg') { $value = $value / 2.20462262185; }
     $value = number_format($value).' '.$target_unit;
 
     return $value;
@@ -76,9 +72,7 @@ if (!function_exists('DB_FuelCost')) {
     $unit = isset($unit) ? $unit : setting('units.fuel');
     $currency = isset($currency) ? $currency : setting('units.currency');
 
-    if ($unit === 'kg') {
-      $cost = $cost / 2.20462262185;
-    }
+    if ($unit === 'kg') { $cost = $cost / 2.20462262185; }
     $cost = number_format($cost, 3).' '.$currency.'/'.$unit;
 
     return $cost;
@@ -91,7 +85,6 @@ if (!function_exists('DB_AircraftStatus')) {
   function DB_AircraftStatus($aircraft)
   {
     $color = 'primary';
-
     $status = $aircraft->status;
 
     if ($status === 'A') { $color = 'success'; }
@@ -139,7 +132,6 @@ if (!function_exists('DB_PirepState')) {
   function DB_PirepState($pirep)
   {
     $color = 'primary';
-
     $state = $pirep->state;
 
     if ($state === 0 || $state === 5) { $color = 'info'; }
@@ -160,7 +152,6 @@ if (!function_exists('DB_UserState')) {
   function DB_UserState($user)
   {
     $color = 'primary';
-
     $state = $user->state;
 
     if ($state === 0) { $color = 'secondary'; }

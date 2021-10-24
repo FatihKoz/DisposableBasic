@@ -11,7 +11,7 @@ use App\Models\Subfleet;
 use App\Models\User;
 use League\ISO3166\ISO3166;
 
-class DB_HubsController extends Controller
+class DB_HubController extends Controller
 {
   // Hubs
   public function index()
