@@ -27,31 +27,8 @@
       </div>
       {{-- MIDDLE --}}
       <div class="col">
-        @if($departures->count() > 0 && $arrivals->count() > 0)
-          <div class="card mb-2">
-            <div class="card-header p-1">
-              <h5 class="m-1">
-                Top Departures
-                <i class="fas fa-plane-departure float-end m-1"></i>
-              </h5>
-            </div>
-            <div class="card-body p-0 table-responsive">
-              {{ $departures }}
-            </div>
-          </div>
-
-          <div class="card mb-2">
-            <div class="card-header p-1">
-              <h5 class="m-1">
-                Top Arrivals
-                <i class="fas fa-plane-arrival float-end m-1"></i>
-              </h5>
-            </div>
-            <div class="card-body p-0">
-            {{ $arrivals }}
-            </div>
-          </div>
-        @endif
+        @widget('DBasic::LeaderBoard', ['source' => 'dep', 'count' => 3])
+        @widget('DBasic::LeaderBoard', ['source' => 'arr', 'count' => 3])
       </div>
       {{-- RIGHT --}}
       <div class="col">

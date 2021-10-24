@@ -19,6 +19,39 @@ if (!function_exists('DB_CheckModule')) {
   }
 }
 
+// Convert Distance
+// Return string
+if (!function_exists('DB_ConvertDistance')) {
+  function DB_ConvertDistance($value, $target_unit = null) 
+  {
+    $target_unit = isset($target_unit) ? $target_unit : setting('units.distance');
+
+    if ($target_unit === 'km') {
+      $value = $value * 1.852;
+    } elseif ($target_unit === 'mi') {
+      $value = $value * 1.15078;
+    }
+    $value = number_format($value).' '.$target_unit;
+
+    return $value;
+  }
+}
+
+// Convert Minutes
+// Return string
+if (!function_exists('DB_ConvertMinutes')) {
+  function DB_ConvertMinutes($minutes, $format = '%02d:%02d') 
+  {
+    $minutes = intval($minutes);
+
+    if ($minutes < 1) { return $minutes; }
+    $hours = floor($minutes / 60);
+    $minutes = ($minutes % 60);
+
+    return sprintf($format, $hours, $minutes);
+  }
+}
+
 // Convert Weight from LBS to KGS
 // Return string
 if (!function_exists('DB_ConvertWeight')) {

@@ -19,12 +19,7 @@ class DB_StatsController extends Controller
 
     $stats_pirep = $StatSvc->PirepStats();
 
-    $arrivals = $StatSvc->TopAirports('arr', 5);
-    $departures = $StatSvc->TopAirports('dpt', 5);
-
     return view('DBasic::stats.index', [
-      'arrivals'    => $arrivals,
-      'departures'  => $departures,
       'stats_basic' => $stats_basic,
       'stats_pirep' => $stats_pirep,
     ]);
