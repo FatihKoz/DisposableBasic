@@ -2,7 +2,8 @@
 
 return [
   // ActiveBookings
-  'activeb' => 'Active Bookings',
+  'active_bids' => 'Active Bids',
+  'active_sbrf' => 'Active Bookings',
   // ActiveUsers
   'activeu' => 'Active Users',
   // AircraftList

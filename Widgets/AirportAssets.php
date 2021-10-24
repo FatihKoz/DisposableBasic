@@ -39,7 +39,7 @@ class AirportAssets extends Widget
       'assets'     => isset($assets) ? $assets : null,
       'count'      => is_countable($assets) ? $assets->count() : 0,
       'icon'       => $icon,
-      'is_visible' => (is_countable($assets) && $assets->count() > 0) ? true : false,
+      'is_visible' => filled($assets) ? true : false,
       'location'   => $location,
       'title'      => $title,
       'type'       => $type,

@@ -7,13 +7,15 @@
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">
-      <table class="table table-borderless table-sm table-striped mb-0 text-start align-middle">
+      <table class="table table-borderless table-sm table-striped text-start align-middle mb-0">
         @foreach($active_users as $active)
           <tr>
             <td>
-              <a href="{{ route('frontend.profile.show', [$active->user_id]) }}">{{ $active->user->name_private ?? '' }}</a>
+              <a href="{{ route('frontend.profile.show', [$active->user_id]) }}">{{ optional($active->user)->name_private }}</a>
             </td>
-            <td class="text-end">{{ $active->last_activity->diffForHumans() }}</td>
+            <td class="text-end">
+              {{ $active->last_activity->diffForHumans() }}
+            </td>
           </tr>
         @endforeach
       </table>

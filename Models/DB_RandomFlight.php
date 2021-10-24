@@ -35,7 +35,6 @@ class DB_RandomFlight extends Model
       'user_id'   => $this->user_id,
       'flight_id' => $this->flight_id,
       'state'     => 2,
-      'status'    => 'ONB',
     ])->whereDate('submitted_at', $this->assign_date)->first();
 
     return isset($pirep) ? true : false;
