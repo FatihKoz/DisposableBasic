@@ -70,6 +70,9 @@ class DB_ServiceProvider extends ServiceProvider
         Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
         // Statistics
         Route::get('dstats', 'DB_StatisticController@index')->name('stats');
+        // Widgets
+        Route::match(['get', 'post'], 'djumpseat', 'DB_WidgetController@jumpseat')->name('jumpseat');
+        Route::match(['get', 'post'], 'dtransferac', 'DB_WidgetController@transferac')->name('transferac');
       });
     });
 
