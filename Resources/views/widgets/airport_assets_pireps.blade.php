@@ -29,14 +29,14 @@
       </td>
       <td>
         @if($pirep->aircraft)
-          <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration]) }}">{{ $pirep->aircraft->ident }}</a> 
+          <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration ?? '']) }}">{{ optional($pirep->aircraft)->ident }}</a> 
         @endif
       </td>
       <td>
         {{ DB_ConvertMinutes($pirep->flight_time) }}
       </td>
       <td class="text-end">
-        <a href="{{ route('frontend.profile.show', [$pirep->user_id]) }}">{{ $pirep->user->name_private ?? 'Deleted User'}}</a>
+        <a href="{{ route('frontend.profile.show', [$pirep->user_id]) }}">{{ optional($pirep->user)->name_private }}</a>
       </td>
       <td>
         {{ $pirep->submitted_at->diffForHumans() }}

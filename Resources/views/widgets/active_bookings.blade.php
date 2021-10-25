@@ -6,7 +6,7 @@
         <i class="fas fa-file-signature float-end m-1"></i>
       </h5>
     </div>
-    <div class="card-body p-0 table-responsive">
+    <div class="card-body p-0 overflow-auto table-responsive">
       <table class="table table-borderless table-sm table-striped text-start align-middle mb-0">
         <tr>
           @if(!$bids)

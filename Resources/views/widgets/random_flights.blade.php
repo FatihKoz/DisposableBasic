@@ -17,7 +17,7 @@
         @foreach($random_flights as $rf)
           <tr>
             <td class="text-start">
-              <a href="{{ route('frontend.flights.show', [$rf->flight_id]) }}">{{ $rf->flight->airline->code.' '.$rf->flight->flight_number }}</a>
+              <a href="{{ route('frontend.flights.show', [$rf->flight_id]) }}">{{ optional($rf->flight->airline)->code.' '.$rf->flight->flight_number }}</a>
             </td>
             <td>
               <a href="{{ route('frontend.airports.show', [$rf->flight->dpt_airport_id]) }}" title="{{ optional($rf->flight->dpt_airport)->name }}">{{ $rf->flight->dpt_airport_id }}</a>

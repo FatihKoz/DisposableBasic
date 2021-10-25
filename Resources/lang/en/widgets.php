@@ -6,8 +6,6 @@ return [
   'active_sbrf' => 'Active Bookings',
   // ActiveUsers
   'activeu' => 'Active Users',
-  // AircraftList
-  'ac_list' => 'Aircraft List',
   // AirportAssets
   'maintenance' => 'Maintenance in progress...',
   'useronleave' => 'Pilot is on leave',
@@ -21,6 +19,12 @@ return [
   'dchannels' => 'Public Channels',
   'djoin'     => 'Join',
   'donline'   => 'Users Online',
+  // FleetOverview
+  'fleetoverview' => 'Fleet Overview',
+  'icaotype'      => 'ICAO Type Report',
+  'bylocation'    => 'Counts by Airport',
+  'bysubfleet'    => 'Counts by Subfleet',
+  'nonhubloc'     => 'Counts by Non-Hub Airports',
   // FlightBoard
   'flight_board' => 'Active Flights',
   'view_pirep'   => 'View Live Pirep',
