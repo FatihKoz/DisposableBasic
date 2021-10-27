@@ -159,13 +159,13 @@ class DB_StatServices
         $subfleets_array = DB::table('subfleets')->where($where)->pluck('id')->toArray();
 
         if (empty($airline_id)) {
-            $stats[__('DBasic::stats.airlines')] = DB::table('airlines')->where('active', 1)->count();
+            $stats[__('DBasic::common.airlines')] = DB::table('airlines')->where('active', 1)->count();
         }
 
-        $stats[__('DBasic::stats.pilots')] = DB::table('users')->where($where)->count();
-        $stats[__('DBasic::stats.subfleets')] = count($subfleets_array);
-        $stats[__('DBasic::stats.aircraft')] = DB::table('aircraft')->whereIn('subfleet_id', $subfleets_array)->count();
-        $stats[__('DBasic::stats.flights')] = DB::table('flights')->where($where)->count();
+        $stats[__('DBasic::common.pilots')] = DB::table('users')->where($where)->count();
+        $stats[__('DBasic::common.subfleets')] = count($subfleets_array);
+        $stats[__('DBasic::common.aircraft')] = DB::table('aircraft')->whereIn('subfleet_id', $subfleets_array)->count();
+        $stats[__('DBasic::common.flights')] = DB::table('flights')->where($where)->count();
 
         return $stats;
     }
@@ -187,13 +187,13 @@ class DB_StatServices
             $level = 10;
         }
 
-        $stats[__('DBasic::stats.pireps_ack')] = DB::table('pireps')->where($where)->count();
+        $stats[__('DBasic::widgets.pireps_ack')] = DB::table('pireps')->where($where)->count();
 
         /* Rejected Pirep counts, dashed out on purpose
         if (empty($airline_id)) {
-            $stats[__('DBasic::stats.pireps_rej')] = DB::table('pireps')->where('state', PirepState::REJECTED)->count();
+            $stats[__('DBasic::widgets.pireps_rej')] = DB::table('pireps')->where('state', PirepState::REJECTED)->count();
         } else {
-            $stats[__('DBasic::stats.pireps_rej')] = DB::table('pireps')->where(['airline_id' => $airline_id, 'state' => PirepState::REJECTED])->count();
+            $stats[__('DBasic::widgets.pireps_rej')] = DB::table('pireps')->where(['airline_id' => $airline_id, 'state' => PirepState::REJECTED])->count();
         }
         */
 
@@ -226,39 +226,39 @@ class DB_StatServices
             }
         }
 
-        $stats[__('DBasic::stats.ttime')] = DB_ConvertMinutes($total_time, '%02dh %02dm');
+        $stats[__('DBasic::widgets.ttime')] = DB_ConvertMinutes($total_time, '%02dh %02dm');
         if ($level > 10) {
-            $stats[__('DBasic::stats.atime')] = DB_ConvertMinutes($average_time, '%02dh %02dm');
+            $stats[__('DBasic::widgets.atime')] = DB_ConvertMinutes($average_time, '%02dh %02dm');
         }
 
-        $stats[__('DBasic::stats.tfuel')] = number_format($total_fuel) . ' ' . $unit_fuel;
+        $stats[__('DBasic::widgets.tfuel')] = number_format($total_fuel) . ' ' . $unit_fuel;
         if ($level > 10) {
-            $stats[__('DBasic::stats.afuel')] = number_format($average_fuel) . ' ' . $unit_fuel;
+            $stats[__('DBasic::widgets.afuel')] = number_format($average_fuel) . ' ' . $unit_fuel;
         }
 
         if ($total_fuel > 0 && $total_time > 0) {
             $average_fuel_hour = ($total_fuel / $total_time) * 60;
-            $stats[__('DBasic::stats.hfuel')] = number_format($average_fuel_hour) . ' ' . $unit_fuel;
+            $stats[__('DBasic::widgets.hfuel')] = number_format($average_fuel_hour) . ' ' . $unit_fuel;
         }
 
-        $stats[__('DBasic::stats.tdist')] = number_format($total_dist) . ' ' . $unit_distance;
+        $stats[__('DBasic::widgets.tdist')] = number_format($total_dist) . ' ' . $unit_distance;
         if ($level > 10) {
-            $stats[__('DBasic::stats.adist')] = number_format($average_dist) . ' ' . $unit_distance;
+            $stats[__('DBasic::widgets.adist')] = number_format($average_dist) . ' ' . $unit_distance;
         }
 
         if ($total_dist > 0 && $total_time > 0 && $level > 10) {
             $average_dist_hour = ($total_dist / $total_time) * 60;
-            $stats[__('DBasic::stats.hdist')] = number_format($average_dist_hour) . ' ' . $unit_distance;
+            $stats[__('DBasic::widgets.hdist')] = number_format($average_dist_hour) . ' ' . $unit_distance;
         }
 
         $where['source'] = PirepSource::ACARS;
 
         $average_lrate = DB::table('pireps')->where($where)->avg('landing_rate');
-        $stats[__('DBasic::stats.alrate')] = number_format(abs($average_lrate)) . ' ft/min';
+        $stats[__('DBasic::widgets.alrate')] = number_format(abs($average_lrate)) . ' ft/min';
 
         if ($level > 10) {
             $average_score = DB::table('pireps')->where($where)->avg('score');
-            $stats[__('DBasic::stats.ascore')] = number_format($average_score);
+            $stats[__('DBasic::widgets.ascore')] = number_format($average_score);
         }
 
         return $stats;

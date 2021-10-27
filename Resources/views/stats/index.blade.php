@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', __('DBasic::stats.stats'))
+@section('title', __('DBasic::common.stats'))
 
 @section('content')
   {{-- BEGIN OVERALL STATS --}}
@@ -9,7 +9,7 @@
         <div class="card mb-2">
           <div class="card-header p-1">
             <h5 class="m-1">
-              @lang('DBasic::stats.stats_gen')
+              @lang('DBasic::widgets.stats_gen')
               <i class="fas fa-sitemap float-end m-1"></i>
             </h5>
           </div>
@@ -35,7 +35,7 @@
         <div class="card mb-2">
           <div class="card-header p-1">
             <h5 class="m-1">
-              @lang('DBasic::stats.stats_rep')
+              @lang('DBasic::widgets.stats_rep')
               <i class="fas fa-file-upload float-end m-1"></i>
             </h5>
           </div>

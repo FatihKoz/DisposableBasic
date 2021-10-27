@@ -14,8 +14,8 @@ class DB_StatisticController extends Controller
         $StatSvc = app(DB_StatServices::class);
 
         $stats_basic = $StatSvc->BasicStats();
-        $stats_basic[__('DBasic::stats.airports')] = DB::table('airports')->count();
-        $stats_basic[__('DBasic::stats.hubs')] = DB::table('airports')->where('hub', 1)->count();
+        $stats_basic[__('DBasic::common.airports')] = DB::table('airports')->count();
+        $stats_basic[__('DBasic::common.hubs')] = DB::table('airports')->where('hub', 1)->count();
 
         $stats_pirep = $StatSvc->PirepStats();
 

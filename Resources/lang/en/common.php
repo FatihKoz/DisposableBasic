@@ -4,6 +4,8 @@ return [
     // Generic Definitions
     'airline'   => 'Airline',
     'airlines'  => 'Airlines',
+    'airport'   => 'Airport',
+    'airports'  => 'Airports',
     'arrival'   => 'Arrival',
     'arr_abr'   => 'Arr',
     'aircraft'  => 'Aircraft',
@@ -35,6 +37,7 @@ return [
     'pilots'    => 'Pilots',
     'pireps'    => 'PIREPs',
     'rank'      => 'Rank',
+    'ranks'     => 'Ranks',
     'record'    => 'Record',
     'reports'   => 'Flight Reports',
     'roster'    => 'Roster',
@@ -42,6 +45,7 @@ return [
     'stats'     => 'Statistics',
     'status'    => 'Status',
     'subfleet'  => 'Subfleet',
+    'subfleets' => 'Subfleets',
     'timezone'  => 'Time Zone',
     'total'     => 'Total',
     // Aircraft - Pirep - Flight
@@ -89,5 +93,15 @@ return [
     'finance'   => 'Overall Finance',
     'income'    => 'Income',
     'journal'   => 'Journal Transactions',
-    'memo'      => 'Action Details',
+    'memo'      => 'Details',
+    // Ranks
+    'allowed_sf'  => 'Subfleets Allowed:',
+    'allowed_sh'  => 'Show/Hide Allowed Subfleets',
+    'minhour'     => 'Minimum Hours',
+    'pay_manual'  => 'Pay/Hour Manual',
+    'pay_acars'   => 'Pay/Hour Acars',
+    'rank_image'  => 'Epaulet',
+    'rank_title'  => 'Title',
+    'restrict'    => 'Restrictions',
+    'restrict_no' => 'No Restrictions',
 ];
