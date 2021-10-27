@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', __('DB::common.awards'))
+@section('title', __('DBasic::common.awards'))
 
 @section('content')
   <div class="row row-cols-4">

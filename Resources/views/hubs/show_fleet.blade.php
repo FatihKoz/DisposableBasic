@@ -9,7 +9,7 @@
           </h5>
         </div>
         <div class="card-body p-0 overflow-auto table-responsive">
-          @include('DBasic::fleet.table', ['fleet' => $aircraft_hub, 'type' => 'hub'])
+          @include('DBasic::fleet.table', ['aircraft' => $aircraft_hub, 'type' => 'hub'])
         </div>
         <div class="card-footer p-1 small text-end">
           @lang('DBasic::common.total'): {{ $aircraft_hub->count() }}
@@ -27,7 +27,7 @@
           </h5>
         </div>
         <div class="card-body p-0 overflow-auto table-responsive">
-          @include('DBasic::fleet.table', ['fleet' => $aircraft_off, 'type' => 'hub'])
+          @include('DBasic::fleet.table', ['aircraft' => $aircraft_off, 'type' => 'hub'])
         </div>
         <div class="card-footer p-1 small text-end">
           @lang('DBasic::common.total'): {{ $aircraft_off->count() }}

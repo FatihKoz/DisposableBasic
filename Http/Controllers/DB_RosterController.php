@@ -11,7 +11,8 @@ class DB_RosterController extends Controller
     // All Users
     public function index()
     {
-        $users = User::with('airline', 'rank')->orderby('id')->get();
+        $eager_load = array('airline', 'current_airport', 'home_airport', 'last_pirep', 'rank');
+        $users = User::withCount('awards')->with($eager_load)->orderby('id')->paginate(30);
 
         return view('DBasic::roster.index', [
             'users'   => $users,

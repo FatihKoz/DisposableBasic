@@ -58,6 +58,11 @@ return [
     'top_airlines' => 'Top Airlines',
     'top_airports' => 'Top Airports',
     'top_pilots'   => 'Top Pilots',
+    'lb_overall'   => 'All Time',
+    'lb_month_a'   => 'Airline (Month)',
+    'lb_month_p'   => 'Pilot (Month)',
+    'lb_year_a'    => 'Airline (Year)',
+    'lb_year_p'    => 'Pilot (Year)',
     // Random Flights
     'random_flights' => 'Random Flights',
     // SunriseSunset

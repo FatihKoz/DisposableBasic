@@ -27,7 +27,7 @@
           </h5>
         </div>
         <div class="card-body p-0 overflow-auto table-responsive">
-          @include('DBasic::roster.table', ['users' => $users_off, 'type' => 'hub'])
+          @include('DBasic::roster.table', ['users' => $users_off, 'type' => 'visitor'])
         </div>
         <div class="card-footer p-1 small text-end">
           @lang('DBasic::common.total'): {{ $users_off->count() }}

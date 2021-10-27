@@ -101,7 +101,7 @@
       <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1 p-0">
-            @lang('DBasic::stats.stats_gen')
+            @lang('DBasic::widgets.stats_gen')
             <i class="fas fa-cogs float-end m-1"></i>
           </h5>
         </div>
@@ -120,7 +120,7 @@
       <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1 p-0">
-            @lang('DBasic::stats.stats_rep')
+            @lang('DBasic::widgets.stats_rep')
             <i class="fas fa-cogs float-end m-1"></i>
           </h5>
         </div>

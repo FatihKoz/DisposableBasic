@@ -4,7 +4,6 @@ use \App\Models\Enums\AircraftState;
 use \App\Models\Enums\AircraftStatus;
 use \App\Models\Enums\PirepState;
 use \App\Models\Enums\UserState;
-use \App\Models\SimBrief;
 use \Nwidart\Modules\Facades\Module;
 
 // Check phpVMS Module
@@ -13,7 +12,6 @@ if (!function_exists('DB_CheckModule')) {
     function DB_CheckModule($module_name)
     {
         $phpvms_module = Module::find($module_name);
-
         return isset($phpvms_module) ? $phpvms_module->isEnabled() : false;
     }
 }
@@ -21,8 +19,11 @@ if (!function_exists('DB_CheckModule')) {
 // Convert Distance
 // Return string
 if (!function_exists('DB_ConvertDistance')) {
-    function DB_ConvertDistance($value, $target_unit = null)
+    function DB_ConvertDistance($value = 0, $target_unit = null)
     {
+        if ($value == 0) {
+            return null;
+        }
         $target_unit = isset($target_unit) ? $target_unit : setting('units.distance');
 
         if ($target_unit === 'km') {
@@ -39,11 +40,11 @@ if (!function_exists('DB_ConvertDistance')) {
 // Convert Minutes
 // Return string
 if (!function_exists('DB_ConvertMinutes')) {
-    function DB_ConvertMinutes($minutes, $format = '%02d:%02d')
+    function DB_ConvertMinutes($minutes = 0, $format = '%02d:%02d')
     {
         $minutes = intval($minutes);
 
-        if ($minutes < 1 || blank($minutes)) {
+        if ($minutes < 1) {
             return null;
         }
         $hours = floor($minutes / 60);
@@ -58,7 +59,7 @@ if (!function_exists('DB_ConvertMinutes')) {
 if (!function_exists('DB_ConvertWeight')) {
     function DB_ConvertWeight($value = 0, $target_unit = null)
     {
-        if (blank($value)) {
+        if ($value == 0) {
             return null;
         }
         $target_unit = isset($target_unit) ? $target_unit : setting('units.weight');
@@ -75,15 +76,18 @@ if (!function_exists('DB_ConvertWeight')) {
 // Fuel Cost Converter
 // Return string
 if (!function_exists('DB_FuelCost')) {
-    function DB_FuelCost($cost, $unit = null, $currency = null)
+    function DB_FuelCost($cost = 0, $unit = null, $currency = null)
     {
+        if ($cost == 0) {
+            return null;
+        }
         $unit = isset($unit) ? $unit : setting('units.fuel');
         $currency = isset($currency) ? $currency : setting('units.currency');
 
         if ($unit === 'kg') {
             $cost = $cost / 2.20462262185;
         }
-        $cost = number_format($cost, 3) . ' ' . $currency . '/' . $unit;
+        $cost = number_format($cost, 3) . ' ' . ucfirst($currency) . '/' . ucfirst($unit);
 
         return $cost;
     }
@@ -92,102 +96,118 @@ if (!function_exists('DB_FuelCost')) {
 // Aircraft Status Badge
 // Return string (with html tags)
 if (!function_exists('DB_AircraftStatus')) {
-    function DB_AircraftStatus($aircraft)
+    function DB_AircraftStatus($aircraft, $type = 'badge')
     {
         $color = 'primary';
         $status = $aircraft->status;
 
-        if ($status === 'A') {
+        if ($status === AircraftStatus::ACTIVE) {
             $color = 'success';
-        } elseif ($status === 'M') {
+        } elseif ($status === AircraftStatus::MAINTENANCE) {
             $color = 'info';
-        } elseif ($status === 'S' || $status === 'R') {
+        } elseif ($status === AircraftStatus::STORED || $status === AircraftStatus::RETIRED) {
             $color = 'warning';
-        } elseif ($status === 'C' || $status === 'W') {
+        } elseif ($status === AircraftStatus::SCRAPPED || $status === AircraftStatus::WRITTEN_OFF) {
             $color = 'danger';
         }
-        $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftStatus::label($status) . '</span>';
+
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftStatus::label($status) . '</span>';
+        }
 
         return $result;
     }
 }
 
-// Prepare Aircraft State Badge
-// Return string (with html tags)
+// Aircraft State
+// Return mixed
 if (!function_exists('DB_AircraftState')) {
-    function DB_AircraftState($aircraft)
+    function DB_AircraftState($aircraft, $type = 'badge')
     {
         $color = 'primary';
-
         $state = $aircraft->state;
-        $aircraft_id = $aircraft->id;
 
-        if ($state === 0) {
+        if ($state === AircraftState::PARKED) {
             $color = 'success';
-        } elseif ($state === 1) {
+        } elseif ($state === AircraftState::IN_USE) {
             $color = 'info';
-        } elseif ($state === 2) {
+        } elseif ($state === AircraftState::IN_AIR) {
             $color = 'warning';
         }
-        $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftState::label($state) . '</span>';
 
-        // See if this aircraft is being used by some user's active simbrief ofp
-        /*
-        if ($state === 0 && isset($aircraft_id) && setting('simbrief.block_aircraft')) {
-            $simbrief_book = SimBrief::with('user')->select('id')->where('aircraft_id', $aircraft_id)->whereNotNull('flight_id')->whereNull('pirep_id')->orderby('created_at', 'desc')->first();
-            if (isset($simbrief_book)) {
-                $result = '<span class="badge bg-secondary text-black" title="Booked By: '.$simbrief_book->user->name_private.'">Booked</span>';
-            }
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftState::label($state) . '</span>';
         }
-        */
 
         return $result;
     }
 }
 
-// Prepare Pirep State Badge
-// Return string (with html tags)
+// Pirep State
+// Return mixed
 if (!function_exists('DB_PirepState')) {
-    function DB_PirepState($pirep)
+    function DB_PirepState($pirep, $type = 'badge')
     {
         $color = 'primary';
         $state = $pirep->state;
 
-        if ($state === 0 || $state === 5) {
+        if ($state === PirepState::IN_PROGRESS || $state === PirepState::DRAFT) {
             $color = 'info';
-        } elseif ($state === 1) {
+        } elseif ($state === PirepState::PENDING) {
             $color = 'secondary';
-        } elseif ($state === 2) {
+        } elseif ($state === PirepState::ACCEPTED) {
             $color = 'success';
-        } elseif ($state === 3 || $state === 4 || $state === 6) {
+        } elseif ($state === PirepState::CANCELLED || $state === PirepState::DELETED || $state === PirepState::REJECTED) {
             $color = 'danger';
-        } elseif ($state === 7) {
+        } elseif ($state === PirepState::PAUSED) {
             $color = 'warning';
         }
-        $result = '<span class="badge bg-' . $color . ' text-black">' . PirepState::label($state) . '</span>';
+
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-black">' . PirepState::label($state) . '</span>';
+        }
 
         return $result;
     }
 }
 
-// Prepare User State Badge
-// Return string (with html tags)
+// User State
+// Return mixed
 if (!function_exists('DB_UserState')) {
-    function DB_UserState($user)
+    function DB_UserState($user, $type = 'badge')
     {
         $color = 'primary';
         $state = $user->state;
 
-        if ($state === 0) {
-            $color = 'secondary';
-        } elseif ($state === 1) {
-            $color = 'success';
-        } elseif ($state === 2 || $state === 4 || $state === 5) {
-            $color = 'danger';
-        } elseif ($state === 3) {
+        if ($state === UserState::PENDING) {
             $color = 'warning';
+        } elseif ($state === UserState::ACTIVE) {
+            $color = 'success';
+        } elseif ($state === UserState::REJECTED || $state === UserState::SUSPENDED || $state === UserState::DELETED) {
+            $color = 'danger';
+        } elseif ($state === UserState::ON_LEAVE) {
+            $color = 'secondary';
         }
-        $result = '<span class="badge bg-' . $color . ' text-black">' . UserState::label($state) . '</span>';
+
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-light">' . UserState::label($state) . '</span>';
+        }
 
         return $result;
     }

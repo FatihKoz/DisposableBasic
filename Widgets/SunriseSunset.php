@@ -63,7 +63,7 @@ class SunriseSunset extends Widget
             'details'        => $details,
             'icon'           => $icon,
             'footer_note'    => isset($footer_note) ? $footer_note : null,
-            'location'       => isset($location) ? ' | ' . $location : null,
+            'location'       => isset($location) ? $location : null,
             'twilight_begin' => ($twilight_begin > 1) ? Carbon::parse($twilight_begin)->format('H:i') . ' UTC' : $not_able,
             'twilight_end'   => ($twilight_end > 1) ? Carbon::parse($twilight_end)->format('H:i') . ' UTC' : $not_able,
             'sunrise'        => ($sunrise > 1) ? Carbon::parse($sunrise)->format('H:i') . ' UTC' : $not_able,

@@ -8,14 +8,17 @@ use App\Models\Enums\PirepState;
 
 class DB_PirepController extends Controller
 {
-    // Pireps (except inProgress)
+    // All Pireps (except inProgress)
     public function index()
     {
-        $eager_pireps = array('user', 'aircraft', 'airline', 'dpt_airport', 'arr_airport');
-        $pireps = Pirep::with($eager_pireps)->where('state', '!=', PirepState::IN_PROGRESS)->orderby('submitted_at', 'desc')->paginate(25);
+        $units = array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight'));
+        $eager_load = array('user', 'aircraft', 'airline', 'dpt_airport', 'arr_airport');
+
+        $pireps = Pirep::with($eager_load)->where('state', '!=', PirepState::IN_PROGRESS)->orderby('submitted_at', 'desc')->paginate(25);
 
         return view('DBasic::pireps.index', [
             'pireps' => $pireps,
+            'units'  => $units,
         ]);
     }
 }

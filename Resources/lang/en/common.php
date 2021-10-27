@@ -2,13 +2,13 @@
 
 return [
     // Generic Definitions
+    'aircraft'  => 'Aircraft',
     'airline'   => 'Airline',
     'airlines'  => 'Airlines',
     'airport'   => 'Airport',
     'airports'  => 'Airports',
     'arrival'   => 'Arrival',
     'arr_abr'   => 'Arr',
-    'aircraft'  => 'Aircraft',
     'awards'    => 'Awards',
     'base'      => 'Base',
     'callsign'  => 'Callsign',
@@ -18,6 +18,7 @@ return [
     'count'     => 'Count',
     'departure' => 'Departure',
     'dep_abr'   => 'Dep',
+    'distance'  => 'Distance',
     'expire'    => 'Expires',
     'fleet'     => 'Fleet',
     'flights'   => 'Flights',
@@ -27,6 +28,7 @@ return [
     'iata'      => 'IATA Code',
     'icao'      => 'ICAO Code',
     'ident'     => 'Ident',
+    'last_flt'  => 'Last Flight',
     'limit'     => 'Limit',
     'location'  => 'Location',
     'max'       => 'Max',
@@ -61,6 +63,7 @@ return [
     'ftime'     => 'Flight Time',
     'fuel'      => 'Fuel',
     'fuelob'    => 'Fuel On Board',
+    'fuelused'  => 'Fuel Used',
     'lastlnd'   => 'Last Landing',
     'lrate'     => 'Landing Rate',
     'orig'      => 'Origin',

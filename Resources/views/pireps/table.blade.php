@@ -6,6 +6,7 @@
       <th class="text-start">@lang('DBasic::common.dest')</th>
       <th>@lang('DBasic::common.aircraft')</th>
       <th>@lang('DBasic::common.btime')</th>
+      <th>@lang('DBasic::common.fuelused')</th>
       {{-- <th>@lang('DBasic::common.score')</th> --}}
       {{-- <th>@lang('DBasic::common.lndrate')</th> --}}
       <th>@lang('DBasic::common.pilot')</th>
@@ -13,8 +14,8 @@
     </tr>
   </thead>
   <tbody>
-    @foreach($pireps as $pirep)
-      <tr @if($pirep->state === 6) class="table-danger" title="Rejected" @endif>
+    @foreach ($pireps as $pirep)
+      <tr @if ($pirep->state != 2) {!! DB_PirepState($pirep, 'row') !!} @endif>
         <th class="text-start">
           @ability('admin', 'admin-access')
             <a href="{{ route('frontend.pireps.show', [$pirep->id]) }}"><i class="fas fa-info-circle me-1"></i></a>
@@ -31,6 +32,7 @@
           <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration ?? '']) }}">{{ optional($pirep->aircraft)->ident }}</a>
         </td>
         <td>{{ DB_ConvertMinutes($pirep->flight_time) }}</td>
+        <td>{{ DB_ConvertWeight($pirep->fuel_used, $units['fuel']) }}</td>
         {{-- <td>{{ $pirep->score }}</td> --}}
         {{-- <td>@if($pirep->landing_rate) {{ abs($pirep->landing_rate) }} ft/min @endif</td> --}}
         <td>

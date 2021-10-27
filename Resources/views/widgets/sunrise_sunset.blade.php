@@ -1,7 +1,7 @@
 <div class="card mb-2">
   <div class="card-header p-1">
     <h5 class="m-1">
-      @lang('DBasic::widgets.sundetails') {{ $location }}
+      @lang('DBasic::widgets.sundetails')
       <i class="fas {{ $icon }} float-end m-1"></i>
     </h5>
   </div>
@@ -31,6 +31,7 @@
   </div>
   @if($footer_note)
     <div class="card-footer p-0 px-1 text-end small">
+      <span class="float-start"><b>{{ $location }}</b></span>
       <b>{{ $footer_note }}</b>
     </div>
   @endif
