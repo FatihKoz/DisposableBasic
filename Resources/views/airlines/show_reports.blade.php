@@ -1,22 +1,10 @@
-<table class="table table-sm table-borderless table-striped text-start align-middle mb-0">
-  <thead class="table-dark">
-    <tr>
-      <td>Flight #</td>
-      <td>Origin</td>
-      <td>Destination</td>
-      <td>Aircraft</td>
-      <td>Pilot In Command</td>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach($pireps as $pirep)
-    <tr>
-      <td>{{ $pirep->flight_number }}</td>
-      <td>{{ $pirep->dpt_airport->name }}</td>
-      <td>{{ $pirep->arr_airport->name }}</td>
-      <td>{{ $pirep->aircraft->registration }}</td>
-      <td>{{ $pirep->user->name_private }}</td>
-    </tr>
-    @endforeach
-  </tbody>
-</table>
+<div class="card mb-2">
+  <div class="card-body p-0 overflow-auto table-responsive" style="max-height: 84vh;">
+    @include('DBasic::pireps.table')
+  </div>
+  <div class="card-footer p-0 px-1 small text-end">
+    <b>@lang('DBasic::common.total') {{ $pireps->total() }}</b>
+  </div>
+</div>
+
+{{ $pireps->links('pagination.auto') }}

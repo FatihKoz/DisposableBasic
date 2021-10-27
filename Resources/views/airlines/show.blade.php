@@ -27,7 +27,7 @@
       <div class="tab-content" id="airline-navContent">
         @if($subfleets->count() > 0)
           <div class="tab-pane fade show active" id="fleet" role="tabpanel" aria-labelledby="airline-fleet">
-            @include('DBasic::airlines.show_fleet')
+            @include('DBasic::airlines.show_fleet_full')
           </div>
         @endif
         @if($users->count() > 0)

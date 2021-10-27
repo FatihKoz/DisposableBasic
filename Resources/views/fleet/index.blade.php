@@ -33,7 +33,7 @@
               @endif
             </div>
             <div class="col text-end">
-              <b>@lang('DBasic::common.total'):</b> {{ $fleet->total() }}
+              <b>@lang('DBasic::common.total'):</b> {{ $aircraft->total() }}
             </div>
           </div>
         </div>
@@ -41,5 +41,5 @@
     </div>
   </div>
 
-  {{ $fleet->links('pagination.auto') }}
+  {{ $aircraft->links('pagination.auto') }}
 @endsection

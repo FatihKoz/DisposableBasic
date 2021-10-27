@@ -8,16 +8,16 @@ use App\Models\Enums\PirepState;
 
 class FlightBoard extends Widget
 {
-  public $reloadTimeout = 62;
+    public $reloadTimeout = 62;
 
-  public function run()
-  {
-    $eager_load = array('aircraft', 'airline', 'arr_airport', 'dpt_airport', 'position', 'user');
-    $flights = Pirep::with($eager_load)->where('state', PirepState::IN_PROGRESS)->orderby('updated_at', 'desc')->get();
+    public function run()
+    {
+        $eager_load = array('aircraft', 'airline', 'arr_airport', 'dpt_airport', 'position', 'user');
+        $flights = Pirep::with($eager_load)->where('state', PirepState::IN_PROGRESS)->orderby('updated_at', 'desc')->get();
 
-    return view('DBasic::widgets.flight_board', [
-      'flights'    => $flights,
-      'is_visible' => (count($flights) > 0) ? true : false,
-    ]);
-  }
+        return view('DBasic::widgets.flight_board', [
+            'flights'    => $flights,
+            'is_visible' => isset($flights) ? true : false,
+        ]);
+    }
 }

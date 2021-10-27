@@ -8,119 +8,125 @@ use Illuminate\Support\Facades\Route;
 
 class DB_ServiceProvider extends ServiceProvider
 {
-  protected $moduleSvc;
+    protected $moduleSvc;
 
-  // Boot the application events
-  public function boot()
-  {
-    $this->moduleSvc = app(ModuleService::class);
+    // Boot the application events
+    public function boot()
+    {
+        $this->moduleSvc = app(ModuleService::class);
 
-    $this->registerRoutes();
-    $this->registerTranslations();
-    $this->registerConfig();
-    $this->registerViews();
-    $this->registerLinks();
+        $this->registerRoutes();
+        $this->registerTranslations();
+        $this->registerConfig();
+        $this->registerViews();
+        $this->registerLinks();
 
-    $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
 
-    app('arrilot.widget-namespaces')->registerNamespace('DBasic', 'Modules\DisposableBasic\Widgets');
-  }
-
-  // Service Providers
-  public function register() { }
-
-  // Module Links
-  public function registerLinks()
-  {
-    $this->moduleSvc->addAdminLink('Disposable Basic', '/admin/dbasic', 'pe-7s-tools');
-  }
-
-  // Routes
-  protected function registerRoutes()
-  {
-    // Frontend
-    Route::group([
-      'as'         => 'DBasic.',
-      'middleware' => ['web'],
-      'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
-      'prefix'     => '',
-    ], function () {
-      Route::group([
-        'middleware' => ['auth'],
-      ], function () {
-        // Airlines
-        Route::get('dairlines', 'DB_AirlineController@index')->name('airlines');
-        Route::get('dairlines/{icao}', 'DB_AirlineController@show')->name('airline');
-        // Awards
-        Route::get('dawards', 'DB_AwardController@index')->name('awards');
-        // Fleet
-        Route::get('dfleet', 'DB_FleetController@index')->name('fleet');
-        Route::get('dfleet/{subfleet_type}', 'DB_FleetController@subfleet')->name('subfleet');
-        Route::get('daircraft/{ac_reg}', 'DB_FleetController@aircraft')->name('aircraft');
-        // Hubs
-        Route::get('dhubs', 'DB_HubController@index')->name('hubs');
-        Route::get('dhubs/{icao}', 'DB_HubController@show')->name('hub');
-        // News
-        Route::get('dnews', 'DB_NewsController@index')->name('news');
-        // Ranks
-        Route::get('dranks', 'DB_RankController@index')->name('ranks');
-        // Roster
-        Route::get('droster', 'DB_RosterController@index')->name('roster');
-        // Pireps
-        Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
-        // Statistics
-        Route::get('dstats', 'DB_StatisticController@index')->name('stats');
-        // Widgets
-        Route::match(['get', 'post'], 'djumpseat', 'DB_WidgetController@jumpseat')->name('jumpseat');
-        Route::match(['get', 'post'], 'dtransferac', 'DB_WidgetController@transferac')->name('transferac');
-      });
-    });
-
-    // Admin
-    Route::group([
-      'as'         => 'DBasic.',
-      'middleware' => ['web', 'role:admin'],
-      'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
-      'prefix'     => 'admin',
-    ], function () {
-      Route::group([],
-        function () {
-        Route::get('dbasic', 'DB_AdminController@index')->name('admin');
-      });
-    });
-  }
-
-  // Config
-  protected function registerConfig()
-  {
-    $this->publishes([ __DIR__.'/../Config/config.php' => config_path('DisposableBasic.php'),], 'config');
-    $this->mergeConfigFrom( __DIR__.'/../Config/config.php', 'DisposableBasic');
-  }
-
-  // Translations
-  public function registerTranslations()
-  {
-    $langPath = resource_path('lang/modules/DisposableBasic');
-
-    if (is_dir($langPath)) {
-      $this->loadTranslationsFrom($langPath, 'DBasic');
-    } else {
-      $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'DBasic');
+        app('arrilot.widget-namespaces')->registerNamespace('DBasic', 'Modules\DisposableBasic\Widgets');
     }
-  }
 
-  // Views
-  public function registerViews()
-  {
-    $viewPath = resource_path('views/modules/DisposableBasic');
-    $sourcePath = __DIR__.'/../Resources/views';
+    // Service Providers
+    public function register()
+    {
+    }
 
-    $this->publishes([$sourcePath => $viewPath,], 'views');
+    // Module Links
+    public function registerLinks()
+    {
+        $this->moduleSvc->addAdminLink('Disposable Basic', '/admin/dbasic', 'pe-7s-tools');
+    }
 
-    $this->loadViewsFrom(array_merge(array_map(function ($path) {
-      return $path . '/modules/DisposableBasic';
-    }, \Config::get('view.paths')), [$sourcePath]), 'DBasic');
-  }
+    // Routes
+    protected function registerRoutes()
+    {
+        // Frontend
+        Route::group([
+            'as'         => 'DBasic.',
+            'middleware' => ['web'],
+            'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
+            'prefix'     => '',
+        ], function () {
+            Route::group([
+                'middleware' => ['auth'],
+            ], function () {
+                // Airlines
+                Route::get('dairlines', 'DB_AirlineController@index')->name('airlines');
+                Route::get('dairlines/{icao}', 'DB_AirlineController@show')->name('airline');
+                // Awards
+                Route::get('dawards', 'DB_AwardController@index')->name('awards');
+                // Fleet
+                Route::get('dfleet', 'DB_FleetController@index')->name('fleet');
+                Route::get('dfleet/{subfleet_type}', 'DB_FleetController@subfleet')->name('subfleet');
+                Route::get('daircraft/{ac_reg}', 'DB_FleetController@aircraft')->name('aircraft');
+                // Hubs
+                Route::get('dhubs', 'DB_HubController@index')->name('hubs');
+                Route::get('dhubs/{icao}', 'DB_HubController@show')->name('hub');
+                // News
+                Route::get('dnews', 'DB_NewsController@index')->name('news');
+                // Ranks
+                Route::get('dranks', 'DB_RankController@index')->name('ranks');
+                // Roster
+                Route::get('droster', 'DB_RosterController@index')->name('roster');
+                // Pireps
+                Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
+                // Statistics
+                Route::get('dstats', 'DB_StatisticController@index')->name('stats');
+                // Widgets
+                Route::match(['get', 'post'], 'djumpseat', 'DB_WidgetController@jumpseat')->name('jumpseat');
+                Route::match(['get', 'post'], 'dtransferac', 'DB_WidgetController@transferac')->name('transferac');
+            });
+        });
 
-  public function provides(): array { return []; }
+        // Admin
+        Route::group([
+            'as'         => 'DBasic.',
+            'middleware' => ['web', 'role:admin'],
+            'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
+            'prefix'     => 'admin',
+        ], function () {
+            Route::group([
+                'middleware' => ['auth'],
+            ], function () {
+                Route::get('dbasic', 'DB_AdminController@index')->name('admin');
+            });
+        });
+    }
+
+    // Config
+    protected function registerConfig()
+    {
+        $this->publishes([__DIR__ . '/../Config/config.php' => config_path('DisposableBasic.php'),], 'config');
+        $this->mergeConfigFrom(__DIR__ . '/../Config/config.php', 'DisposableBasic');
+    }
+
+    // Translations
+    public function registerTranslations()
+    {
+        $langPath = resource_path('lang/modules/DisposableBasic');
+
+        if (is_dir($langPath)) {
+            $this->loadTranslationsFrom($langPath, 'DBasic');
+        } else {
+            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'DBasic');
+        }
+    }
+
+    // Views
+    public function registerViews()
+    {
+        $viewPath = resource_path('views/modules/DisposableBasic');
+        $sourcePath = __DIR__ . '/../Resources/views';
+
+        $this->publishes([$sourcePath => $viewPath,], 'views');
+
+        $this->loadViewsFrom(array_merge(array_map(function ($path) {
+            return $path . '/modules/DisposableBasic';
+        }, \Config::get('view.paths')), [$sourcePath]), 'DBasic');
+    }
+
+    public function provides(): array
+    {
+        return [];
+    }
 }

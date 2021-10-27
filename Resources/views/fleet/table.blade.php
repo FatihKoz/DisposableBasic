@@ -15,29 +15,28 @@
       <th>@lang('DBasic::common.btime')</th>
       <th>@lang('DBasic::common.lastlnd')</th>
     @endempty
-    <th>@lang('common.state')</th>
-    <th>@lang('common.status')</th>
+    <th>@lang('DBasic::common.state')</th>
+    <th>@lang('DBasic::common.status')</th>
   </tr>
-  @foreach($fleet as $ac)
-    <tr>
+  @foreach($aircraft as $ac)
+    @php if(!isset($subfleet)) { $subfleet = $ac->subfleet; } @endphp 
+    <tr @if($ac->simbriefs_count > 0) class="table-primary" @endif>
       <td class="text-start">
         <a href="{{ route('DBasic.aircraft', [$ac->registration]) }}">{{ $ac->registration }} @if($ac->registration != $ac->name) '{{ $ac->name }}' @endif</a>
       </td>
       <td>{{ $ac->icao }}</td>
       @empty($coll)
         <td>
-          <a href="{{ route('DBasic.airline', [$ac->subfleet->airline->icao ?? '']) }}">{{ $ac->subfleet->airline->name ?? '' }}</a>
+          <a href="{{ route('DBasic.airline', [$subfleet->airline->icao ?? '']) }}">{{ $subfleet->airline->name ?? '' }}</a>
         </td>
         @empty($type)
           <td>
-            <a href="{{ route('DBasic.subfleet', [$ac->subfleet->type ?? '']) }}">{{ $ac->subfleet->name ?? '' }}</a>
+            <a href="{{ route('DBasic.subfleet', [$subfleet->type ?? '']) }}">{{ $subfleet->name ?? '' }}</a>
           </td>
         @endempty
       @endempty
       <td>
-        @if(optional($ac->subfleet)->hub_id)
-          <a href="{{ route('DBasic.hub', [strtoupper($ac->subfleet->hub_id) ?? '']) }}">{{ $ac->subfleet->hub_id ?? ''}}</a>
-        @endif
+        <a href="{{ route('DBasic.hub', [strtoupper($subfleet->hub_id) ?? '']) }}">{{ $subfleet->hub_id ?? ''}}</a>
       </td>
       <td>
         <a href="{{ route('frontend.airports.show', [$ac->airport_id ?? '']) }}">{{ $ac->airport_id ?? '' }}</a>
@@ -46,11 +45,7 @@
         {{ DB_ConvertWeight($ac->fuel_onboard, $units['fuel']) }}
       </td>
       @empty($type)
-        <td>
-          @if($ac->flight_time > 0)
-            @minutestotime($ac->flight_time)
-          @endif
-        </td>
+        <td>{{ DB_ConvertMinutes($ac->flight_time, '%02dh %02dm') }}</td>
         <td>{{ optional($ac->landing_time)->diffForHumans() }}</td>
       @endempty
       <td>{!! DB_AircraftState($ac) !!}</td>

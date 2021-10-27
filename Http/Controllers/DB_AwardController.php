@@ -7,13 +7,13 @@ use App\Models\Award;
 
 class DB_AwardController extends Controller
 {
-  // Awards
-  public function index()
-  {
-    $awards = Award::orderby('id')->get()->sortby('name', SORT_NATURAL);
+    // Awards
+    public function index()
+    {
+        $awards = Award::orderby('id')->get()->sortby('name', SORT_NATURAL);
 
-    return view('DBasic::awards.index', [
-      'awards' => $awards
-    ]);
-  }
+        return view('DBasic::awards.index', [
+            'awards' => $awards
+        ]);
+    }
 }

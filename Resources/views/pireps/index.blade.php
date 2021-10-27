@@ -15,7 +15,7 @@
           @include('DBasic::pireps.table')
         </div>
         <div class="card-footer p-1 text-end small">
-          @lang('DBasic::common.totpireps'): {{ $pireps->total() }}
+          <b>@lang('DBasic::common.total') {{ $pireps->total() }}</b>
         </div>
       </div>
     </div>

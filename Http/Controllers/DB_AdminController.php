@@ -6,8 +6,8 @@ use App\Contracts\Controller;
 
 class DB_AdminController extends Controller
 {
-  public function index()
-  {
-    return view('DBasic::admin.index');
-  }
+    public function index()
+    {
+        return view('DBasic::admin.index');
+    }
 }

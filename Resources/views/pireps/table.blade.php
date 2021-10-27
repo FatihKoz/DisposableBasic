@@ -1,49 +1,43 @@
-<table class="table table-sm table-borderless table-striped text-start mb-0 align-middle">
-  <tr>
-    <th>@lang('DBasic::common.flightid')</th>
-    <th>@lang('DBasic::common.orig')</th>
-    <th>@lang('DBasic::common.dest')</th>
-    <th>@lang('DBasic::common.aircraft')</th>
-    <th class="text-center">@lang('DBasic::common.btime')</th>
-    {{-- <th class="text-center">@lang('DisposableBasic::common.score')</th> --}}
-    {{-- <th class="text-center">@lang('DisposableBasic::common.lndrate')</th> --}}
-    <th>@lang('DBasic::common.pic')</th>
-    <th class="text-center">@lang('DBasic::common.submitted')</th>
-    <th class="text-center">@lang('common.status')</th>
-  </tr>
-  @foreach($pireps as $pirep)
+<table class="table table-sm table-borderless table-striped text-center align-middle mb-0">
+  <thead>
     <tr>
-      <td>
-        @ability('admin', 'admin-access')
-          <a href="{{ route('frontend.pireps.show', [$pirep->id]) }}"><i class="fas fa-info-circle me-3"></i></a>
-        @endability
-        <b>{{ optional($pirep->airline)->code }} {{ $pirep->flight_number }}</b>
-      </td>
-      <td>
-        <a href="{{ route('frontend.airports.show', [$pirep->dpt_airport_id]) }}">{{ $pirep->dpt_airport_id }} {{ optional($pirep->dpt_airport)->name }}</a>
-      </td>
-      <td>
-        <a href="{{ route('frontend.airports.show', [$pirep->arr_airport_id]) }}">{{ $pirep->arr_airport_id }} {{ optional($pirep->arr_airport)->name }}</a>
-      </td>
-      <td>
-        @if($pirep->aircraft)
-          {{ $pirep->aircraft->registration }} ({{ $pirep->aircraft->icao }})
-        @endif
-      </td>
-      <td class="text-center">
-        @minutestotime($pirep->flight_time)
-      </td>
-      {{-- <td class="text-center">{{ $pirep->score }}</td> --}}
-      {{-- <td class="text-center">@if($pirep->landing_rate) {{ $pirep->landing_rate }} ft/min @endif</td> --}}
-      <td>
-        <a href="{{ route('frontend.users.show.public', [$pirep->user_id]) }}">{{ optional($pirep->user)->name_private }}</a>
-      </td>
-      <td class="text-center">
-        @if(filled($pirep->submitted_at))
-          {{ $pirep->submitted_at->diffForHumans() }}
-        @endif
-      </td>
-      <td class="text-center">{{ $pirep->state }}</td>
+      <th class="text-start">@lang('DBasic::common.flightno')</th>
+      <th class="text-start">@lang('DBasic::common.orig')</th>
+      <th class="text-start">@lang('DBasic::common.dest')</th>
+      <th>@lang('DBasic::common.aircraft')</th>
+      <th>@lang('DBasic::common.btime')</th>
+      {{-- <th>@lang('DBasic::common.score')</th> --}}
+      {{-- <th>@lang('DBasic::common.lndrate')</th> --}}
+      <th>@lang('DBasic::common.pilot')</th>
+      <th class="text-end">@lang('DBasic::common.submitted')</th>
     </tr>
-  @endforeach
+  </thead>
+  <tbody>
+    @foreach($pireps as $pirep)
+      <tr @if($pirep->state === 6) class="table-danger" title="Rejected" @endif>
+        <th class="text-start">
+          @ability('admin', 'admin-access')
+            <a href="{{ route('frontend.pireps.show', [$pirep->id]) }}"><i class="fas fa-info-circle me-1"></i></a>
+          @endability
+          {{ optional($pirep->airline)->code }} {{ $pirep->flight_number }}
+        </th>
+        <td class="text-start">
+          <a href="{{ route('frontend.airports.show', [$pirep->dpt_airport_id]) }}">{{ $pirep->dpt_airport_id.' '.optional($pirep->dpt_airport)->name }}</a>
+        </td>
+        <td class="text-start">
+          <a href="{{ route('frontend.airports.show', [$pirep->arr_airport_id]) }}">{{ $pirep->arr_airport_id.' '.optional($pirep->arr_airport)->name }}</a>
+        </td>
+        <td>
+          <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration ?? '']) }}">{{ optional($pirep->aircraft)->ident }}</a>
+        </td>
+        <td>{{ DB_ConvertMinutes($pirep->flight_time) }}</td>
+        {{-- <td>{{ $pirep->score }}</td> --}}
+        {{-- <td>@if($pirep->landing_rate) {{ abs($pirep->landing_rate) }} ft/min @endif</td> --}}
+        <td>
+          <a href="{{ route('frontend.users.show.public', [$pirep->user_id]) }}">{{ optional($pirep->user)->name_private }}</a>
+        </td>
+        <td class="text-end">{{ $pirep->submitted_at->diffForHumans() }}</td>
+      </tr>
+    @endforeach
+  </tbody>
 </table>

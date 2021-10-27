@@ -7,14 +7,14 @@ use App\Models\User;
 
 class DB_Session extends Model
 {
-  public $table = 'sessions';
+    public $table = 'sessions';
 
-  protected $dates = [
-    'last_activity',
-  ];
+    protected $dates = [
+        'last_activity',
+    ];
 
-  public function user()
-  {
-    return $this->hasOne(User::class, 'id', 'user_id');
-  }
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

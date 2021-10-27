@@ -1,21 +1,26 @@
 {
-  "name": "DisposableBasic",
-  "type": "phpvms-module",
-  "description": "Disposable Virtual Airline Pack (Basic)",
-  "authors": [{ "name": "B.Fatih KOZ", "email": "fatih.koz@gmail.com"}],
-  "require": {
-    "composer/installers": "~1.0"
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Modules\\DisposableBasic\\Providers\\DB_ServiceProvider"
-      ]
+    "name": "DisposableBasic",
+    "type": "phpvms-module",
+    "description": "Disposable Virtual Airline Pack (Basic)",
+    "authors": [
+        {
+            "name": "B.Fatih KOZ",
+            "email": "fatih.koz@gmail.com"
+        }
+    ],
+    "require": {
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\DisposableBasic\\Providers\\DB_ServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\DisposableBasic\\": "."
+        }
     }
-  },
-  "autoload": {
-    "psr-4": {
-      "Modules\\DisposableBasic\\": "."
-    }
-  }
 }

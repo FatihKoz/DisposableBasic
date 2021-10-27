@@ -4,7 +4,8 @@
 @section('content')
   <div class="row">
     <div class="col-6">
-      {{ optional($aircraft->landing_time)->diffForHumans() }}
+      @dump($aircraft->simbrief_block)
+      {{ $aircraft }}
 
       @if(count($aircraft->files) > 0 && Auth::check())
         <div class="card mb-2">

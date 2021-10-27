@@ -6,20 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDisposableRandomFlightTable extends Migration
 {
-  public function up()
-  {
-    if (!Schema::hasTable('disposable_randomflight')) {
-      // Create Disposable RandomFlight Table
-      Schema::create('disposable_randomflight', function (Blueprint $table) {
-        $table->increments('id');
-        $table->integer('user_id')->nullable();
-        $table->string('airport_id', 5)->nullable();
-        $table->string('flight_id', 100)->nullable();
-        $table->date('assign_date')->nullable();
-        $table->timestamps();
-        $table->index('id');
-        $table->unique('id');
-      });
+    public function up()
+    {
+        // Create Disposable RandomFlight Table
+        if (!Schema::hasTable('disposable_randomflight')) {
+            Schema::create('disposable_randomflight', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id')->nullable();
+                $table->string('airport_id', 5)->nullable();
+                $table->string('flight_id', 100)->nullable();
+                $table->date('assign_date')->nullable();
+                $table->timestamps();
+                $table->index('id');
+                $table->unique('id');
+            });
+        }
     }
-  }
 }
