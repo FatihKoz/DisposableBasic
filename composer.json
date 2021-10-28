@@ -14,7 +14,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\DisposableBasic\\Providers\\DB_ServiceProvider"
+                "Modules\\DisposableBasic\\Providers\\DB_ServiceProvider",
+                "Modules\\DisposableBasic\\Providers\\DB_EventProvider"
             ]
         }
     },

@@ -192,13 +192,13 @@ if (!function_exists('DB_UserState')) {
         $state = $user->state;
 
         if ($state === UserState::PENDING) {
-            $color = 'warning';
+            $color = 'secondary';
         } elseif ($state === UserState::ACTIVE) {
             $color = 'success';
         } elseif ($state === UserState::REJECTED || $state === UserState::SUSPENDED || $state === UserState::DELETED) {
             $color = 'danger';
         } elseif ($state === UserState::ON_LEAVE) {
-            $color = 'secondary';
+            $color = 'warning';
         }
 
         if ($type === 'bg') {
@@ -269,6 +269,7 @@ if (!function_exists('DB_InArray_MD')) {
                 return true;
             }
         }
+
         return false;
     }
 }

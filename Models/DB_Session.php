@@ -13,6 +13,7 @@ class DB_Session extends Model
         'last_activity',
     ];
 
+    // Relationship
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');

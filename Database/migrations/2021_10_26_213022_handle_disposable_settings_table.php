@@ -4,9 +4,9 @@ use App\Contracts\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDisposableSettingsTable extends Migration
+class HandleDisposableSettingsTable extends Migration
 {
-    public function up() 
+    public function up()
     {
         // Create Disposable Settings Table
         if (!Schema::hasTable('disposable_settings')) {

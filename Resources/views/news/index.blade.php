@@ -15,9 +15,9 @@
           <div class="card-body p-1 text-start">
             {!! $news->body !!}
           </div>
-          <div class="card-footer p-1 text-end small">
-            <span class="float-start">{{ optional($news->user)->name_private }}</span>
-            {{ $news->created_at->format('d.M.Y H:i') }}
+          <div class="card-footer p-0 px-1 text-end small">
+            <span class="float-start"><b>{{ optional($news->user)->name_private }}</b></span>
+            <b>{{ $news->created_at->format('d.M.Y H:i') }}</b>
           </div>
         </div>
       </div>

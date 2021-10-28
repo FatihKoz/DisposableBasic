@@ -8,7 +8,7 @@ class HandleDisposableRandomFlightsTable extends Migration
 {
     public function up()
     {
-        // Create Disposable RandomFlight Table
+        // Create Disposable Random Flight table
         if (!Schema::hasTable('disposable_randomflight')) {
             Schema::create('disposable_randomflight', function (Blueprint $table) {
                 $table->increments('id');
@@ -23,7 +23,7 @@ class HandleDisposableRandomFlightsTable extends Migration
             });
         }
 
-        // Update Disposable RandomFlight Table
+        // Update Disposable Random Flight table
         if (Schema::hasTable('disposable_randomflight') && !Schema::hasColumn('disposable_randomflight', 'pirep_id')) {
             Schema::table('disposable_randomflight', function (Blueprint $table) {
                 $table->string('flight_id', 150)->nullable()->change();
@@ -31,7 +31,7 @@ class HandleDisposableRandomFlightsTable extends Migration
             });
         }
 
-        // Rename Disposable RandomFlight Table
+        // Rename to Disposable Random Flights
         if (Schema::hasTable('disposable_randomflight')) {
             Schema::rename('disposable_randomflight', 'disposable_random_flights');
         }
