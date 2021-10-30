@@ -50,6 +50,7 @@ return [
     'subfleets' => 'Subfleets',
     'timezone'  => 'Time Zone',
     'total'     => 'Total',
+    'type'      => 'Type',
     // Aircraft - Pirep - Flight
     'altitude'  => 'Altitude',
     'avg'       => 'Average',

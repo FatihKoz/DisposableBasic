@@ -28,7 +28,7 @@ class DB_FleetController extends Controller
         $aircraft = Aircraft::withCount('simbriefs')->with('subfleet.airline')->where('subfleet_id', $subfleet->id)->orderby('registration')->paginate(25);
 
         if (!$subfleet) {
-            flash()->error('Subfleet Not Found !');
+            flash()->error('Subfleet not found !');
             return redirect(route('DBasic.fleet'));
         }
 
@@ -43,26 +43,29 @@ class DB_FleetController extends Controller
     public function aircraft($ac_reg)
     {
         $units = array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight'));
-        $aircraft = Aircraft::with('subfleet.airline')->where('registration', $ac_reg)->first();
+        $eager_load = array('airport', 'files', 'subfleet.airline', 'subfleet.fares', 'subfleet.hub');
+        $aircraft = Aircraft::with($eager_load)->where('registration', $ac_reg)->first();
 
         if (!$aircraft) {
-            flash()->error('Aircraft Not Found !');
+            flash()->error('Aircraft not found !');
             return redirect(route('DBasic.fleet'));
         }
 
         // Latest Pireps
         $where = array('aircraft_id' => $aircraft->id, 'state' => 2, 'status' => 'ONB');
         $eager_pireps = array('dpt_airport', 'arr_airport', 'user', 'airline');
-        $pireps = Pirep::with($eager_pireps)->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
+        $pireps = Pirep::with($eager_pireps)->where($where)->orderby('submitted_at', 'desc')->take(8)->get();
 
         // Aircraft or Subfleet Image
         $image_ac = strtolower('image/aircraft/'.$aircraft->registration.'.jpg');
-        $image_sf = strtolower('image/subfleet/'.$aircraft->subfleet->type.'.jpg');
+        $image_sf = strtolower('image/subfleet/'.optional($aircraft->subfleet)->type.'.jpg');
 
         if (is_file($image_ac)) {
             $image = $image_ac;
+            $image_text = optional(optional($aircraft->subfleet)->airline)->name.' '.$aircraft->registration;
         } elseif (is_file($image_sf)) {
             $image = $image_sf;
+            $image_text = optional(optional($aircraft->subfleet)->airline)->name.' '.$aircraft->icao;
         }
 
         // Passenger Weight
@@ -74,6 +77,7 @@ class DB_FleetController extends Controller
         return view('DBasic::fleet.show', [
             'aircraft'   => $aircraft,
             'image'      => isset($image) ? $image : null,
+            'image_text' => isset($image_text) ? $image_text : null,
             'pax_weight' => $pax_weight,
             'pireps'     => $pireps,
             'units'      => $units,

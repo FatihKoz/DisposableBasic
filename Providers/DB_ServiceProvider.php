@@ -90,8 +90,13 @@ class DB_ServiceProvider extends ServiceProvider
             ], function () {
                 Route::get('dbasic', 'DB_AdminController@index')->name('admin');
                 Route::match(['get', 'post'], 'dsettings_update', 'DB_AdminController@settings_update')->name('settings_update');
+                Route::match(['get', 'post'], 'dpark_aircraft', 'DB_AdminController@park_aircraft')->name('park_aircraft');
                 Route::match(['get', 'post'], 'dspecs', 'DB_SpecController@index')->name('specs');
                 Route::match(['get', 'post'], 'dspecs_store', 'DB_SpecController@store')->name('specs_store');
+                Route::match(['get', 'post'], 'dtech', 'DB_TechController@index')->name('tech');
+                Route::match(['get', 'post'], 'dtech_store', 'DB_TechController@store')->name('tech_store');
+                Route::match(['get', 'post'], 'drunway', 'DB_RunwayController@index')->name('runway');
+                Route::match(['get', 'post'], 'drunway_store', 'DB_RunwayController@store')->name('runway_store');
             });
         });
     }

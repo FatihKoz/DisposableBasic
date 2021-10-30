@@ -85,8 +85,10 @@ class DB_HubController extends Controller
                 $off_where['state'] = 1;
             }
 
-            $users_hub = User::with('airline', 'rank')->where($hub_where)->orderby('id')->get();
-            $users_off = User::with('airline', 'rank')->where($off_where)->orderby('id')->get();
+            $eager_users = array('airline', 'current_airport', 'home_airport', 'rank');
+
+            $users_hub = User::with($eager_users)->where($hub_where)->orderby('id')->get();
+            $users_off = User::with($eager_users)->where($off_where)->orderby('id')->get();
             $is_visible['pilots'] = ($users_hub->count() > 0 || $users_off->count() > 0) ? true : false;
 
             // Pilot Reports

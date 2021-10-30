@@ -1,5 +1,5 @@
 @extends('admin.app')
-@section('title', 'Disposable Aircraft Specs')
+@section('title', 'Disposable Aircraft Specifications')
 
 @section('content')
   <div class="card border-blue-bottom" style="margin-left:5px; margin-right:5px; margin-bottom:5px;">
@@ -231,9 +231,10 @@
 @endsection
 
 @section('scripts')
+  @parent
   <script type="text/javascript">
     // Simple Selection With Dropdown Change
-    // Also keep button hidden until a valid selection
+    // Also keep buttons hidden until a valid selection
     const $oldlink = document.getElementById('edit_link').href;
 
     function check_selection() {
@@ -244,15 +245,15 @@
         document.getElementById('edit_link').style.visibility = 'visible';
         document.getElementById('delete_link').style.visibility = 'visible';
       }
-      const selectedspec = document.getElementById('spec_selection').value;
-      const newlink = '?spec_edit='.concat(selectedspec);
-      const deletelink = '?spec_delete='.concat(selectedspec);
+      const selected_item = document.getElementById('spec_selection').value;
+      const link_edit = '?spec_edit='.concat(selected_item);
+      const link_delete = '?spec_delete='.concat(selected_item);
 
-      document.getElementById('edit_link').href = $oldlink.concat(newlink);
-      document.getElementById('delete_link').href = $oldlink.concat(deletelink);
+      document.getElementById('edit_link').href = $oldlink.concat(link_edit);
+      document.getElementById('delete_link').href = $oldlink.concat(link_delete);
     }
 
-    // De-Select Others when one is selected (for select2 dropdowns)
+    // De-Select others when one is selected (for select2 dropdowns)
     function check_icao() {
       if ($('#icao_selection').val() != '') {
         $('#subfleet_selection').val('').trigger('change');

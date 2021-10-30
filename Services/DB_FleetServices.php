@@ -8,16 +8,13 @@ use App\Models\Pirep;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
-use Laracasts\Flash\Flash;
+use Modules\DisposableBasic\Models\DB_Tech;
 
 class DB_FleetServices
 {
-    // Fix Aircraft State
-    public function FixAircraftState($reg)
+    public function ParkAircraft($reg)
     {
         $result = 0;
         $aircraft = Aircraft::where('registration', $reg)->where('state', '!=', AircraftState::PARKED)->first();
@@ -28,25 +25,20 @@ class DB_FleetServices
             if ($pirep) {
                 $pirep->state = PirepState::CANCELLED;
                 $pirep->status = PirepStatus::CANCELLED;
-                $pirep->notes = 'Cancelled By Admin';
+                $pirep->notes = 'Cancelled by Admin';
                 $pirep->save();
                 $result = 1;
                 event(new PirepCancelled($pirep));
                 Log::info('Disposable Basic, Pirep ID:' . $pirep->id . ' CANCELLED to fix aircraft state');
             }
+
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
             $result = $result + 1;
             Log::info('Disposable Basic, Aircraft REG:' . $aircraft->registration . ' PARKED by Admin');
         }
 
-        if ($result === 0) {
-            Flash::error('Nothing Done... Aircraft Not Found or was already PARKED');
-        } elseif ($result === 1) {
-            Flash::success('Aircraft State Changed Back to PARKED');
-        } elseif ($result === 2) {
-            Flash::success('Aircraft State Changed Back to PARKED and Pirep CANCELLED');
-        }
+        return $result;
     }
 
     // Provide avg fuel burn per minute (for fuel calculations etc)
@@ -54,10 +46,7 @@ class DB_FleetServices
     {
         $results = [];
         $aircraft_icao = DB::table('aircraft')->where('id', $aircraft_id)->value('icao');
-
-        if (Schema::hasTable('disposable_tech') && Schema::hasColumn('disposable_tech', 'avg_fuel')) {
-            $result = DB::table('disposable_tech')->where('icao', $aircraft_icao)->value('avg_fuel');
-        }
+        $result = DB_Tech::where('icao', $aircraft_icao)->value('avg_fuel');
 
         if ($result > 0) {
             $results['source'] = 'ICAO Type Avg (Manufacturer)';

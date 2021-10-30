@@ -4,7 +4,9 @@
       <th class="text-start">@lang('DBasic::common.flightno')</th>
       <th class="text-start">@lang('DBasic::common.orig')</th>
       <th class="text-start">@lang('DBasic::common.dest')</th>
-      <th>@lang('DBasic::common.aircraft')</th>
+      @if(!isset($ac_page))
+        <th>@lang('DBasic::common.aircraft')</th>
+      @endif
       <th>@lang('DBasic::common.btime')</th>
       <th>@lang('DBasic::common.fuelused')</th>
       {{-- <th>@lang('DBasic::common.score')</th> --}}
@@ -28,9 +30,11 @@
         <td class="text-start">
           <a href="{{ route('frontend.airports.show', [$pirep->arr_airport_id]) }}">{{ $pirep->arr_airport_id.' '.optional($pirep->arr_airport)->name }}</a>
         </td>
-        <td>
-          <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration ?? '']) }}">{{ optional($pirep->aircraft)->ident }}</a>
-        </td>
+        @if(!isset($ac_page))
+          <td>
+            <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration ?? '']) }}">{{ optional($pirep->aircraft)->ident }}</a>
+          </td>
+        @endif
         <td>{{ DB_ConvertMinutes($pirep->flight_time) }}</td>
         <td>{{ DB_ConvertWeight($pirep->fuel_used, $units['fuel']) }}</td>
         {{-- <td>{{ $pirep->score }}</td> --}}
