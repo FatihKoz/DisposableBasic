@@ -4,7 +4,7 @@ use App\Models\Pirep;
 use Illuminate\Support\Facades\DB;
 use Modules\DisposableBasic\Models\DB_Runway;
 use Modules\DisposableBasic\Models\DB_Spec;
-use Modules\DisposableTech\Models\Disposable_Tech;
+use Modules\DisposableBasic\Models\DB_Tech;
 
 if (!function_exists('DB_GetRunways')) {
     // Get runways of an airport (by icao code)
@@ -23,7 +23,7 @@ if (!function_exists('DB_GetSpecs')) {
     {
         $specs = DB_Spec::where(['aircraft_id' => $aircraft->id, 'active' => true])->orderby('saircraft')->get();
 
-        if ($deep_check && !count($specs)) {
+        if ($deep_check && !count($specs) && $aircraft->subfleet) {
             $specs = DB_GetSpecs_SF($aircraft->subfleet);
         }
 
@@ -31,7 +31,7 @@ if (!function_exists('DB_GetSpecs')) {
             $specs = DB_GetSpecs_ICAO($aircraft->icao);
         }
 
-        return $specs;
+        return filled($specs) ? $specs : null;
     }
 }
 
@@ -41,7 +41,7 @@ if (!function_exists('DB_GetSpecs_SF')) {
     {
         $specs = DB_Spec::where(['subfleet_id' => $subfleet->id, 'active' => true])->orderby('saircraft')->get();
 
-        return $specs;
+        return filled($specs) ? $specs : null;
     }
 }
 
@@ -51,7 +51,7 @@ if (!function_exists('DB_GetSpecs_ICAO')) {
     {
         $specs = DB_Spec::where(['icao_id' => $icao, 'active' => true])->orderby('saircraft')->get();
 
-        return $specs;
+        return filled($specs) ? $specs : null;
     }
 }
 

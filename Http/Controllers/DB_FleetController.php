@@ -6,6 +6,7 @@ use App\Contracts\Controller;
 use App\Models\Aircraft;
 use App\Models\Pirep;
 use App\Models\Subfleet;
+use Modules\DisposableBasic\Services\DB_FleetServices;
 
 class DB_FleetController extends Controller
 {
@@ -16,24 +17,51 @@ class DB_FleetController extends Controller
 
         return view('DBasic::fleet.index', [
             'aircraft' => $aircraft,
-            'units'    => array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight')),
+            'units'    => $this->GetUnits(),
         ]);
     }
 
     // Subfleet
     public function subfleet($subfleet_type)
     {
-        $units = array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight'));
-        $subfleet = Subfleet::withCount('flights', 'fares')->with('airline', 'fares')->where('type', $subfleet_type)->first();
-        $aircraft = Aircraft::withCount('simbriefs')->with('subfleet.airline')->where('subfleet_id', $subfleet->id)->orderby('registration')->paginate(25);
+        $units = $units = $this->GetUnits();
+
+        $subfleet = Subfleet::withCount('flights', 'fares')->with('airline', 'fares', 'hub')->where('type', $subfleet_type)->first();
+        $aircraft = Aircraft::withCount('simbriefs')->with('subfleet.airline')->where('subfleet_id', $subfleet->id)->orderby('registration')->get();
+        
+        // Latest Pireps
+        $where = array('state' => 2);
+        $aircraft_array = $aircraft->pluck('id')->toArray();
+        $eager_pireps = array('dpt_airport', 'arr_airport', 'user', 'airline');
+        $pireps = Pirep::with($eager_pireps)->where($where)->whereIn('aircraft_id', $aircraft_array)->orderby('submitted_at', 'desc')->take(5)->get();
 
         if (!$subfleet) {
             flash()->error('Subfleet not found !');
             return redirect(route('DBasic.fleet'));
         }
 
-        return view('DBasic::fleet.index', [
+        // Subfleet Image
+        $FleetSvc = app(DB_FleetServices::class);
+        $image = $FleetSvc->SubfleetImage($subfleet);
+
+        // Specifications
+        $specs = DB_GetSpecs_SF($subfleet);
+
+        // Files (only Subfleet level)
+        $files = $subfleet->files;
+
+        $overflow_mh = 78;
+        if(filled($files)) { $overflow_mh = $overflow_mh - 20; }
+        if(filled($specs)) { $overflow_mh = $overflow_mh - 20; }
+        if(filled($pireps)) { $overflow_mh = $overflow_mh - 20; }
+
+        return view('DBasic::fleet.subfleet', [
             'aircraft' => $aircraft,
+            'files'    => filled($files) ? $files : null,
+            'image'    => $image,
+            'over_mh'  => $overflow_mh, 
+            'pireps'   => filled($pireps) ? $pireps : null,
+            'specs'    => $specs,
             'subfleet' => $subfleet,
             'units'    => $units,
         ]);
@@ -42,9 +70,10 @@ class DB_FleetController extends Controller
     // Aircraft
     public function aircraft($ac_reg)
     {
-        $units = array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight'));
-        $eager_load = array('airport', 'files', 'subfleet.airline', 'subfleet.fares', 'subfleet.hub');
-        $aircraft = Aircraft::with($eager_load)->where('registration', $ac_reg)->first();
+        $units = $this->GetUnits();
+
+        $eager_aircraft = array('airport', 'files', 'subfleet.airline', 'subfleet.fares', 'subfleet.files', 'subfleet.hub');
+        $aircraft = Aircraft::with($eager_aircraft)->where('registration', $ac_reg)->first();
 
         if (!$aircraft) {
             flash()->error('Aircraft not found !');
@@ -52,35 +81,49 @@ class DB_FleetController extends Controller
         }
 
         // Latest Pireps
-        $where = array('aircraft_id' => $aircraft->id, 'state' => 2, 'status' => 'ONB');
+        $where = array('aircraft_id' => $aircraft->id, 'state' => 2);
         $eager_pireps = array('dpt_airport', 'arr_airport', 'user', 'airline');
-        $pireps = Pirep::with($eager_pireps)->where($where)->orderby('submitted_at', 'desc')->take(8)->get();
+        $pireps = Pirep::with($eager_pireps)->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
 
         // Aircraft or Subfleet Image
-        $image_ac = strtolower('image/aircraft/'.$aircraft->registration.'.jpg');
-        $image_sf = strtolower('image/subfleet/'.optional($aircraft->subfleet)->type.'.jpg');
+        $FleetSvc = app(DB_FleetServices::class);
+        $image = $FleetSvc->AircraftImage($aircraft);
 
-        if (is_file($image_ac)) {
-            $image = $image_ac;
-            $image_text = optional(optional($aircraft->subfleet)->airline)->name.' '.$aircraft->registration;
-        } elseif (is_file($image_sf)) {
-            $image = $image_sf;
-            $image_text = optional(optional($aircraft->subfleet)->airline)->name.' '.$aircraft->icao;
+        // Specifications
+        $specs = DB_GetSpecs($aircraft, true);
+
+        // Combined files of aircraft and it's subfleet;
+        $files = $aircraft->files;
+        if ($aircraft->subfleet) {
+            $files = $files->concat($aircraft->subfleet->files);
         }
 
-        // Passenger Weight
-        $pax_weight = setting('simbrief.noncharter_pax_weight');
-        if ($units['weight'] === 'kg') {
-            $pax_weight = round($pax_weight / 2.20462262185, 2);
-        }
-
-        return view('DBasic::fleet.show', [
+        return view('DBasic::fleet.aircraft', [
             'aircraft'   => $aircraft,
-            'image'      => isset($image) ? $image : null,
-            'image_text' => isset($image_text) ? $image_text : null,
-            'pax_weight' => $pax_weight,
-            'pireps'     => $pireps,
+            'files'      => filled($files) ? $files : null,
+            'image'      => $image,
+            'maint'      => null,
+            'pireps'     => filled($pireps) ? $pireps : null,
+            'specs'      => $specs,
             'units'      => $units,
         ]);
+    }
+
+    private function GetUnits()
+    {
+        $units = array(
+            'fuel'     => setting('units.fuel'),
+            'weight'   => setting('units.weight'),
+            'distance' => setting('units.distance'),
+            'altitude' => setting('units.altitude')
+        );
+
+        // Passenger Weight
+        $units['pax_weight'] = setting('simbrief.noncharter_pax_weight');
+        if ($units['weight'] === 'kg') {
+            $units['pax_weight'] = round($units['pax_weight'] / 2.20462262185, 2);
+        }
+
+        return $units;
     }
 }

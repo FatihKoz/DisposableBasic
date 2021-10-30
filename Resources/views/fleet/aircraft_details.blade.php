@@ -3,9 +3,9 @@
     <h5 class="m-1">
       {{ $aircraft->registration }}
       @if($aircraft->name != $aircraft->registration)
-        &nbsp;'{{ $aircraft->name }}'
+        &nbsp;"{{ $aircraft->name }}"
       @endif
-      <i class="fas fa-plane float-end m-1"></i>
+      <i class="fas fa-plane float-end"></i>
     </h5>
   </div>
   <div class="card-body p-0 table-responsive">
@@ -46,14 +46,14 @@
       <tr>
         <th scope="row">@lang('DBasic::common.base')</th>
         <td>
-          <a href="{{ route('DBasic.hub', [$aircraft->subfleet->hub_id ?? '']) }}">{{ $aircraft->subfleet->hub->name ?? '' }}</a>
+          <a href="{{ route('DBasic.hub', [$aircraft->subfleet->hub_id ?? '']) }}">{{ $aircraft->subfleet->hub->full_name ?? '' }}</a>
         </td>
       </tr>
       @if($aircraft->airport_id)
         <tr>
           <th scope="row">@lang('DBasic::common.location')</th>
           <td>
-            <a href="{{ route('frontend.airports.show', [$aircraft->airport_id]) }}">{{ $aircraft->airport->name ?? '' }}</a>
+            <a href="{{ route('frontend.airports.show', [$aircraft->airport_id]) }}">{{ $aircraft->airport->full_name ?? $aircraft->airport_id }}</a>
           </td>
         </tr>
       @endif

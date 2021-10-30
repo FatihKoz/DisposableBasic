@@ -14,6 +14,41 @@ use Modules\DisposableBasic\Models\DB_Tech;
 
 class DB_FleetServices
 {
+    // Check folders for an image, Aircraft + Subfleet
+    public function AircraftImage($aircraft)
+    {
+        $image = null;
+        $image_url = strtolower('image/aircraft/' . $aircraft->registration . '.jpg');
+
+        if (is_file($image_url)) {
+            $image['url'] = $image_url;
+            $image['title'] = $aircraft->registration;
+
+            if ($aircraft->registration != $aircraft->name) {
+                $image['title'] = $aircraft->registration . ' "' . $aircraft->name . '"';
+            }
+        } elseif ($aircraft->subfleet) {
+            $image = $this->SubfleetImage($aircraft->subfleet);
+        }
+
+        return is_array($image) ? $image : null;
+    }
+
+    // Check folders for an image, Subfleet only
+    public function SubfleetImage($subfleet)
+    {
+        $image = null;
+        $image_url = strtolower('image/subfleet/' . $subfleet->type . '.jpg');
+
+        if (is_file($image_url)) {
+            $image['url'] = $image_url;
+            $image['title'] = $subfleet->name;
+        }
+
+        return is_array($image) ? $image : null;
+    }
+
+    // Fix state of a stuck aircraft (and cancel it's pirep if any)
     public function ParkAircraft($reg)
     {
         $result = 0;
@@ -29,13 +64,13 @@ class DB_FleetServices
                 $pirep->save();
                 $result = 1;
                 event(new PirepCancelled($pirep));
-                Log::info('Disposable Basic, Pirep ID:' . $pirep->id . ' CANCELLED to fix aircraft state');
+                Log::info('Disposable Basic, Pirep ID:' . $pirep->id . ' CANCELLED');
             }
 
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
             $result = $result + 1;
-            Log::info('Disposable Basic, Aircraft REG:' . $aircraft->registration . ' PARKED by Admin');
+            Log::info('Disposable Basic, Aircraft REG:' . $aircraft->registration . ' PARKED');
         }
 
         return $result;

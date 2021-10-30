@@ -189,6 +189,11 @@ class DB_StatServices
 
         $stats[__('DBasic::widgets.pireps_ack')] = DB::table('pireps')->where($where)->count();
 
+        // Return null if pirep count is zero, no need to work for the rest
+        if ($stats[__('DBasic::widgets.pireps_ack')] === 0) {
+            return null;
+        }
+
         /* Rejected Pirep counts, dashed out on purpose
         if (empty($airline_id)) {
             $stats[__('DBasic::widgets.pireps_rej')] = DB::table('pireps')->where('state', PirepState::REJECTED)->count();
