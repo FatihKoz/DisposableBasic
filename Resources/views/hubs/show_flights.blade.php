@@ -11,8 +11,8 @@
         <div class="card-body p-0 overflow-auto table-responsive">
           @include('DBasic::flights.table', ['flights' => $flights_dpt, 'type' => 'dpt'])
         </div>
-        <div class="card-footer p-1 small text-end">
-          @lang('DBasic::common.total'): {{ $flights_dpt->count() }}
+        <div class="card-footer p-0 px-1 small text-end">
+          <b>@lang('DBasic::common.total') {{ $flights_dpt->count() }}</b>
         </div>
       </div>
     @endif
@@ -29,8 +29,8 @@
         <div class="card-body p-0 overflow-auto table-responsive">
           @include('DBasic::flights.table', ['flights' => $flights_arr, 'type' => 'arr'])
         </div>
-        <div class="card-footer p-1 small text-end">
-          @lang('DBasic::common.total'): {{ $flights_arr->count() }}
+        <div class="card-footer p-0 px-1 small text-end">
+          <b>@lang('DBasic::common.total') {{ $flights_arr->count() }}</b>
         </div>
       </div>
     @endif

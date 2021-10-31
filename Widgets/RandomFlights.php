@@ -20,7 +20,10 @@ class RandomFlights extends Widget
         $user = Auth::user();
 
         if (!$user) {
-            return view('DBasic::widgets.random_flights', ['is_visible' => false]);
+
+            return view('DBasic::widgets.random_flights', [
+                'is_visible' => false,
+            ]);
         }
 
         DB_RandomFlight::where('assign_date', '!=', $today)->delete();

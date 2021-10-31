@@ -11,8 +11,8 @@
         <div class="card-body p-0 overflow-auto table-responsive">
           @include('DBasic::roster.table', ['users' => $users_hub, 'type' => 'hub'])
         </div>
-        <div class="card-footer p-1 small text-end">
-          @lang('DBasic::common.total'): {{ $users_hub->count() }}
+        <div class="card-footer p-0 px-1 small text-end">
+          <b>@lang('DBasic::common.total') {{ $users_hub->count() }}</b>
         </div>
       </div>
     @endif
@@ -29,8 +29,8 @@
         <div class="card-body p-0 overflow-auto table-responsive">
           @include('DBasic::roster.table', ['users' => $users_off, 'type' => 'visitor'])
         </div>
-        <div class="card-footer p-1 small text-end">
-          @lang('DBasic::common.total'): {{ $users_off->count() }}
+        <div class="card-footer p-0 px-1 small text-end">
+          <b>@lang('DBasic::common.total') {{ $users_off->count() }}</b>
         </div>
       </div>
     @endif

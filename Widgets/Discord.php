@@ -64,12 +64,12 @@ class Discord extends Widget
         }
 
         return view('DBasic::widgets.discord', [
-            'name'       => $name,
-            'invite'     => $invite,
             'channels'   => $channels,
-            'members'    => $members,
-            'presence'   => $presence,
+            'invite'     => $invite,
             'is_visible' => (count($members) > 0) ? true : false,
+            'members'    => $members,
+            'name'       => $name,
+            'presence'   => $presence,
         ]);
     }
 }

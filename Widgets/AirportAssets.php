@@ -42,9 +42,9 @@ class AirportAssets extends Widget
             'is_visible' => filled($assets) ? true : false,
             'location'   => $location,
             'title'      => $title,
+            'total_time' => isset($total_time) ? $total_time : null,
             'type'       => $type,
             'units'      => $units,
-            'total_time' => isset($total_time) ? $total_time : null,
         ]);
     }
 }

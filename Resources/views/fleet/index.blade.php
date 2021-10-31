@@ -11,7 +11,7 @@
             <i class="fas fa-plane float-end m-1"></i>
           </h5>
         </div>
-        <div class="card-body p-0 table-responsive">
+        <div class="card-body p-0 overflow-auto table-responsive" style="max-height: 78vh;">
           @include('DBasic::fleet.table')
         </div>
         <div class="card-footer p-1 small">

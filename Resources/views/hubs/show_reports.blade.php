@@ -10,12 +10,12 @@
       <div class="card-body p-0 overflow-auto table-responsive">
         @include('DBasic::pireps.table')
       </div>
-      <div class="card-footer p-1 small text-end">
-        Total Pireps: {{ $pireps->total() }}
+      <div class="card-footer p-0 px-1 small text-end">
+        <span class="float-start"><b>@lang('DBasic::common.total') {{ $pireps->total() }}</b></span>
+        <b>@lang('DBasic::common.latest') {{ $pireps->lastItem() }}</b>
       </div>
     </div>
   </div>
 </div>
 
-{{ $pireps->links('pagination.auto') }}
-   
+{{-- $pireps->links('pagination.auto') --}}

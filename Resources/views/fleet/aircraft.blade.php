@@ -20,6 +20,8 @@
           </div>
         </div>
       @endif
+
+      @widget('DBasic::FuelCalculator')
     </div>
     {{-- Right --}}
     <div class="col-7">

@@ -29,8 +29,8 @@ class ActiveBookings extends Widget
 
         return view('DBasic::widgets.active_bookings', [
             'active_bookings' => $active_bookings,
-            'expire'          => ($source === 'simbrief') ? setting('simbrief.expire_hours') : setting('bids.expire_time'),
             'bids'            => ($source === 'bids') ? true : false,
+            'expire'          => ($source === 'simbrief') ? setting('simbrief.expire_hours') : setting('bids.expire_time'),
             'is_visible'      => filled($active_bookings) ? true : false,
             'title'           => $title,
         ]);

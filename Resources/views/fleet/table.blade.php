@@ -38,7 +38,7 @@
       <td>
         {{ DB_ConvertWeight($ac->fuel_onboard, $units['fuel']) }}
       </td>
-      <td>{{ DB_ConvertMinutes($ac->flight_time, '%02dh %02dm') }}</td>
+      <td>{{ DB_ConvertMinutes($ac->flight_time, '%2dh %2dm') }}</td>
       <td>{{ optional($ac->landing_time)->diffForHumans() }}</td>
       <td>{!! DB_AircraftState($ac) !!}</td>
       <td>{!! DB_AircraftStatus($ac) !!}</td>

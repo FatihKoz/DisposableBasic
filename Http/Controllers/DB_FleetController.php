@@ -13,7 +13,7 @@ class DB_FleetController extends Controller
     // Fleet
     public function index()
     {
-        $aircraft = Aircraft::with('subfleet.airline')->orderby('icao')->orderby('registration')->paginate(25);
+        $aircraft = Aircraft::with('subfleet.airline')->orderby('icao')->orderby('registration')->paginate(50);
 
         return view('DBasic::fleet.index', [
             'aircraft' => $aircraft,
