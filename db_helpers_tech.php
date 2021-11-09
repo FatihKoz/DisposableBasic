@@ -93,65 +93,6 @@ if (!function_exists('Dispo_GetICAOTech')) {
   }
 }
 
-if (!function_exists('Dispo_SimBriefWeight')) {
-  // Convert Any Given Weight Value for SimBrief acdata json
-  // which needs main weights as lbs with 3 digits precision (except paxwgt)
-  function Dispo_SimBriefWeight($weight_value) {
-    $kgstolbs = 2.20462262185;
-    if (setting('units.weight') === 'kg') { $weight_value = round(($weight_value * $kgstolbs) / 1000, 3); }
-    else { $weight_value = round($weight_value / 1000, 3); }
-    return $weight_value;
-  }
-}
-
-if (!function_exists('Dispo_SimBriefPaxWeight')) {
-  // Convert Given Pax Weight Value for SimBrief acdata json
-  // which needs to be lbs
-  function Dispo_SimBriefPaxWeight($weight_value) {
-    $kgstolbs = 2.20462262185;
-    if (setting('units.weight') === 'kg') { $weight_value = round($weight_value * $kgstolbs); }
-    return $weight_value;
-  }
-}
-
-if (!function_exists('Dispo_Specs')) {
-  // Prepare The Specs Selection Dropdown
-  // Return JSON String
-  function Dispo_Specs($specs) {
-    $result = collect();
-
-    if (filled($specs->airframe_id)) { $result->put('airframe_id', $specs->airframe_id); }
-    if (filled($specs->icao)) { $result->put('icao', $specs->icao); }
-    if (filled($specs->name)) { $result->put('name', $specs->name); }
-    if (filled($specs->engines)) { $result->put('engines', $specs->engines); }
-    if (filled($specs->dow)) { $result->put('oew', Dispo_SimBriefWeight($specs->dow)); }
-    if (filled($specs->mzfw)) { $result->put('mzfw', Dispo_SimBriefWeight($specs->mzfw)); }
-    if (filled($specs->mtow)) { $result->put('mtow', Dispo_SimBriefWeight($specs->mtow)); }
-    if (filled($specs->mlw)) { $result->put('mlw', Dispo_SimBriefWeight($specs->mlw)); }
-    if (filled($specs->mfuel)) { $result->put('maxfuel', Dispo_SimBriefWeight($specs->mfuel)); }
-    if (filled($specs->mpax)) { $result->put('maxpax', $specs->mpax); }
-    if (filled($specs->cat) && filled($specs->equip) && filled($specs->transponder)) {
-      $result->put('cat', $specs->cat);
-      $result->put('equip', $specs->equip);
-      $result->put('transponder', $specs->transponder);
-    }
-    if (filled($specs->pbn)) { $result->put('pbn', $specs->pbn); }
-    if (filled($specs->fuelfactor)) { $result->put('fuelfactor', $specs->fuelfactor); }
-    if (filled($specs->cruiselevel)) { $result->put('cruiseoffset', $specs->cruiselevel); }
-    if (filled($specs->paxwgt) && filled($specs->bagwgt)) {
-      $result->put('paxw', $specs->paxwgt);
-      $result->put('bagw', $specs->bagwgt);
-      $result->put('paxwgt', Dispo_SimBriefPaxWeight($specs->paxwgt + $specs->bagwgt));
-    }
-    if (filled(Theme::getSetting('sb_rvr'))) { $sb_rvr = Theme::getSetting('sb_rvr');} else { $sb_rvr = '500';}
-    if (filled(Theme::getSetting('sb_rmk'))) { $sb_rmk = Theme::getSetting('sb_rmk');} else { $sb_rmk = strtoupper(config('app.name'));}
-    $result->put('extrarmk', 'RVR/'.$sb_rvr.' RMK/TCAS '.$sb_rmk);
-
-    $acdata = json_encode($result);
-    return $acdata;
-  }
-}
-
 if (!function_exists('Dispo_CheckWeights')) {
   // Check Weights of a Pirep According to Specs
   // Return formatted string (with html tags)

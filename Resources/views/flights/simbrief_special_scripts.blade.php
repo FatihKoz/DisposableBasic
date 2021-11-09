@@ -10,11 +10,18 @@
   const rmktext = String("{{ $sb_rmk ?? config('app.name') }}").toUpperCase();
 
   // Convert weights according to SimBrief requirements
-  // (Weights must be in thousand pounds with 3 digits precision)
-  function ConvertWeight(weight_value = null, base_weight = unitwgt) {
-    if (base_weight === 'kg') {
-      weight_value = ((weight_value / kgstolbs) / 1000).toFixed(3);
-    } else {
+  // All Weights must be in thousand pounds with 3 digits precision like 19.362
+  // Only PAX Weight must be an integer like 189
+  function ConvertWeight(weight_value = null, type = null, base_weight = unitwgt) {
+    if (type === 'pax' && base_weight === 'kg') {
+      weight_value = (weight_value * kgstolbs).toFixed(0);
+    } else if (type === 'pax' && base_weight != 'kg') {
+      weight_value = Math.round(weight_value);
+    }
+
+    if (type != 'pax' && base_weight === 'kg') {
+      weight_value = ((weight_value * kgstolbs) / 1000).toFixed(3);
+    } else if (type != 'pax' && base_weight != 'kg') {
       weight_value = (weight_value / 1000).toFixed(3);
     }
 
@@ -92,6 +99,7 @@
           document.getElementById('tdPaxLoad').title = 'Spec Pax Load: ' + Number(AcDataJson.paxw * paxfig) + ' ' + unitwgt;
           document.getElementById('tdBagLoad').title = 'Spec Bag Load: ' + Number(AcDataJson.bagw * paxfig) + ' ' + unitwgt;
         }
+        AcDataJson.paxwgt = ConvertWeight(AcDataJson.paxwgt, 'pax');
         delete AcDataJson.paxw;
         delete AcDataJson.bagw;
       } else {
