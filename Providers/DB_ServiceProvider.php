@@ -68,6 +68,8 @@ class DB_ServiceProvider extends ServiceProvider
                 Route::get('dranks', 'DB_RankController@index')->name('ranks');
                 // Roster
                 Route::get('droster', 'DB_RosterController@index')->name('roster');
+                // Pages
+                Route::get('dlivewx', 'DB_PageController@livewx')->name('livewx');
                 // Pireps
                 Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
                 // Statistics

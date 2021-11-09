@@ -15,7 +15,7 @@
   <div class="modal" id="fuel_calc" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="Fuel Calculator" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content shadow-none p-0" style="border-radius: 5px;">
-        <div class="modal-header card-header border-1 p-1">
+        <div class="modal-header border-1 p-1">
           <h5 class="m-1">Fuel Calculator</h5>
           <span class="close m-1">
             <i class="fas fa-times-circle" title="Close" data-dismiss="modal" aria-label="Close" aria-hidden="true"></i>
@@ -71,8 +71,8 @@
             @endif
           </form>
         </div>
-        <div class="modal-footer card-header p-1 text-right">
-          <button type="button" class="btn btn-sm btn-warning text-black" id="calc_button" onclick="FuelCalculator()">
+        <div class="modal-footer p-1 text-right">
+          <button type="button" class="btn btn-sm btn-warning m-0 mx-1 p-0 px-1 text-black" id="calc_button" onclick="FuelCalculator()">
             <b>Calculate</b>
             <i class="fas fa-gas-pump ml-1 mr-1" style="color: black;"></i>
           </button>
@@ -82,7 +82,7 @@
   </div>
 
   {{-- Fuel Calculator Script --}}
-  @php 
+  @php
     $avg_pounds = $fuel_data['avg_pounds'];
     $avg_metric = $fuel_data['avg_metric'];
   @endphp

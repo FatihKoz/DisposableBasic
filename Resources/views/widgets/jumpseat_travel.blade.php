@@ -5,14 +5,14 @@
         <div class="card-header p-1">
           <h5 class="m-1">
             @lang('DBasic::widgets.js_travel')
-            <i class="fas fa-ticket-alt float-end m-1"></i>
+            <i class="fas fa-ticket-alt float-end"></i>
           </h5>
         </div>
         <div class="card-body p-1">
           <select name="newloc" id="destination" style="width: 100%" class="form-group input-group select2 my-1">
             <option value="">@lang('DBasic::widgets.js_selectap')</option>
             @foreach($js_airports as $destination)
-              <option value="{{ $destination->id }}">{{ $destination->id }} : {{ $destination->name }} ({{ $destination->location }})</option>
+              <option value="{{ $destination->id }}">{{ $destination->id.' : '.$destination->name.' ('.$destination->location.')' }}</option>
             @endforeach
           </select>
         </div>

@@ -5,7 +5,7 @@
         <div class="card-header p-1">
           <h5 class="m-1">
             @lang('DBasic::widgets.ta_title')
-            <i class="fas fa-plane float-end m-1"></i>
+            <i class="fas fa-plane float-end"></i>
           </h5>
         </div>
         <div class="card-body p-1">
@@ -13,7 +13,9 @@
             <option value="">@lang('DBasic::widgets.ta_selectac')</option>
             @foreach($ts_aircraft as $ac)
               <option value="{{ $ac->id }}">
-                {{ $ac->icao }} | {{ $ac->registration }} @if($ac->registration != $ac->name) '{{ $ac->name }}' @endif | {{ $ac->airport_id }} | {{ $ac->subfleet->airline->name }}
+                {{ $ac->icao.' | '.$ac->registration }}
+                @if($ac->registration != $ac->name) '{{ $ac->name }}' @endif
+                {{ ' | '.$ac->airport_id.' | '.optional($ac->airline)->name }}
               </option>
             @endforeach
           </select>

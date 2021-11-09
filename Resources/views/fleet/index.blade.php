@@ -8,10 +8,10 @@
         <div class="card-header p-1">
           <h5 class="m-1">
             @isset($subfleet) {{ $subfleet->airline->name }} | {{ $subfleet->name }} @else {{ config('app.name') }} @endisset @lang('DBasic::common.fleet')
-            <i class="fas fa-plane float-end m-1"></i>
+            <i class="fas fa-plane float-end"></i>
           </h5>
         </div>
-        <div class="card-body p-0 overflow-auto table-responsive" style="max-height: 78vh;">
+        <div class="card-body p-0 overflow-auto table-responsive" style="max-height: 77vh;">
           @include('DBasic::fleet.table')
         </div>
         <div class="card-footer p-1 small">
@@ -33,7 +33,7 @@
               @endif
             </div>
             <div class="col text-end">
-              <b>@lang('DBasic::common.total'):</b> {{ $aircraft->total() }}
+              <b>@lang('DBasic::common.paginate', ['first' => $aircraft->firstItem(), 'last' => $aircraft->lastItem(), 'total' => $aircraft->total()])</b>
             </div>
           </div>
         </div>

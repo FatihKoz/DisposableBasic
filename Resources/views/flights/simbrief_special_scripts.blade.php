@@ -3,19 +3,21 @@
   // Also re-arrange acdata json string for SimBrief
   const paxwgt = Math.round({{ $pax_weight }} + {{ $bag_weight }});
   const paxfig = Number({{ $tpaxfig ?? 0 }})
-  const unitwgt = String("{{ setting('units.weight') }}");
+  const unitwgt = String("{{ $units['weight'] }}");
   const kgstolbs = Number(2.20462262185);
   const rvr = String("{{ $sb_rvr ?? '500' }}");
   const actype = String("{{ $aircraft->subfleet->simbrief_type ?? $aircraft->icao }}");
   const rmktext = String("{{ $sb_rmk ?? config('app.name') }}").toUpperCase();
 
-  // Convert weights according to PhpVms settings for visual display
-  function ConvertWeight(weight_value = null, weight_target = unitwgt) {
-    if (weight_target === 'kg') {
-      weight_value = ((weight_value / kgstolbs) * 1000).toFixed(0);
+  // Convert weights according to SimBrief requirements
+  // (Weights must be in thousand pounds with 3 digits precision)
+  function ConvertWeight(weight_value = null, base_weight = unitwgt) {
+    if (base_weight === 'kg') {
+      weight_value = ((weight_value / kgstolbs) / 1000).toFixed(3);
     } else {
-      weight_value = (weight_value * 1000).toFixed(0);
+      weight_value = (weight_value / 1000).toFixed(3);
     }
+
     return weight_value;
   }
 
@@ -49,33 +51,38 @@
       }
       // Populate visible fields with avilable data
       if (typeof AcDataJson.oew != 'undefined') {
-        document.getElementById('dow').value = ConvertWeight(AcDataJson.oew);
+        document.getElementById('dow').value = AcDataJson.oew;
+        AcDataJson.oew = ConvertWeight(AcDataJson.oew);
       } else {
         document.getElementById('dow').value = '--';
       }
       if (typeof AcDataJson.mzfw != 'undefined') {
-        document.getElementById('mzfw').value = ConvertWeight(AcDataJson.mzfw);
+        document.getElementById('mzfw').value = AcDataJson.mzfw;
+        AcDataJson.mzfw = ConvertWeight(AcDataJson.mzfw);
       } else {
         document.getElementById('mzfw').value = '--';
       }
       if (typeof AcDataJson.mtow != 'undefined') {
-        document.getElementById('mtow').value = ConvertWeight(AcDataJson.mtow);
+        document.getElementById('mtow').value = AcDataJson.mtow;
+        AcDataJson.mtow = ConvertWeight(AcDataJson.mtow);
       } else {
         document.getElementById('mtow').value = '--';
       }
       if (typeof AcDataJson.mlw != 'undefined') {
-        document.getElementById('mlw').value = ConvertWeight(AcDataJson.mlw);
+        document.getElementById('mlw').value = AcDataJson.mlw;
+        AcDataJson.mlw = ConvertWeight(AcDataJson.mlw);
       } else {
         document.getElementById('mlw').value = '--';
       }
       if (typeof AcDataJson.maxfuel != 'undefined') {
-        document.getElementById('maxfuel').value = ConvertWeight(AcDataJson.maxfuel);
+        document.getElementById('maxfuel').value = AcDataJson.maxfuel;
+        AcDataJson.maxfuel = ConvertWeight(AcDataJson.maxfuel);
       } else {
         document.getElementById('maxfuel').value = '--';
       }
       // Provide a clue about possible ZFW Unlerload
       if (typeof AcDataJson.oew != 'undefined' && typeof AcDataJson.mzfw != 'undefined') {
-        document.getElementById('tdPayload').title = 'ZFW Underload: ' + String((ConvertWeight(AcDataJson.mzfw) - ConvertWeight(AcDataJson.oew)) - Number({{ $tpayload }})) + ' ' + unitwgt;
+        document.getElementById('tdPayload').title = 'ZFW Underload: ' + String((AcDataJson.mzfw - AcDataJson.oew) - Number({{ $tpayload }})) + ' ' + unitwgt;
       } else {
         document.getElementById('tdPayload').title = 'Calculation Not Possible !';
       }
@@ -91,6 +98,8 @@
         AcDataJson.paxwgt = paxwgt;
       }
 
+      // Add Extra Remarks
+      AcDataJson.extrarmk = 'RVR/'.concat(rvr).concat(' RMK/TCAS ').concat(rmktext);
       // Write final ACDATA field for SimBrief
       document.getElementById('acdata').value = JSON.stringify(AcDataJson);
     }

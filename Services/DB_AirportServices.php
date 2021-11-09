@@ -77,7 +77,7 @@ class DB_AirportServices
 
         $statuses_array = array(AircraftStatus::ACTIVE, AircraftStatus::MAINTENANCE);
 
-        $eager_load = array('subfleet.airline');
+        $eager_load = array('airline', 'subfleet');
         $where = array('airport_id' => $location, 'state' => AircraftState::PARKED);
 
         $aircraft = Aircraft::with($eager_load)

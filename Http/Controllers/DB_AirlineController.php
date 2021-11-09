@@ -53,14 +53,14 @@ class DB_AirlineController extends Controller
             }
 
             $eager_users = array('rank', 'current_airport', 'home_airport');
-            $users = User::with($eager_users)->where($user_where)->orderby('id')->get();
+            $users = User::withCount('awards')->with($eager_users)->where($user_where)->orderby('id')->get();
 
             $pirep_where = [];
             $pirep_where['airline_id'] = $airline->id;
             $pirep_where[] = ['state', '!=', PirepState::IN_PROGRESS];
 
             $eager_pireps = array('aircraft.subfleet', 'airline', 'dpt_airport', 'arr_airport', 'user');
-            $pireps = Pirep::with($eager_pireps)->where('airline_id', $airline->id)->where($pirep_where)->orderby('submitted_at', 'desc')->paginate(25);
+            $pireps = Pirep::with($eager_pireps)->where('airline_id', $airline->id)->where($pirep_where)->orderby('submitted_at', 'desc')->paginate(50);
 
             $StatSvc = app(DB_StatServices::class);
 
@@ -79,7 +79,7 @@ class DB_AirlineController extends Controller
                 'stats_b'   => $stats_basic,
                 'stats_p'   => $stats_pirep,
                 'subfleets' => $subfleets,
-                'units'     => array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight')),
+                'units'     => DB_GetUnits(),
                 'users'     => $users,
             ]);
         }

@@ -3,7 +3,7 @@
     <div class="card-header p-1">
       <h5 class="m-1">
         @lang('DBasic::widgets.random_flights')
-        <i class="fas fa-random float-end m-1"></i>
+        <i class="fas fa-random float-end"></i>
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">

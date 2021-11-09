@@ -3,7 +3,7 @@
     <div class="card-header p-1">
       <h5 class="m-1">
         @lang('DBasic::widgets.airport_info')
-        <i class="fas fa-info-circle float-end m-1"></i>
+        <i class="fas fa-info-circle float-end"></i>
       </h5>
     </div>
     <div class="card-body p-1">
@@ -16,8 +16,8 @@
         @endforeach
       </select>
     </div>
-    <div class="card-footer p-1 text-end">
-      <span class="float-start">
+    <div class="card-footer p-1 text-end small">
+      <span class="float-start pt-1">
         @if($config['type'] === 'hubs') @lang('DBasic::widgets.hubs_only') @endif
         @if($config['type'] === 'nohubs') @lang('DBasic::widgets.nonhubs_only') @endif
       </span>

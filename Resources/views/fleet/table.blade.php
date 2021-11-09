@@ -6,8 +6,12 @@
       <th>@lang('DBasic::common.airline')</th>
       <th>@lang('DBasic::common.subfleet')</th>
     @endempty
-    <th>@lang('DBasic::common.base')</th>
-    <th>@lang('DBasic::common.location')</th>
+    @empty($hub_ac)
+      <th>@lang('DBasic::common.base')</th>
+    @endempty
+    @empty($visitor_ac)
+      <th>@lang('DBasic::common.location')</th>
+    @endempty
     <th>@lang('DBasic::common.fuelob')</th>
     <th>@lang('DBasic::common.btime')</th>
     <th>@lang('DBasic::common.lastlnd')</th>
@@ -18,23 +22,38 @@
     @php if(!isset($subfleet)) { $subfleet = $ac->subfleet; } @endphp
     <tr @if($ac->simbriefs_count > 0) class="table-primary" @endif>
       <td class="text-start">
-        <a href="{{ route('DBasic.aircraft', [$ac->registration]) }}">{{ $ac->registration }} @if($ac->registration != $ac->name) '{{ $ac->name }}' @endif</a>
+        <a href="{{ route('DBasic.aircraft', [$ac->registration]) }}">
+          {{ $ac->registration }}
+          @if($ac->registration != $ac->name) '{{ $ac->name }}' @endif
+        </a>
       </td>
       <td>{{ $ac->icao }}</td>
       @empty($compact_view)
         <td>
-          <a href="{{ route('DBasic.airline', [$subfleet->airline->icao ?? '']) }}">{{ $subfleet->airline->name ?? '' }}</a>
+          <a href="{{ route('DBasic.airline', [$subfleet->airline->icao ?? '']) }}">
+            {{ $subfleet->airline->name ?? '' }}
+          </a>
         </td>
         <td>
-          <a href="{{ route('DBasic.subfleet', [$subfleet->type ?? '']) }}">{{ $subfleet->name ?? '' }}</a>
+          <a href="{{ route('DBasic.subfleet', [$subfleet->type ?? '']) }}">
+            {{ $subfleet->name ?? '' }}
+          </a>
         </td>
       @endempty
-      <td>
-        <a href="{{ route('DBasic.hub', [strtoupper($subfleet->hub_id) ?? '']) }}">{{ $subfleet->hub_id ?? ''}}</a>
-      </td>
-      <td>
-        <a href="{{ route('frontend.airports.show', [$ac->airport_id ?? '']) }}">{{ $ac->airport_id ?? '' }}</a>
-      </td>
+      @empty($hub_ac)
+        <td>
+          <a href="{{ route('DBasic.hub', [strtoupper($subfleet->hub_id) ?? '']) }}">
+            {{ $subfleet->hub_id ?? ''}}
+          </a>
+        </td>
+      @endempty
+      @empty($visitor_ac)
+        <td>
+          <a href="{{ route('frontend.airports.show', [$ac->airport_id ?? '']) }}">
+            {{ $ac->airport_id ?? '' }}
+          </a>
+        </td>
+      @endempty
       <td>
         {{ DB_ConvertWeight($ac->fuel_onboard, $units['fuel']) }}
       </td>

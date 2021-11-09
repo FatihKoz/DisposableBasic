@@ -9,7 +9,7 @@
         <div class="card-header p-1">
           <h5 class="m-1">
             @lang('DBasic::widgets.stats_gen')
-            <i class="fas fa-sitemap float-end m-1"></i>
+            <i class="fas fa-sitemap float-end"></i>
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
@@ -55,7 +55,7 @@
         <div class="card-header p-1">
           <h5 class="m-1">
             @lang('DBasic::widgets.stats_rep')
-            <i class="fas fa-file-upload float-end m-1"></i>
+            <i class="fas fa-file-upload float-end"></i>
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">

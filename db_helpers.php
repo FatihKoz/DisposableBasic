@@ -6,6 +6,64 @@ use \App\Models\Enums\PirepState;
 use \App\Models\Enums\UserState;
 use \Nwidart\Modules\Facades\Module;
 
+// Aircraft Status Badge
+// Return string (with html tags)
+if (!function_exists('DB_AircraftStatus')) {
+    function DB_AircraftStatus($aircraft, $type = 'badge')
+    {
+        $color = 'primary';
+        $status = $aircraft->status;
+
+        if ($status === AircraftStatus::ACTIVE) {
+            $color = 'success';
+        } elseif ($status === AircraftStatus::MAINTENANCE) {
+            $color = 'info';
+        } elseif ($status === AircraftStatus::STORED || $status === AircraftStatus::RETIRED) {
+            $color = 'warning';
+        } elseif ($status === AircraftStatus::SCRAPPED || $status === AircraftStatus::WRITTEN_OFF) {
+            $color = 'danger';
+        }
+
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftStatus::label($status) . '</span>';
+        }
+
+        return $result;
+    }
+}
+
+// Aircraft State
+// Return mixed
+if (!function_exists('DB_AircraftState')) {
+    function DB_AircraftState($aircraft, $type = 'badge')
+    {
+        $color = 'primary';
+        $state = $aircraft->state;
+
+        if ($state === AircraftState::PARKED) {
+            $color = 'success';
+        } elseif ($state === AircraftState::IN_USE) {
+            $color = 'info';
+        } elseif ($state === AircraftState::IN_AIR) {
+            $color = 'warning';
+        }
+
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftState::label($state) . '</span>';
+        }
+
+        return $result;
+    }
+}
+
 // Check phpVMS Module
 // Return boolean
 if (!function_exists('DB_CheckModule')) {
@@ -73,6 +131,23 @@ if (!function_exists('DB_ConvertWeight')) {
     }
 }
 
+// Format Flight STA and STD Times (from 1200 to 12:30)
+// Return string
+if (!function_exists('DB_FormatScheduleTime')) {
+    function DB_FormatScheduleTime($time = null)
+    {
+        if (is_null($time) || !is_numeric($time) || strlen($time) === 5) {
+            return $time;
+        }
+
+        if (!str_contains($time, ':') && strlen($time) === 4) {
+            $time = substr($time, 0, 2) . ':' . substr($time, 2, 2);
+        }
+
+        return $time;
+    }
+}
+
 // Fuel Cost Converter
 // Return string
 if (!function_exists('DB_FuelCost')) {
@@ -93,61 +168,23 @@ if (!function_exists('DB_FuelCost')) {
     }
 }
 
-// Aircraft Status Badge
-// Return string (with html tags)
-if (!function_exists('DB_AircraftStatus')) {
-    function DB_AircraftStatus($aircraft, $type = 'badge')
+// Get Required Units
+// Return array
+if (!function_exists('DB_GetUnits')) {
+    function DB_GetUnits($type = null)
     {
-        $color = 'primary';
-        $status = $aircraft->status;
+        $units = [];
+        $units['currency'] = setting('units.currency');
+        $units['distance'] = setting('units.distance');
+        $units['fuel'] = setting('units.fuel');
+        $units['weight'] = setting('units.weight');
 
-        if ($status === AircraftStatus::ACTIVE) {
-            $color = 'success';
-        } elseif ($status === AircraftStatus::MAINTENANCE) {
-            $color = 'info';
-        } elseif ($status === AircraftStatus::STORED || $status === AircraftStatus::RETIRED) {
-            $color = 'warning';
-        } elseif ($status === AircraftStatus::SCRAPPED || $status === AircraftStatus::WRITTEN_OFF) {
-            $color = 'danger';
+        if ($type === 'full') {
+            $units['volume'] = settings('units.volume');
+            $units['altitude'] = settings('units.altitude');
         }
 
-        if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
-        } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
-        } else {
-            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftStatus::label($status) . '</span>';
-        }
-
-        return $result;
-    }
-}
-
-// Aircraft State
-// Return mixed
-if (!function_exists('DB_AircraftState')) {
-    function DB_AircraftState($aircraft, $type = 'badge')
-    {
-        $color = 'primary';
-        $state = $aircraft->state;
-
-        if ($state === AircraftState::PARKED) {
-            $color = 'success';
-        } elseif ($state === AircraftState::IN_USE) {
-            $color = 'info';
-        } elseif ($state === AircraftState::IN_AIR) {
-            $color = 'warning';
-        }
-
-        if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
-        } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
-        } else {
-            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftState::label($state) . '</span>';
-        }
-
-        return $result;
+        return $units;
     }
 }
 
@@ -183,36 +220,6 @@ if (!function_exists('DB_PirepState')) {
     }
 }
 
-// User State
-// Return mixed
-if (!function_exists('DB_UserState')) {
-    function DB_UserState($user, $type = 'badge')
-    {
-        $color = 'primary';
-        $state = $user->state;
-
-        if ($state === UserState::PENDING) {
-            $color = 'secondary';
-        } elseif ($state === UserState::ACTIVE) {
-            $color = 'success';
-        } elseif ($state === UserState::REJECTED || $state === UserState::SUSPENDED || $state === UserState::DELETED) {
-            $color = 'danger';
-        } elseif ($state === UserState::ON_LEAVE) {
-            $color = 'warning';
-        }
-
-        if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
-        } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
-        } else {
-            $result = '<span class="badge bg-' . $color . ' text-light">' . UserState::label($state) . '</span>';
-        }
-
-        return $result;
-    }
-}
-
 // Check Disposable Module Setting
 // Return mixed, either boolean or the value itself as string
 // If setting is not found, return either false or provided default
@@ -234,6 +241,39 @@ if (!function_exists('DB_Setting')) {
         } else {
             $result = $setting->value;
         }
+
+        return $result;
+    }
+}
+
+// User State
+// Return mixed
+if (!function_exists('DB_UserState')) {
+    function DB_UserState($user, $type = 'badge')
+    {
+        $color = 'primary';
+        $state = $user->state;
+
+        if ($state === UserState::PENDING) {
+            $color = 'secondary';
+        } elseif ($state === UserState::ACTIVE) {
+            $color = 'success';
+        } elseif ($state === UserState::REJECTED || $state === UserState::SUSPENDED || $state === UserState::DELETED) {
+            $color = 'danger';
+        } elseif ($state === UserState::ON_LEAVE) {
+            $color = 'warning';
+        }
+
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'bg_add') {
+            $result = 'bg-' . $color;
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-light">' . UserState::label($state) . '</span>';
+        }
+
         return $result;
     }
 }

@@ -7,7 +7,7 @@
     <div class="card-header p-1">
       <h5 class="m-1">
         {{ config('app.name') }} | @lang('DBasic::common.ranks')
-        <i class="fas fa-tags float-end m-1"></i>
+        <i class="fas fa-tags float-end"></i>
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">
@@ -20,7 +20,7 @@
           <th>@lang('DBasic::common.rank_image')</th>
           <th>@lang('DBasic::common.restrict')</th>
         </tr>
-        @foreach ($ranks as $rank)
+        @foreach($ranks as $rank)
           <tr>
             <td class="text-start">{{ $rank->name }}</td>
             <td>{{ number_format($rank->hours) }}</td>
@@ -32,7 +32,7 @@
               @endif
             </td>
             <td>
-              @if ($rank->subfleets->count() > 0)
+              @if($rank->subfleets->count() > 0)
                 @lang('DBasic::common.allowed_sf') {{ $rank->subfleets->count() }}
                 <i class="fas fa-angle-double-down mx-2" type="button" data-toggle="collapse" aria-expanded="false"
                     data-target="#sfr_{{ $rank->id }}" aria-controls="sfr_{{ $rank->id }}"
@@ -50,21 +50,21 @@
 
   {{-- Rank Boxes --}}
   <div class="row row-cols-3">
-    @foreach ($ranks as $rank)
+    @foreach($ranks as $rank)
       <div id="sfr_{{ $rank->id }}" class="collapse">
-        @if ($rank->subfleets->count() > 0)
+        @if($rank->subfleets->count() > 0)
           <div class="col">
             <div class="card mb-2">
               <div class="card-header p-1">
                 <h5 class="m-1">
                   {{ $rank->name }}
-                  <i class="fas fa-tag m-1 float-end"></i>
+                  <i class="fas fa-tag float-end"></i>
                 </h5>
               </div>
               <div class="card-body p-1">
-                @foreach ($rank->subfleets as $subfleet)
+                @foreach($rank->subfleets as $subfleet)
                   <a href="{{ route('DBasic.subfleet', [$subfleet->type]) }}">
-                    &bull; {{ $subfleet->name }} | {{ $subfleet->airline->name }}
+                    &bull; {{ $subfleet->name.' | '.optional($subfleet->airline)->name }}
                   </a>
                   <br>
                 @endforeach

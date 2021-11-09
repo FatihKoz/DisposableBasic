@@ -116,13 +116,13 @@ class DB_FleetServices
                 })
                 ->first();
 
-            if ($result && $result->total_fuel > 0 && $result->total_time > 0) {
+            if (filled($result) && $result->total_fuel > 0 && $result->total_time > 0) {
                 break;
             }
             $count_while++;
         }
 
-        if ($result && $result->total_fuel > 0 && $result->total_time > 0) {
+        if (filled($result) && $result->total_fuel > 0 && $result->total_time > 0) {
             $results['avg_pounds'] = round($result->total_fuel / $result->total_time, 2);
             $results['avg_metric'] = round($results['avg_pounds'] / 2.20462262185, 2);
         }

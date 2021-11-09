@@ -81,6 +81,64 @@ class DB_Spec extends Model
         'active'      => 'nullable',
     ];
 
+    // Attributes
+    public function getSimbriefAttribute()
+    {
+        $sb = collect();
+
+        if (filled($this->airframe_id)) {
+            $sb->put('airframe_id', $this->airframe_id);
+        }
+        if (filled($this->icao)) {
+            $sb->put('icao', $this->icao);
+        }
+        if (filled($this->name)) {
+            $sb->put('name', $this->name);
+        }
+        if (filled($this->engines)) {
+            $sb->put('engines', $this->engines);
+        }
+        if (filled($this->dow)) {
+            $sb->put('oew', $this->dow);
+        }
+        if (filled($this->mzfw)) {
+            $sb->put('mzfw', $this->mzfw);
+        }
+        if (filled($this->mtow)) {
+            $sb->put('mtow', $this->mtow);
+        }
+        if (filled($this->mlw)) {
+            $sb->put('mlw', $this->mlw);
+        }
+        if (filled($this->mfuel)) {
+            $sb->put('maxfuel', $this->mfuel);
+        }
+        if (filled($this->mpax)) {
+            $sb->put('maxpax', $this->mpax);
+        }
+        if (filled($this->cat) && filled($this->equip) && filled($this->transponder)) {
+            $sb->put('cat', $this->cat);
+            $sb->put('equip', $this->equip);
+            $sb->put('transponder', $this->transponder);
+        }
+        if (filled($this->pbn)) {
+            $sb->put('pbn', $this->pbn);
+        }
+        if (filled($this->fuelfactor)) {
+            $sb->put('fuelfactor', $this->fuelfactor);
+        }
+        if (filled($this->cruiselevel)) {
+            $sb->put('cruiseoffset', $this->cruiselevel);
+        }
+        if (filled($this->paxwgt) && filled($this->bagwgt)) {
+            $sb->put('paxw', $this->paxwgt);
+            $sb->put('bagw', $this->bagwgt);
+            $sb->put('paxwgt', $this->paxwgt + $this->bagwgt);
+        }
+
+        return json_encode($sb);
+    }
+
     // Relationships
     public function aircraft()
     {

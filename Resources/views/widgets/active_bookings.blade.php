@@ -3,7 +3,7 @@
     <div class="card-header p-1">
       <h5 class="m-1">
         {{ $title }}
-        <i class="fas fa-file-signature float-end m-1"></i>
+        <i class="fas fa-file-signature float-end"></i>
       </h5>
     </div>
     <div class="card-body p-0 overflow-auto table-responsive">
@@ -26,7 +26,7 @@
               </td>
             @endif
             <td>
-              <a href="{{ route('frontend.flights.show', [$booking->flight_id]) }}" title="{{ $booking->flight->ident }}">{{ $booking->flight->airline->code.' '.$booking->flight->flight_number }}</a>
+              <a href="{{ route('frontend.flights.show', [$booking->flight_id]) }}" title="{{ $booking->flight->ident }}">{{ optional($booking->flight->airline)->code.' '.$booking->flight->flight_number }}</a>
             </td>
             <td>
               <a href="{{ route('frontend.airports.show', [$booking->flight->dpt_airport_id]) }}" title="{{ optional($booking->flight->dpt_airport)->name }}">{{ $booking->flight->dpt_airport_id }}</a>

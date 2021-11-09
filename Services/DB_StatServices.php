@@ -124,7 +124,7 @@ class DB_StatServices
         foreach ($results as $item) {
 
             if ($type === 'time') {
-                $item->totals = DB_ConvertMinutes($item->totals, '%02dh %02dm');
+                $item->totals = DB_ConvertMinutes($item->totals, '%2dh %2dm');
             } elseif ($type === 'lrate' || $type === 'lrate_low' || $type === 'lrate_high') {
                 $item->totals = number_format($item->totals) . ' ft/min';
             } elseif ($type === 'distance') {
@@ -231,9 +231,9 @@ class DB_StatServices
             }
         }
 
-        $stats[__('DBasic::widgets.ttime')] = DB_ConvertMinutes($total_time, '%02dh %02dm');
+        $stats[__('DBasic::widgets.ttime')] = DB_ConvertMinutes($total_time, '%2dh %2dm');
         if ($level > 10) {
-            $stats[__('DBasic::widgets.atime')] = DB_ConvertMinutes($average_time, '%02dh %02dm');
+            $stats[__('DBasic::widgets.atime')] = DB_ConvertMinutes($average_time, '%2dh %2dm');
         }
 
         $stats[__('DBasic::widgets.tfuel')] = number_format($total_fuel) . ' ' . $unit_fuel;

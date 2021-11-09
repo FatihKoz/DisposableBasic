@@ -2,7 +2,7 @@
   <div class="card-header p-1">
     <h5 class="m-1">
       {{ $header_title }}
-      <i class="fas {{ $header_icon }} float-end m-1"></i>
+      <i class="fas {{ $header_icon }} float-end"></i>
     </h5>
   </div>
   <div class="card-body p-0 table-responsive">
@@ -23,7 +23,7 @@
       @endforeach
     </table>
   </div>
-  <div class="card-footer p-0 px-1 text-end small">
-    <b>{{ $footer_note }} {{ $footer_type }}</b>
+  <div class="card-footer p-0 px-1 text-end small fw-bold">
+    {{ $footer_note.' '.$footer_type }}
   </div>
 </div>

@@ -14,7 +14,7 @@ class DB_PirepController extends Controller
         $units = array('fuel' => setting('units.fuel'), 'weight' => setting('units.weight'));
         $eager_load = array('user', 'aircraft', 'airline', 'dpt_airport', 'arr_airport');
 
-        $pireps = Pirep::with($eager_load)->where('state', '!=', PirepState::IN_PROGRESS)->orderby('submitted_at', 'desc')->paginate(25);
+        $pireps = Pirep::with($eager_load)->where('state', '!=', PirepState::IN_PROGRESS)->orderby('submitted_at', 'desc')->paginate(50);
 
         return view('DBasic::pireps.index', [
             'pireps' => $pireps,

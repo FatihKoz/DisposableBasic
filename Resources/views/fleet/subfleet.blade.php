@@ -55,7 +55,7 @@
             </h5>
           </div>
           <div class="card-body p-0 overflow-auto table-responsive">
-            @include('DBasic::pireps.table', ['sf_page' => true])
+            @include('DBasic::pireps.table', ['compact_view' => true])
           </div>
           <div class="card-footer p-0 px-1 small text-end">
             <b>@lang('DBasic::common.latest') {{ $pireps->count() }}</b>

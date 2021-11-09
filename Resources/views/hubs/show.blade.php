@@ -9,7 +9,7 @@
         <div class="card-header p-1">
           <h5 class="m-1">
             {{ $hub->name }}
-            <i class="fas fa-info float-end m-1"></i>
+            <i class="fas fa-info float-end"></i>
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
@@ -63,39 +63,45 @@
           </table>
         </div>
       </div>
+      @widget('DBasic::SunriseSunset', ['location' => $hub->id])
       {{-- Sub Navigation Pills --}}
       <ul class="nav nav-pills nav-fill mb-2" id="pills-Hub" role="tablist">
-        @if ($is_visible['pilots'])
+        @if($is_visible['pilots'])
           <li class="nav-item mx-1" role="presentation">
-            <button class="nav-link" id="pilots-tab" data-bs-toggle="pill" data-bs-target="#pilots" type="button" role="tab" aria-controls="pilots" aria-selected="false">
+            <button class="nav-link p-1" id="pilots-tab" data-bs-toggle="pill" data-bs-target="#pilots" type="button" role="tab" aria-controls="pilots" aria-selected="false">
               @lang('DBasic::common.pilots')
             </button>
           </li>
-        @endif
-        @if ($is_visible['aircraft'])
           <li class="nav-item mx-1" role="presentation">
-            <button class="nav-link" id="aircraft-tab" data-bs-toggle="pill" data-bs-target="#aircraft" type="button" role="tab" aria-controls="aircraft" aria-selected="false">
+            <button class="nav-link p-1" id="leaderboard-tab" data-bs-toggle="pill" data-bs-target="#leaderboard" type="button" role="tab" aria-controls="leaderboard" aria-selected="false">
+              @lang('DBasic::widgets.leader_board')
+            </button>
+          </li>
+        @endif
+        @if($is_visible['aircraft'])
+          <li class="nav-item mx-1" role="presentation">
+            <button class="nav-link p-1" id="aircraft-tab" data-bs-toggle="pill" data-bs-target="#aircraft" type="button" role="tab" aria-controls="aircraft" aria-selected="false">
               @lang('DBasic::common.aircraft')
             </button>
           </li>
         @endif
-        @if ($is_visible['flights'])
+        @if($is_visible['flights'])
           <li class="nav-item mx-1" role="presentation">
-            <button class="nav-link" id="flights-tab" data-bs-toggle="pill" data-bs-target="#flights" type="button" role="tab" aria-controls="flights" aria-selected="false">
+            <button class="nav-link p-1" id="flights-tab" data-bs-toggle="pill" data-bs-target="#flights" type="button" role="tab" aria-controls="flights" aria-selected="false">
               @lang('DBasic::common.flights')
             </button>
           </li>
         @endif
-        @if ($is_visible['reports'])
+        @if($is_visible['reports'])
           <li class="nav-item mx-1" role="presentation">
-            <button class="nav-link" id="reports-tab" data-bs-toggle="pill" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="false">
+            <button class="nav-link p-1" id="reports-tab" data-bs-toggle="pill" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="false">
               @lang('DBasic::common.pireps')
             </button>
           </li>
         @endif
-        @if ($is_visible['downloads'])
+        @if($is_visible['downloads'])
           <li class="nav-item mx-1" role="presentation">
-            <button class="nav-link" id="downloads-tab" data-bs-toggle="pill" data-bs-target="#downloads" type="button" role="tab" aria-controls="downloads" aria-selected="false">
+            <button class="nav-link p-1" id="downloads-tab" data-bs-toggle="pill" data-bs-target="#downloads" type="button" role="tab" aria-controls="downloads" aria-selected="false">
               @lang('DBasic::common.downloads')
             </button>
           </li>
@@ -114,6 +120,19 @@
     @if ($is_visible['pilots'])
       <div class="tab-pane fade" id="pilots" role="tabpanel" aria-labelledby="pilots-tab">
         @include('DBasic::hubs.show_pilots')
+      </div>
+      <div class="tab-pane fade" id="leaderboard" role="tabpanel" aria-labelledby="leaderboard-tab">
+        <div class="row">
+          <div class="col">
+            @widget('DBasic::LeaderBoard', ['hub' => $hub->id, 'source' => 'pilot', 'count' => 5, 'type' => 'flights'])
+          </div>
+          <div class="col">
+            @widget('DBasic::LeaderBoard', ['hub' => $hub->id, 'source' => 'pilot', 'count' => 5, 'type' => 'time'])
+          </div>
+          <div class="col">
+            @widget('DBasic::LeaderBoard', ['hub' => $hub->id, 'source' => 'pilot', 'count' => 5, 'type' => 'lrate'])
+          </div>
+        </div>
       </div>
     @endif
     @if ($is_visible['aircraft'])
@@ -138,8 +157,8 @@
             <div class="card mb-2">
               <div class="card-header p-1">
                 <h5 class="m-1">
-                  {{ trans_choice('DBasic::common.hub', 1) }} {{ trans_choice('common.download',2) }}
-                  <i class="fas fa-download float-end m-1"></i>
+                  {{ trans_choice('DBasic::common.hub', 1).' '.trans_choice('common.download',2) }}
+                  <i class="fas fa-download float-end"></i>
                 </h5>
               </div>
               <div class="card-body p-0 table-responsive">

@@ -21,7 +21,7 @@
         </div>
       @endif
 
-      @widget('DBasic::FuelCalculator')
+      @widget('DBasic::FuelCalculator', ['aircraft' => $aircraft->id])
     </div>
     {{-- Right --}}
     <div class="col-7">

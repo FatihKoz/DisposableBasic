@@ -70,7 +70,7 @@ class TransferAircraft extends Widget
 
             // Get Aircraft which are NOT at User's current location, parked and active
             // Conditionally apply filters for hubs and/or subfleets
-            $ts_aircraft = Aircraft::with('subfleet.airline')
+            $ts_aircraft = Aircraft::with('airline')
                 ->where($where)
                 ->when(($list === 'hubs' || $list === 'hub'), function ($query) use ($hubs_array) {
                     return $query->whereIn('airport_id', $hubs_array);

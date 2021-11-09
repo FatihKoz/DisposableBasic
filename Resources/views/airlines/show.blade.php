@@ -47,9 +47,9 @@
       {{-- Airline Details --}}
       <div class="card mb-2">
         <div class="card-header p-1">
-          <h5 class="m-1 p-0">
+          <h5 class="m-1">
             @lang('DBasic::common.aldetails')
-            <i class="fas fa-info float-end m-1"></i>
+            <i class="fas fa-info float-end"></i>
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
@@ -74,16 +74,16 @@
         </div>
         @if(filled($airline->logo))
           <div class="card-footer p-1 text-center">
-            <img src="{{ $airline->logo }}" style="max-width: 90%; max-height: 70px;">
+            <img src="{{ $airline->logo }}" style="max-width: 90%; max-height: 50px;">
           </div>
         @endif
       </div>
       {{-- Overall Finance --}}
       <div class="card mb-2">
         <div class="card-header p-1">
-          <h5 class="m-1 p-0">
+          <h5 class="m-1">
             @lang('DBasic::common.finance')
-            <i class="fas fa-receipt float-end m-1"></i>
+            <i class="fas fa-receipt float-end"></i>
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
@@ -100,9 +100,9 @@
       {{-- Basic Stats --}}
       <div class="card mb-2">
         <div class="card-header p-1">
-          <h5 class="m-1 p-0">
-            @lang('DBasic::widgets.stats_gen')
-            <i class="fas fa-cogs float-end m-1"></i>
+          <h5 class="m-1">
+            @lang('DBasic::widgets.stats')
+            <i class="fas fa-cogs float-end"></i>
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
@@ -113,19 +113,6 @@
                 <td class="text-end">{{ $value }}</td>
               </tr>
             @endforeach
-          </table>
-        </div>
-      </div>
-      {{-- Pirep Stats --}}
-      <div class="card mb-2">
-        <div class="card-header p-1">
-          <h5 class="m-1 p-0">
-            @lang('DBasic::widgets.stats_rep')
-            <i class="fas fa-cogs float-end m-1"></i>
-          </h5>
-        </div>
-        <div class="card-body p-0 table-responsive">
-          <table class="table table-sm table-borderless table-striped text-start mb-0">
             @foreach($stats_p as $key => $value)
               <tr>
                 <th>{{ $key }}</th>

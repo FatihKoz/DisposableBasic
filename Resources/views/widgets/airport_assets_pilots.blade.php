@@ -12,7 +12,7 @@
         <a href="{{ route('frontend.profile.show', [$pilot->id]) }}">{{ $pilot->name_private }}</a>
       </td>
       <td>
-        <a href="{{ route('DBasic.airline', [$pilot->airline->icao]) }}">{{ $pilot->airline->name }}</a>
+        <a href="{{ route('DBasic.airline', [optional($pilot->airline)->icao ?? '']) }}">{{ optional($pilot->airline)->name }}</a>
       </td>
       <td>
         {{ $pilot->rank->name }}
@@ -22,8 +22,8 @@
       </td>
       <td class="text-end">
         @if($total_time)
-          {{ DB_ConvertMinutes($pilot->flight_time + $pilot->transfer_time, '%02dh %02dm') }}
-        @else 
+          {{ DB_ConvertMinutes($pilot->flight_time + $pilot->transfer_time, '%2dh %2dm') }}
+        @else
           {{ DB_ConvertMinutes($pilot->flight_time, '%02dh %02dm') }}
         @endif
       </td>

@@ -17,7 +17,7 @@ class FlightBoard extends Widget
 
         return view('DBasic::widgets.flight_board', [
             'flights'    => $flights,
-            'is_visible' => isset($flights) ? true : false,
+            'is_visible' => filled($flights) ? true : false,
         ]);
     }
 }

@@ -12,7 +12,7 @@
         <a href="{{ route('DBasic.aircraft', [$ac->registration]) }}" title="{{ $ac->name }}">{{ $ac->ident }}</a>
       </td>
       <td>
-        <a href="{{ route('DBasic.airline', [$ac->subfleet->airline->icao]) }}">{{ $ac->subfleet->airline->name }}</a>
+        <a href="{{ route('DBasic.airline', [optional($ac->airline)->icao ?? '']) }}">{{ optional($ac->airline)->name }}</a>
       </td>
       <td>
         <a href="{{ route('DBasic.subfleet', [$ac->subfleet->type]) }}">{{ $ac->subfleet->type }}</a>

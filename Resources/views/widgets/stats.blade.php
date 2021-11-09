@@ -3,7 +3,7 @@
     <div class="card-header p-1">
       <h5 class="m-1">
         @lang('DBasic::common.stats') {{ $header_note }}
-        <i class="fas {{ $icon }} float-end m-1"></i>
+        <i class="fas {{ $icon }} float-end"></i>
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">
@@ -17,8 +17,8 @@
       </table>
     </div>
     @if($footer_note)
-      <div class="card-footer p-0 px-1 small text-end">
-        <b>{{ $footer_note }}</b>
+      <div class="card-footer p-0 px-1 small text-end fw-bold">
+        {{ $footer_note }}
       </div>
     @endif
   </div>

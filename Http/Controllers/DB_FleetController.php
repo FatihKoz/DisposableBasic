@@ -24,7 +24,7 @@ class DB_FleetController extends Controller
     // Subfleet
     public function subfleet($subfleet_type)
     {
-        $units = $units = $this->GetUnits();
+        $units = $this->GetUnits();
 
         $subfleet = Subfleet::withCount('flights', 'fares')->with('airline', 'fares', 'hub')->where('type', $subfleet_type)->first();
         $aircraft = Aircraft::withCount('simbriefs')->with('subfleet.airline')->where('subfleet_id', $subfleet->id)->orderby('registration')->get();
@@ -111,12 +111,7 @@ class DB_FleetController extends Controller
 
     private function GetUnits()
     {
-        $units = array(
-            'fuel'     => setting('units.fuel'),
-            'weight'   => setting('units.weight'),
-            'distance' => setting('units.distance'),
-            'altitude' => setting('units.altitude')
-        );
+        $units = DB_GetUnits();
 
         // Passenger Weight
         $units['pax_weight'] = setting('simbrief.noncharter_pax_weight');

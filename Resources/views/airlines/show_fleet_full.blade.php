@@ -5,7 +5,6 @@
         @foreach($airline->aircraft as $ac)
         <tr>
           <th>{{ $ac->ident }}</th>
-
           <th class="text-end">
             {{ $ac->subfleet->name }}
           </th>
