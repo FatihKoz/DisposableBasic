@@ -100,20 +100,18 @@ return [
     'ta_ok_free'     => 'Aircraft transfer completed, :registration is at your location now.',
     'ta_err_ac'      => 'Aircraft transfer not possible without a valid aircraft selection!',
     'ta_err_funds'   => 'Aircraft transfer not possible, not enough funds! You need at least :price',
-
-
     // Personal Stats Widget
-    'noreports'   => 'No Reports',
-    'avglanding'  => 'Average Landing Rate',
-    'avgscore'    => 'Average Score',
-    'avgdistance' => 'Average Distance',
-    'totdistance' => 'Total Distance',
-    'avgtime'     => 'Average Flight Time',
-    'tottime'     => 'Total Flight Time',
-    'avgfuel'     => 'Average Fuel Burn',
-    'totfuel'     => 'Total Fuel Burn',
-    'totflight'   => 'Total Flights',
+    'avgdistance' => 'Avg. Distance',
+    'avgfuel'     => 'Avg. Fuel Burn',
+    'avglanding'  => 'Avg. Landing Rate',
+    'avgscore'    => 'Avg. Score',
+    'avgtime'     => 'Avg. Flight Time',
     'lastndays'   => 'Last :period Days',
+    'noreports'   => 'No Reports',
+    'totdistance' => 'Total Distance',
+    'totflight'   => 'Total Flights',
+    'totfuel'     => 'Total Fuel Burn',
+    'tottime'     => 'Total Flight Time',
 
     // Map Widget
     'flights_map'  => 'Flights Map',
