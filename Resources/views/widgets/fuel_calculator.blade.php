@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col">
       <div class="card p-0 mb-2 bg-transparent border-0">
-        <button type="button" class="btn btn-sm bg-warning text-black" data-toggle="modal" data-target="#fuel_calc">
+        <button type="button" class="btn btn-sm bg-warning text-black p-1" data-toggle="modal" data-target="#fuel_calc">
           <b>Fuel Calculator</b>
           <i class="fas fa-gas-pump mx-1"></i>
         </button>

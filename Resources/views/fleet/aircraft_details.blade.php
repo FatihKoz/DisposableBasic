@@ -30,7 +30,7 @@
       <tr>
         <th>@lang('DBasic::common.airline') / @lang('DBasic::common.subfleet')</th>
         <td>
-          <a href="{{ route('DBasic.airline', [$aircraft->subfleet->airline->icao ?? '']) }}">{{ $aircraft->subfleet->airline->name ?? '' }}</a>
+          <a href="{{ route('DBasic.airline', [$aircraft->airline->icao ?? '']) }}">{{ $aircraft->airline->name ?? '' }}</a>
           /
           <a href="{{ route('DBasic.subfleet', [$aircraft->subfleet->type ?? '']) }}">{{ $aircraft->subfleet->name ?? '' }}</a>
         </td>
@@ -47,18 +47,6 @@
         <th>@lang('DBasic::common.status') / @lang('DBasic::common.state')</th>
         <td>{!! DB_AircraftStatus($aircraft).' '.DB_AircraftState($aircraft) !!}</td>
       </tr>
-      @if($aircraft->fuel_onboard > 0)
-        <tr>
-          <th>@lang('DBasic::common.fuelob')</th>
-          <td>{{ DB_ConvertWeight($aircraft->fuel_onboard, $units['fuel']) }}</td>
-        </tr>
-      @endif
-      @if($aircraft->landing_time)
-        <tr>
-          <th>@lang('DBasic::common.lastlnd')</th>
-          <td>{{ $aircraft->landing_time->diffForHumans() }}</td>
-        </tr>
-      @endif
       @if($aircraft->airport_id)
         <tr>
           <th>@lang('DBasic::common.location')</th>
@@ -67,6 +55,20 @@
           </td>
         </tr>
       @endif
-      </table>
+    </table>
   </div>
+  @if($aircraft->fuel_onboard > 0 || $aircraft->landing_time)
+    <div class="card-footer p-0 px-1 small fw-bold">
+      @if($aircraft->fuel_onboard > 0)
+        <span class="float-end">
+          @lang('DBasic::common.fuelob'): {{ DB_ConvertWeight($aircraft->fuel_onboard, $units['fuel']) }}
+        </span>
+      @endif
+      @if($aircraft->landing_time)
+        <span class="float-start">
+          @lang('DBasic::common.lastlnd'): {{ $aircraft->landing_time->diffForHumans() }}
+        </span>
+      @endif
+    </div>
+  @endif
 </div>

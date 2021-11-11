@@ -73,7 +73,7 @@ if (!function_exists('DB_GetSpecs_SF')) {
         $specs = DB_Spec::where(['subfleet_id' => $subfleet->id, 'active' => true])->orderby('saircraft')->get();
 
         if ($deep_check && blank($specs)) {
-            $specs = DB_GetSpecs_ICAO(substr($subfleet->type, 0, 3));
+            $specs = DB_GetSpecs_ICAO(substr($subfleet->type, 0, 4));
         }
         return filled($specs) ? $specs : null;
     }

@@ -53,6 +53,7 @@ class DB_ServiceProvider extends ServiceProvider
                 // Airlines
                 Route::get('dairlines', 'DB_AirlineController@index')->name('airlines');
                 Route::get('dairlines/{icao}', 'DB_AirlineController@show')->name('airline');
+                Route::get('dairline/{id}', 'DB_AirlineController@myairline')->name('myairline');
                 // Awards
                 Route::get('dawards', 'DB_AwardController@index')->name('awards');
                 // Fleet

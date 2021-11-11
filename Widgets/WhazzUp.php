@@ -9,11 +9,9 @@ use App\Models\User;
 use App\Models\UserField;
 use App\Models\UserFieldValue;
 use Carbon\Carbon;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Models\DB_WhazzUp;
+use Modules\DisposableBasic\Services\DB_OnlineServices;
 use Theme;
 
 class WhazzUp extends Widget
@@ -21,14 +19,6 @@ class WhazzUp extends Widget
     public $reloadTimeout = 60;
 
     protected $config = ['network' => null, 'field_name' => null, 'refresh' => 180];
-
-    public function __construct(
-        array $config = [],
-        GuzzleClient $httpClient
-    ) {
-        parent::__construct($config);
-        $this->httpClient = $httpClient;
-    }
 
     public function run()
     {
@@ -54,7 +44,8 @@ class WhazzUp extends Widget
         $whazzup = DB_WhazzUp::where('network', $network_selection)->orderby('updated_at', 'desc')->first();
 
         if (!$whazzup || $whazzup->updated_at->diffInSeconds() > $refresh_interval) {
-            $whazzup = $this->DownloadWhazzUp($network_selection, $server_address);
+            $OnlineSvc = app(DB_OnlineServices::class);
+            $whazzup = $OnlineSvc->DownloadWhazzUp($network_selection, $server_address);
         }
 
         if ($whazzup) {
@@ -97,7 +88,9 @@ class WhazzUp extends Widget
         $viewer = User::withCount('roles')->find(Auth::id());
         $checks = (isset($viewer) && $viewer->roles_count > 0) ? true : false;
 
-        return view('DBasic::widgets.whazzup', [
+        $pilots = collect($pilots);
+
+        return view('DBasic::widgets.whazzup2', [
             'pilots'  => isset($pilots) ? $pilots : null,
             'error'   => isset($error) ? $error : null,
             'network' => $network_selection,
@@ -133,46 +126,5 @@ class WhazzUp extends Widget
     public function FindActivePirep($user_id = null)
     {
         return Pirep::with('aircraft', 'airline')->where(['user_id' => $user_id, 'state' => 0])->orderby('updated_at', 'desc')->first();
-    }
-
-    public function DownloadWhazzUp($network_selection = null, $server_address = null)
-    {
-        if (!$network_selection || !$server_address) {
-            return;
-        }
-
-        try {
-            $response = $this->httpClient->request('GET', $server_address);
-            if ($response->getStatusCode() !== 200) {
-                Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' Error Occured During WhazzUp Download !');
-            }
-        } catch (GuzzleException $e) {
-            Log::error('Disposable Basic, WhazzUp Data Download Error | ' . $e->getMessage());
-            return;
-        }
-
-        $whazzupdata = json_decode($response->getBody());
-
-        if ($network_selection === 'VATSIM') {
-            $whazzup_sections = [
-                'network' => $network_selection,
-                'pilots'  => json_encode($whazzupdata->pilots),
-                // 'atcos'   => json_encode($whazzupdata->controllers),
-                // 'servers' => json_encode($whazzupdata->servers),
-                // 'rawdata' => json_encode($whazzupdata),
-            ];
-        } else {
-            $whazzup_sections = [
-                'network' => $network_selection,
-                'pilots'  => json_encode($whazzupdata->clients->pilots),
-                // 'atcos'        => json_encode($whazzupdata->clients->atcs),
-                // 'observers'    => json_encode($whazzupdata->clients->observers),
-                // 'servers'      => json_encode($whazzupdata->servers),
-                // 'voiceservers' => json_encode($whazzupdata->voiceServers),
-                // 'rawdata'      => json_encode($whazzupdata),
-            ];
-        }
-
-        return DB_WhazzUp::updateOrCreate(['network' => $network_selection], $whazzup_sections);
     }
 }

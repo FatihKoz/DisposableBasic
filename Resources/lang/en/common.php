@@ -46,6 +46,7 @@ return [
     'record'    => 'Record',
     'reports'   => 'Flight Reports',
     'roster'    => 'Roster',
+    'show_hide' => 'Show / Hide',
     'state'     => 'State',
     'stats'     => 'Statistics',
     'status'    => 'Status',

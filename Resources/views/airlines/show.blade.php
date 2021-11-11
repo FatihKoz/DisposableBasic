@@ -8,17 +8,17 @@
       {{-- Navigation --}}
       <div class="nav nav-pills nav-justified mb-3" id="airline-nav" role="tablist">
         @if($subfleets->count() > 0)
-          <button class="nav-link active mx-1" id="airline-fleet" data-bs-toggle="pill" data-bs-target="#al_fleet" type="button" role="tab" aria-controls="al_fleet" aria-selected="true">
+          <button class="nav-link active mx-1 p-1" id="airline-fleet" data-bs-toggle="pill" data-bs-target="#al_fleet" type="button" role="tab" aria-controls="al_fleet" aria-selected="true">
             @lang('DBasic::common.fleet')
           </button>
         @endif
         @if($users->count() > 0)
-          <button class="nav-link mx-1" id="airline-pilots" data-bs-toggle="pill" data-bs-target="#al_pilots" type="button" role="tab" aria-controls="al_pilots" aria-selected="false">
+          <button class="nav-link mx-1 p-1" id="airline-pilots" data-bs-toggle="pill" data-bs-target="#al_pilots" type="button" role="tab" aria-controls="al_pilots" aria-selected="false">
             @lang('DBasic::common.roster')
           </button>
         @endif
         @if($pireps->count() > 0)
-          <button class="nav-link mx-1" id="airline-pireps" data-bs-toggle="pill" data-bs-target="#al_pireps" type="button" role="tab" aria-controls="al_pireps" aria-selected="false">
+          <button class="nav-link mx-1 p-1" id="airline-pireps" data-bs-toggle="pill" data-bs-target="#al_pireps" type="button" role="tab" aria-controls="al_pireps" aria-selected="false">
             @lang('DBasic::common.reports')
           </button>
         @endif
@@ -27,7 +27,7 @@
       <div class="tab-content" id="airline-navContent">
         @if($subfleets->count() > 0)
           <div class="tab-pane fade show active" id="al_fleet" role="tabpanel" aria-labelledby="airline-fleet">
-            @include('DBasic::airlines.show_fleet_full')
+            @include('DBasic::airlines.show_fleet')
           </div>
         @endif
         @if($users->count() > 0)

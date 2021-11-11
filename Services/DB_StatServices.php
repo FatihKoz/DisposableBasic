@@ -12,13 +12,175 @@ use Illuminate\Support\Facades\DB;
 
 class DB_StatServices
 {
-    // Leader Board
+    // Personal Statistics (uses cache)
+    public function PersonalStats($user_id, $period, $type)
+    {
+        $personal = [];
+
+        $now = Carbon::now();
+        $current_year = $now->copy()->format('Y');
+        $b_date = null;
+        $s_date = null;
+        $e_date = null;
+
+        // Cache
+        $cache_key = 'pstats-' . $user_id . '-' . $type;
+        if (isset($period)) {
+            $cache_key .= '-' . $period;
+        }
+
+        if (is_numeric($period)) {
+            $cache_until = Carbon::now()->endOfDay();
+        } elseif ($period === 'lastm' || $period === 'prevm') {
+            $cache_until = Carbon::now()->endOfMonth();
+        } elseif ($period === 'lasty' || $period === 'prevy') {
+            $cache_until = Carbon::now()->endOfYear();
+        } else {
+            $cache_until = Carbon::now()->addHours(6);
+        }
+
+        // Base Date
+        if (is_numeric($period) || $period === 'currentm' || $period === 'currenty') {
+            $b_date = $now;
+        } elseif ($period === 'lastm') {
+            $b_date = $now->subMonthNoOverflow();
+        } elseif ($period === 'prevm') {
+            $b_date = $now->subMonthsNoOverflow(2);
+        } elseif ($period === 'lasty') {
+            $b_date = $now->subYearNoOverflow();
+        } elseif ($period === 'prevy') {
+            $b_date = $now->subYearsNoOverflow(2);
+        }
+
+        // Period Specific Start and End Dates, Period Text
+        if ($period === 'currenty' || $period === 'lasty' || $period === 'prevy') { // Years
+            $s_date = $b_date->startOfYear();
+            $e_date = $b_date->copy()->endOfYear();
+            $personal['period_text'] = $b_date->format('Y');
+        } elseif ($period === 'currentm' || $period === 'lastm' || $period === 'prevm') { // Months
+            $s_date = $b_date->startOfMonth();
+            $e_date = $b_date->copy()->endOfMonth();
+            $personal['period_text'] = $b_date->format('F');
+        } elseif (is_numeric($period)) { // Days
+            $s_date = $b_date->copy()->startOfDay()->subdays($period);
+            $e_date = $now->endOfDay();
+            $personal['period_text'] = __('DBasic::widgets.lastndays', ['period' => $period]);
+        } elseif ($period === 'q1') { // Quarter 1 JAN-FEB-MAR
+            $s_date = $current_year . '-01-01 00:00:01';
+            $e_date = $current_year . '-03-31 23:59:59';
+            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+        } elseif ($period === 'q2') { // Quarter 2 APR-MAY-JUN
+            $s_date = $current_year . '-04-01 00:00:01';
+            $e_date = $current_year . '-06-30 23:59:59';
+            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+        } elseif ($period === 'q3') { // Quarter 3 JUL-AUG-SEP
+            $s_date = $current_year . '-07-01 00:00:01';
+            $e_date = $current_year . '-09-30 23:59:59';
+            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+        } elseif ($period === 'q4') { // Quarter 4 OCT-NOV-DEC
+            $s_date = $current_year . '-10-01 00:00:01';
+            $e_date = $current_year . '-12-31 23:59:59';
+            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+        }
+
+        $where = [];
+        $where['user_id'] = $user_id;
+        $where['state'] = PirepState::ACCEPTED;
+
+        if ($type === 'avglanding') { // Average Landing Rate - Acars Only
+            $where['source'] = PirepSource::ACARS;
+            $select_raw = 'avg(landing_rate)';
+            $personal['stat_name'] = __('DBasic::widgets.avglanding');
+        } elseif ($type === 'avgscore') { // Average Score - Acars Only
+            $where['source'] = PirepSource::ACARS;
+            $select_raw = 'avg(score)';
+            $personal['stat_name'] = __('DBasic::widgets.avgscore');
+        } elseif ($type === 'avgdistance') { // Average Distance
+            $select_raw = 'avg(distance)';
+            $personal['stat_name'] = __('DBasic::widgets.avgdistance');
+        } elseif ($type === 'totdistance') { // Total Distance
+            $select_raw = 'sum(distance)';
+            $personal['stat_name'] = __('DBasic::widgets.totdistance');
+        } elseif ($type === 'avgtime') { // Average Time
+            $select_raw = 'avg(flight_time)';
+            $personal['stat_name'] = __('DBasic::widgets.avgtime');
+        } elseif ($type === 'tottime') { // Total Time
+            $select_raw = 'sum(flight_time)';
+            $personal['stat_name'] = __('DBasic::widgets.tottime');
+        } elseif ($type === 'avgfuel') { // Average Fuel
+            $select_raw = 'avg(fuel_used)';
+            $personal['stat_name'] = __('DBasic::widgets.avgfuel');
+        } elseif ($type === 'totfuel') { // Total Fuel
+            $select_raw = 'sum(fuel_used)';
+            $personal['stat_name'] = __('DBasic::widgets.totfuel');
+        } elseif ($type === 'totflight') { // Total Flights
+            $select_raw = 'count(id)';
+            $personal['stat_name'] = __('DBasic::widgets.totflight');
+        }
+
+        // Execute
+        $result = cache()->remember($cache_key, $cache_until, function () use ($select_raw, $where, $period, $s_date, $e_date) {
+            return DB::table('pireps')->selectRaw($select_raw . ' as uresult')
+                ->where($where)
+                ->when(isset($period), function ($query) use ($s_date, $e_date) {
+                    $query->whereBetween('submitted_at', [$s_date, $e_date]);
+                })->value('uresult');
+            }
+        );
+
+        $personal['raw'] = $result;
+        // Format the result according to type
+        if ($type === 'avglanding') {
+            $personal['formatted'] = number_format($result) . ' ft/min';
+        } elseif ($type === 'avgscore') {
+            $personal['formatted'] = number_format($result);
+        } elseif ($type === 'avgtime' || $type === 'tottime') {
+            $personal['formatted'] = DB_ConvertMinutes(round($result), '%2dh %2dm');
+        } elseif ($type === 'avgdistance' || $type === 'totdistance') {
+            if (setting('units.distance') === 'km') {
+                $personal['formatted'] = number_format($result * 1.852) . ' km';
+            } else {
+                $personal['formatted'] = number_format($result) . ' nm';
+            }
+        } elseif ($type === 'avgfuel' || $type === 'totfuel') {
+            if (setting('units.fuel') === 'kg') {
+                $personal['formatted'] = number_format($result / 2.20462262185) . ' kg';
+            } else {
+                $personal['formatted'] = number_format($result) . ' lbs';
+            }
+        } else {
+            $personal['formatted'] = round($result);
+        }
+
+        return $personal;
+    }
+
+    // Leader Board (uses cache)
     public function LeaderBoard($source, $count, $type, $period, $hub)
     {
         $now = Carbon::now();
         $s_date = null;
         $e_date = null;
         $whereIn_array = null;
+
+        // Cache
+        $cache_key = 'lboard-' . $source . '-' . $type . '-' . $count;
+        if (isset($period)) {
+            $cache_key .= '-' . $period;
+        } else {
+            $cache_key .= '-alltime';
+        }
+        if (isset($hub)) {
+            $cache_key .= '-' . $hub;
+        }
+
+        if ($period === 'lastm' || $period === 'prevm') {
+            $cache_until = Carbon::now()->endOfMonth();
+        } elseif ($period === 'lasty' || $period === 'prevy') {
+            $cache_until = Carbon::now()->endOfYear();
+        } else {
+            $cache_until = Carbon::now()->endOfDay();
+        }
 
         if ($source === 'airline') { // Airline
             $base = 'airline_id';
@@ -65,6 +227,8 @@ class DB_StatServices
             $s_date = $b_date->startOfMonth();
             $e_date = $b_date->copy()->endOfMonth();
             $is_period = true;
+        } else {
+            $is_period = null;
         }
 
         // Type
@@ -95,20 +259,23 @@ class DB_StatServices
         }
 
         // Main Query
-        $results = Pirep::with($eager_load)->selectRaw($base . ', ' . $select_Raw . ' as totals')
+        $results = cache()->remember($cache_key, $cache_until, function () use ($eager_load, $base, $select_Raw, $where, $is_period, $s_date, $e_date, $whereIn_array, $type, $count) {
+            return Pirep::with($eager_load)->selectRaw($base . ', ' . $select_Raw . ' as totals')
             ->where($where)
-            ->when(isset($is_period), function ($query) use ($s_date, $e_date) {
-                $query->whereBetween('created_at', [$s_date, $e_date]);
-            })
-            ->when(is_array($whereIn_array), function ($query) use ($base, $whereIn_array) {
-                $query->whereIn($base, $whereIn_array);
-            })
-            ->when(($type != 'lrate_high'), function ($query) {
-                $query->orderBy('totals', 'desc');
-            }, function ($query) {
-                $query->orderBy('totals', 'asc');
-            })
-            ->groupBy($base)->take($count)->get();
+                ->when(isset($is_period), function ($query) use ($s_date, $e_date) {
+                    $query->whereBetween('created_at', [$s_date, $e_date]);
+                })
+                ->when(is_array($whereIn_array), function ($query) use ($base, $whereIn_array) {
+                    $query->whereIn($base, $whereIn_array);
+                })
+                ->when(($type != 'lrate_high'), function ($query) {
+                    $query->orderBy('totals', 'desc');
+                }, function ($query) {
+                    $query->orderBy('totals', 'asc');
+                })
+                ->groupBy($base)->take($count)->get();
+            }
+        );
 
         // Route
         if ($source === 'airline') {
@@ -269,13 +436,21 @@ class DB_StatServices
         return $stats;
     }
 
-    // Airline Finance
+    // Airline Finance (uses cache)
     public function AirlineFinance($journal_id)
     {
         $finance = [];
 
-        $income = DB::table('journal_transactions')->where('journal_id', $journal_id)->sum('credit');
-        $expense = DB::table('journal_transactions')->where('journal_id', $journal_id)->sum('debit');
+        // Cache
+        $cache_key = 'journal-'.$journal_id;
+        $cache_until = Carbon::now()->endOfDay();
+
+        $income = cache()->remember($cache_key . '-credit', $cache_until, function () use ($journal_id) {
+            return DB::table('journal_transactions')->where('journal_id', $journal_id)->sum('credit');
+        });
+        $expense = cache()->remember($cache_key . '-debit', $cache_until, function () use ($journal_id) {
+            return DB::table('journal_transactions')->where('journal_id', $journal_id)->sum('debit');
+        });
         $balance = $income - $expense;
         $color = ($balance < 0) ? 'darkred' : 'darkgreen';
 

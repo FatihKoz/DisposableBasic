@@ -53,7 +53,7 @@ class DB_RandomFlight extends Model
 
     public function pirep()
     {
-        $where = array('user_id' => $this->user_id, 'state' => 2);
+        $where = ['user_id' => $this->user_id, 'state' => 2];
         return $this->hasOne(Pirep::class, 'flight_id', 'flight_id')->where($where)->whereDate('submitted_at', $this->assign_date);
     }
 }

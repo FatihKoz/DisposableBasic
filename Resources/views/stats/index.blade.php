@@ -26,20 +26,20 @@
       {{-- Leaderboard Navigation --}}
       <ul class="nav nav-pills nav-fill nav-justify mb-2" id="leaderboard-pills" role="tablist">
         <li class="nav-item px-1" role="presentation">
-          <button class="nav-link active" id="overall-tab" data-bs-toggle="pill" data-bs-target="#overall" type="button" role="tab" aria-controls="overall" aria-selected="true">@lang('DBasic::widgets.lb_overall')</button>
+          <button class="nav-link active p-1" id="overall-tab" data-bs-toggle="pill" data-bs-target="#overall" type="button" role="tab" aria-controls="overall" aria-selected="true">@lang('DBasic::widgets.lb_overall')</button>
         </li>
         <li class="nav-item px-1" role="presentation">
-          <button class="nav-link" id="pl-month-tab" data-bs-toggle="pill" data-bs-target="#pl-month" type="button" role="tab" aria-controls="pl-month" aria-selected="false">@lang('DBasic::widgets.lb_month_p')</button>
+          <button class="nav-link p-1" id="pl-month-tab" data-bs-toggle="pill" data-bs-target="#pl-month" type="button" role="tab" aria-controls="pl-month" aria-selected="false">@lang('DBasic::widgets.lb_month_p')</button>
         </li>
         <li class="nav-item px-1" role="presentation">
-          <button class="nav-link" id="pl-year-tab" data-bs-toggle="pill" data-bs-target="#pl-year" type="button" role="tab" aria-controls="pl-year" aria-selected="false">@lang('DBasic::widgets.lb_year_p')</button>
+          <button class="nav-link p-1" id="pl-year-tab" data-bs-toggle="pill" data-bs-target="#pl-year" type="button" role="tab" aria-controls="pl-year" aria-selected="false">@lang('DBasic::widgets.lb_year_p')</button>
         </li>
         @if ($multi_airline)
           <li class="nav-item px-1" role="presentation">
-            <button class="nav-link" id="al-month-tab" data-bs-toggle="pill" data-bs-target="#al-month" type="button" role="tab" aria-controls="al-month" aria-selected="false">@lang('DBasic::widgets.lb_month_a')</button>
+            <button class="nav-link p-1" id="al-month-tab" data-bs-toggle="pill" data-bs-target="#al-month" type="button" role="tab" aria-controls="al-month" aria-selected="false">@lang('DBasic::widgets.lb_month_a')</button>
           </li>
           <li class="nav-item px-1" role="presentation">
-            <button class="nav-link" id="al-year-tab" data-bs-toggle="pill" data-bs-target="#al-year" type="button" role="tab" aria-controls="al-year" aria-selected="false">@lang('DBasic::widgets.lb_year_a')</button>
+            <button class="nav-link p-1" id="al-year-tab" data-bs-toggle="pill" data-bs-target="#al-year" type="button" role="tab" aria-controls="al-year" aria-selected="false">@lang('DBasic::widgets.lb_year_a')</button>
           </li>
         @endif
       </ul>
