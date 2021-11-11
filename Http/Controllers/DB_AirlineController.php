@@ -52,7 +52,7 @@ class DB_AirlineController extends Controller
                 $user_where['state'] = 1;
             }
 
-            $eager_users = array('rank', 'current_airport', 'home_airport');
+            $eager_users = array('rank', 'current_airport', 'home_airport', 'last_pirep');
             $users = User::withCount('awards')->with($eager_users)->where($user_where)->orderby('id')->get();
 
             $pirep_where = [];

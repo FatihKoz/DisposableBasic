@@ -13,7 +13,7 @@ class Stats extends Widget
     public function run()
     {
         $id = is_numeric($this->config['id']) ? $this->config['id'] : null;
-        $type = ($this->config['type'] === 'aircraft') ? 'aircraft' : 'airline';
+        $type = isset($this->config['type']) ? $this->config['type'] : 'airline';
 
         $StatSvc = app(DB_StatServices::class);
 
@@ -31,6 +31,10 @@ class Stats extends Widget
 
             $details = DB::table('airlines')->select('icao', 'name')->where('id', $id)->first();
             $main = 'icao';
+        } elseif ($type === 'home') {
+            $stats = $StatSvc->PirepStats();
+
+            $footer_note = config('app.name');
         } else {
             $basic_stats = $StatSvc->BasicStats();
             $pirep_stats = $StatSvc->PirepStats();

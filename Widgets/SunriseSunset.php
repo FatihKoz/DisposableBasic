@@ -3,12 +3,12 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Modules\DisposableBasic\Services\DB_AirportServices;
 
 class SunriseSunset extends Widget
 {
-    protected $config = ['location' => null, 'type' => null];
+    protected $config = ['location' => null, 'type' => null, 'card' => true];
 
     public function run()
     {
@@ -27,47 +27,17 @@ class SunriseSunset extends Widget
             ]);
         }
 
-        $footer_note = filled($airport->location) ? $airport->name . ' / ' . $airport->location : $airport->name;
+        $AirportSvc = app(DB_AirportServices::class);
+        $details = $AirportSvc->SunriseSunset($airport, $type);
 
-        $current_time = time();
-        $details = date_sun_info($current_time, $airport->lat, $airport->lon);
-
-        if (!$details) {
-            $error = 'Can not calculate details for given location!';
-
-            return view('DBasic::sunrise_sunset', [
-                'error' => $error,
-                'icon'  => $icon,
-            ]);
-        }
-
-        foreach ($details as $key => $value) {
-            if ($key === $type . '_twilight_begin') {
-                $twilight_begin = $value;
-            }
-            if ($key === $type . '_twilight_end') {
-                $twilight_end = $value;
-            }
-            if ($key === 'sunrise') {
-                $sunrise = $value;
-            }
-            if ($key === 'sunset') {
-                $sunset = $value;
-            }
-        }
-
-        $icon = ($current_time > $twilight_begin && $current_time < $twilight_end) ? 'fa-sun' : 'fa-moon';
-        $not_able = 'Not able to calculate!';
+        $icon = array_key_exists('daylight', $details) ? 'fa-sun' : 'fa-moon';
 
         return view('DBasic::widgets.sunrise_sunset', [
+            'card_view'      => is_bool($this->config['card']) ? $this->config['card'] : true,
             'details'        => $details,
             'icon'           => $icon,
-            'footer_note'    => isset($footer_note) ? $footer_note : null,
+            'footer_note'    => array_key_exists('location', $details) ? $details['location'] : null,
             'location'       => isset($location) ? $location : null,
-            'twilight_begin' => ($twilight_begin > 1) ? Carbon::parse($twilight_begin)->format('H:i') . ' UTC' : $not_able,
-            'twilight_end'   => ($twilight_end > 1) ? Carbon::parse($twilight_end)->format('H:i') . ' UTC' : $not_able,
-            'sunrise'        => ($sunrise > 1) ? Carbon::parse($sunrise)->format('H:i') . ' UTC' : $not_able,
-            'sunset'         => ($sunset > 1) ? Carbon::parse($sunset)->format('H:i') . ' UTC' : $not_able,
         ]);
     }
 }

@@ -7,13 +7,15 @@ use App\Models\Aircraft;
 use App\Models\Pirep;
 use App\Models\Subfleet;
 use Modules\DisposableBasic\Services\DB_FleetServices;
+use Modules\DisposableBasic\Services\DB_StatServices;
 
 class DB_FleetController extends Controller
 {
     // Fleet
     public function index()
     {
-        $aircraft = Aircraft::with('subfleet.airline')->orderby('icao')->orderby('registration')->paginate(50);
+        $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+        $aircraft = Aircraft::withCount($withCount)->with(['airline', 'subfleet'])->orderby('icao')->orderby('registration')->paginate(50);
 
         return view('DBasic::fleet.index', [
             'aircraft' => $aircraft,
@@ -26,13 +28,15 @@ class DB_FleetController extends Controller
     {
         $units = $this->GetUnits();
 
-        $subfleet = Subfleet::withCount('flights', 'fares')->with('airline', 'fares', 'hub')->where('type', $subfleet_type)->first();
-        $aircraft = Aircraft::withCount('simbriefs')->with('subfleet.airline')->where('subfleet_id', $subfleet->id)->orderby('registration')->get();
+        $subfleet = Subfleet::withCount(['flights', 'fares'])->with(['airline', 'fares', 'hub'])->where('type', $subfleet_type)->first();
+
+        $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+        $aircraft = Aircraft::withCount($withCount)->with(['airline', 'subfleet'])->where('subfleet_id', $subfleet->id)->orderby('registration')->get();
         
         // Latest Pireps
-        $where = array('state' => 2);
+        $where = ['state' => 2];
         $aircraft_array = $aircraft->pluck('id')->toArray();
-        $eager_pireps = array('dpt_airport', 'arr_airport', 'user', 'airline');
+        $eager_pireps = ['airline', 'arr_airport', 'dpt_airport', 'user'];
         $pireps = Pirep::with($eager_pireps)->where($where)->whereIn('aircraft_id', $aircraft_array)->orderby('submitted_at', 'desc')->take(5)->get();
 
         if (!$subfleet) {
@@ -45,7 +49,7 @@ class DB_FleetController extends Controller
         $image = $FleetSvc->SubfleetImage($subfleet);
 
         // Specifications
-        $specs = DB_GetSpecs_SF($subfleet);
+        $specs = DB_GetSpecs_SF($subfleet, true);
 
         // Files (only Subfleet level)
         $files = $subfleet->files;
@@ -72,8 +76,9 @@ class DB_FleetController extends Controller
     {
         $units = $this->GetUnits();
 
-        $eager_aircraft = array('airport', 'files', 'subfleet.airline', 'subfleet.fares', 'subfleet.files', 'subfleet.hub');
-        $aircraft = Aircraft::with($eager_aircraft)->where('registration', $ac_reg)->first();
+        $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+        $eager_aircraft = ['airline', 'airport', 'files', 'subfleet.fares', 'subfleet.files', 'subfleet.hub'];
+        $aircraft = Aircraft::withCount($withCount)->with($eager_aircraft)->where('registration', $ac_reg)->first();
 
         if (!$aircraft) {
             flash()->error('Aircraft not found !');
@@ -81,8 +86,8 @@ class DB_FleetController extends Controller
         }
 
         // Latest Pireps
-        $where = array('aircraft_id' => $aircraft->id, 'state' => 2);
-        $eager_pireps = array('dpt_airport', 'arr_airport', 'user', 'airline');
+        $where = ['aircraft_id' => $aircraft->id, 'state' => 2];
+        $eager_pireps = ['dpt_airport', 'arr_airport', 'user', 'airline'];
         $pireps = Pirep::with($eager_pireps)->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
 
         // Aircraft or Subfleet Image
@@ -91,6 +96,10 @@ class DB_FleetController extends Controller
 
         // Specifications
         $specs = DB_GetSpecs($aircraft, true);
+
+        // Stats
+        $StatSvc = app(DB_StatServices::class);
+        $stats = $StatSvc->PirepStats(null, $aircraft->id);
 
         // Combined files of aircraft and it's subfleet;
         $files = $aircraft->files;
@@ -105,6 +114,7 @@ class DB_FleetController extends Controller
             'maint'      => null,
             'pireps'     => filled($pireps) ? $pireps : null,
             'specs'      => $specs,
+            'stats'      => $stats,
             'units'      => $units,
         ]);
     }

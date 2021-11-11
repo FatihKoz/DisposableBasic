@@ -103,4 +103,10 @@ class TransferAircraft extends Widget
             'ts_aircraft' => isset($ts_aircraft) ? $ts_aircraft : null,
         ]);
     }
+
+    public function placeholder()
+    {
+        $loading_style = '<div class="alert alert-info mb-2 p-1 px-2 small fw-bold"><div class="spinner-border spinner-border-sm text-dark me-2" role="status"></div>Loading aircraft data...</div>';
+        return $loading_style;
+    }
 }

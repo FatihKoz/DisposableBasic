@@ -11,6 +11,7 @@ use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
 use App\Models\Enums\UserState;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DB_AirportServices
 {
@@ -21,12 +22,12 @@ class DB_AirportServices
             return null;
         }
 
-        $user_states = array(UserState::ACTIVE, UserState::ON_LEAVE);
+        $user_states = [UserState::ACTIVE, UserState::ON_LEAVE];
         $users_array = DB::table('users')->whereIn('state', $user_states)->pluck('id')->toArray();
         $airlines_array = DB::table('airlines')->where('active', 1)->pluck('id')->toArray();
 
-        $eager_load = array('aircraft', 'airline', 'arr_airport', 'dpt_airport', 'user');
-        $where = array('state' => PirepState::ACCEPTED, 'status' => PirepStatus::ARRIVED);
+        $eager_load = ['aircraft', 'airline', 'arr_airport', 'dpt_airport', 'user'];
+        $where = ['state' => PirepState::ACCEPTED, 'status' => PirepStatus::ARRIVED];
 
         $pireps = Pirep::with($eager_load)
             ->where(function ($query) use ($location) {
@@ -50,11 +51,11 @@ class DB_AirportServices
             return null;
         }
 
-        $states_array = array(UserState::ACTIVE, UserState::ON_LEAVE);
+        $states_array = [UserState::ACTIVE, UserState::ON_LEAVE];
         $airlines_array = DB::table('airlines')->where('active', 1)->pluck('id')->toArray();
 
-        $eager_load = array('airline', 'rank', 'home_airport');
-        $where = array('curr_airport_id' => $location);
+        $eager_load = ['airline', 'rank', 'home_airport'];
+        $where = ['curr_airport_id' => $location];
 
         $pilots = User::with($eager_load)
             ->where($where)
@@ -68,19 +69,20 @@ class DB_AirportServices
         return $pilots;
     }
 
-    // Aircraft
+    // Aircraft parked at a location
     public function GetAircraft($location, $count = null)
     {
         if (!$location) {
             return null;
         }
 
-        $statuses_array = array(AircraftStatus::ACTIVE, AircraftStatus::MAINTENANCE);
+        $statuses_array = [AircraftStatus::ACTIVE, AircraftStatus::MAINTENANCE];
 
-        $eager_load = array('airline', 'subfleet');
-        $where = array('airport_id' => $location, 'state' => AircraftState::PARKED);
+        $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+        $eager_load = ['airline', 'subfleet'];
+        $where = ['airport_id' => $location, 'state' => AircraftState::PARKED];
 
-        $aircraft = Aircraft::with($eager_load)
+        $aircraft = Aircraft::withCount($withCount)->with($eager_load)
             ->where($where)
             ->whereIn('status', $statuses_array)
             ->orderBy('landing_time', 'desc')
@@ -90,5 +92,43 @@ class DB_AirportServices
             })->get();
 
         return $aircraft;
+    }
+
+    // Sunrise Sunset Time Details
+    public function SunriseSunset($airport, $type = 'nautical')
+    {
+        $result = [];
+
+        if (!$airport) {
+            return $result;
+        }
+
+        $result['location'] = filled($airport->location) ? $airport->name . ' / ' . $airport->location : $airport->name;
+
+        $current_time = time();
+        $details = date_sun_info($current_time, $airport->lat, $airport->lon);
+
+        if ($details) {
+            foreach ($details as $key => $value) {
+                if ($key === $type . '_twilight_begin' && $value > 1) {
+                    $result['twilight_begin'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                }
+                if ($key === $type . '_twilight_end' && $value > 1) {
+                    $result['twilight_end'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                }
+                if ($key === 'sunrise' && $value > 1) {
+                    $result['sunrise'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                }
+                if ($key === 'sunset' && $value > 1) {
+                    $result['sunset'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                }
+            }
+        }
+
+        if (array_key_exists('civil_twilight_begin', $details) && array_key_exists('civil_twilight_end', $details) && $current_time > $details['civil_twilight_begin'] && $current_time < $details['civil_twilight_end']) {
+            $result['daylight'] = true;
+        }
+
+        return $result;
     }
 }

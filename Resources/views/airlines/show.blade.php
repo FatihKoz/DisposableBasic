@@ -8,17 +8,17 @@
       {{-- Navigation --}}
       <div class="nav nav-pills nav-justified mb-3" id="airline-nav" role="tablist">
         @if($subfleets->count() > 0)
-          <button class="nav-link active mx-1" id="airline-fleet" data-bs-toggle="pill" data-bs-target="#fleet" type="button" role="tab" aria-controls="fleet" aria-selected="true">
+          <button class="nav-link active mx-1" id="airline-fleet" data-bs-toggle="pill" data-bs-target="#al_fleet" type="button" role="tab" aria-controls="al_fleet" aria-selected="true">
             @lang('DBasic::common.fleet')
           </button>
         @endif
         @if($users->count() > 0)
-          <button class="nav-link mx-1" id="airline-pilots" data-bs-toggle="pill" data-bs-target="#pilots" type="button" role="tab" aria-controls="pilots" aria-selected="false">
+          <button class="nav-link mx-1" id="airline-pilots" data-bs-toggle="pill" data-bs-target="#al_pilots" type="button" role="tab" aria-controls="al_pilots" aria-selected="false">
             @lang('DBasic::common.roster')
           </button>
         @endif
         @if($pireps->count() > 0)
-          <button class="nav-link mx-1" id="airline-pireps" data-bs-toggle="pill" data-bs-target="#pireps" type="button" role="tab" aria-controls="pireps" aria-selected="false">
+          <button class="nav-link mx-1" id="airline-pireps" data-bs-toggle="pill" data-bs-target="#al_pireps" type="button" role="tab" aria-controls="al_pireps" aria-selected="false">
             @lang('DBasic::common.reports')
           </button>
         @endif
@@ -26,17 +26,17 @@
       {{-- Content --}}
       <div class="tab-content" id="airline-navContent">
         @if($subfleets->count() > 0)
-          <div class="tab-pane fade show active" id="fleet" role="tabpanel" aria-labelledby="airline-fleet">
+          <div class="tab-pane fade show active" id="al_fleet" role="tabpanel" aria-labelledby="airline-fleet">
             @include('DBasic::airlines.show_fleet_full')
           </div>
         @endif
         @if($users->count() > 0)
-          <div class="tab-pane fade" id="pilots" role="tabpanel" aria-labelledby="airline-pilots">
+          <div class="tab-pane fade" id="al_pilots" role="tabpanel" aria-labelledby="airline-pilots">
             @include('DBasic::airlines.show_roster')
           </div>
         @endif
         @if($pireps->count() > 0)
-          <div class="tab-pane fade" id="pireps" role="tabpanel" aria-labelledby="airline-pireps">
+          <div class="tab-pane fade" id="al_pireps" role="tabpanel" aria-labelledby="airline-pireps">
             @include('DBasic::airlines.show_reports')
           </div>
         @endif
@@ -77,6 +77,15 @@
             <img src="{{ $airline->logo }}" style="max-width: 90%; max-height: 50px;">
           </div>
         @endif
+      </div>
+      {{-- Two Map side by side positioning --}}
+      <div class="row">
+        <div class="col">
+          @widget('DBasic::Map', ['source' => $airline->id])
+        </div>
+        <div class="col">
+          @widget('DBasic::Map', ['source' => 'fleet', 'airline' => $airline->id])
+        </div>
       </div>
       {{-- Overall Finance --}}
       <div class="card mb-2">

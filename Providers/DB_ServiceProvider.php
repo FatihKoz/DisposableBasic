@@ -91,6 +91,7 @@ class DB_ServiceProvider extends ServiceProvider
                 'middleware' => ['auth'],
             ], function () {
                 Route::get('dbasic', 'DB_AdminController@index')->name('admin');
+                Route::get('dcheck', 'DB_AdminController@health_check')->name('health_check');
                 Route::match(['get', 'post'], 'dsettings_update', 'DB_AdminController@settings_update')->name('settings_update');
                 Route::match(['get', 'post'], 'dpark_aircraft', 'DB_AdminController@park_aircraft')->name('park_aircraft');
                 Route::match(['get', 'post'], 'dspecs', 'DB_SpecController@index')->name('specs');

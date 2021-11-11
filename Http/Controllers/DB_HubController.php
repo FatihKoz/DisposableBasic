@@ -11,6 +11,7 @@ use App\Models\Subfleet;
 use App\Models\User;
 use League\ISO3166\ISO3166;
 use Illuminate\Support\Facades\Auth;
+use Modules\DisposableBasic\Services\DB_AirportServices;
 
 class DB_HubController extends Controller
 {
@@ -53,16 +54,23 @@ class DB_HubController extends Controller
             // Aircraft
             $hub_subfleets = Subfleet::where('hub_id', $hub->id)->pluck('id')->toArray();
 
-            $aircraft_hub = Aircraft::with('subfleet.airline')->whereIn('subfleet_id', $hub_subfleets)
-                ->orderby('icao')->orderby('registration')->get();
-            $aircraft_off = Aircraft::with('subfleet.airline')->whereNotIn('subfleet_id', $hub_subfleets)
-                ->where('airport_id', $hub->id)->orderby('icao')->orderby('registration')->get();
+            $eager_aircraft = ['airline', 'subfleet'];
+            $withCount_aircraft = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+            $aircraft_hub = Aircraft::withCount($withCount_aircraft)->with($eager_aircraft)
+                ->whereIn('subfleet_id', $hub_subfleets)
+                ->orderby('icao')->orderby('registration')
+                ->get();
+            $aircraft_off = Aircraft::withCount($withCount_aircraft)->with($eager_aircraft)
+                ->whereNotIn('subfleet_id', $hub_subfleets)
+                ->where('airport_id', $hub->id)
+                ->orderby('icao')->orderby('registration')
+                ->get();
 
             $is_visible['aircraft'] = ($aircraft_hub->count() > 0 || $aircraft_off->count() > 0) ? true : false;
 
             // Flights
-            $f_where = array('active' => 1, 'visible' => 1);
-            $eager_flights = array('airline', 'arr_airport', 'dpt_airport');
+            $f_where = ['active' => 1, 'visible' => 1];
+            $eager_flights = ['airline', 'arr_airport', 'dpt_airport'];
 
             $flights = Flight::with($eager_flights)->where($f_where)
                 ->where(function ($query) use ($hub) {
@@ -85,15 +93,15 @@ class DB_HubController extends Controller
                 $off_where['state'] = 1;
             }
 
-            $eager_users = array('airline', 'current_airport', 'home_airport', 'rank');
+            $eager_users = ['airline', 'current_airport', 'home_airport', 'rank'];
 
             $users_hub = User::with($eager_users)->where($hub_where)->orderby('id')->get();
             $users_off = User::with($eager_users)->where($off_where)->orderby('id')->get();
             $is_visible['pilots'] = ($users_hub->count() > 0 || $users_off->count() > 0) ? true : false;
 
             // Pilot Reports
-            $p_where = array('state' => 2, 'status' => 'ONB');
-            $eager_pireps = array('user', 'aircraft', 'airline', 'dpt_airport', 'arr_airport');
+            $p_where = ['state' => 2, 'status' => 'ONB'];
+            $eager_pireps = ['aircraft', 'airline', 'arr_airport', 'dpt_airport', 'user'];
 
             $pireps = Pirep::with($eager_pireps)->where('dpt_airport_id', $hub->id)->where($p_where)
                 ->orWhere('arr_airport_id', $hub->id)->where($p_where)
@@ -102,6 +110,10 @@ class DB_HubController extends Controller
 
             // Downloads
             $is_visible['downloads'] = ($hub->files_count > 0 && Auth::check()) ? true : false;
+
+            // Sunrise Sunset Details
+            $AirportSvc = app(DB_AirportServices::class);
+            $sun_details = $AirportSvc->SunriseSunset($hub);
 
             return view('DBasic::hubs.show', [
                 'aircraft_hub' => $aircraft_hub,
@@ -112,6 +124,7 @@ class DB_HubController extends Controller
                 'hub'          => $hub,
                 'is_visible'   => $is_visible,
                 'pireps'       => $pireps,
+                'sundetails'   => $sun_details,
                 'units'        => $units,
                 'users_hub'    => $users_hub,
                 'users_off'    => $users_off,

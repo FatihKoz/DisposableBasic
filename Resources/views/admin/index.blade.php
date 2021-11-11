@@ -4,9 +4,9 @@
 @section('content')
   <div class="card border-blue-bottom" style="margin-bottom: 10px;">
     <div class="content">
-      <p>This module is designed to basic features for a Virtual Airline to operate.</p>
+      <p>This module is designed to provide basic features for a Virtual Airline to operate</p>
       <hr>
-      <p><b>To Be Completed...</b></p>
+      <p><b>Documentation to be completed...</b></p>
       <hr>
       <p>By <a href="https://github.com/FatihKoz" target="_blank">B.Fatih KOZ</a> &copy; @php echo date('Y'); @endphp</p>
     </div>
@@ -15,25 +15,32 @@
   <div class="row text-center" style="margin-left:5px; margin-right:5px;">
     <h4 style="margin:5px;"><b>Admin Features</b></h4>
     <div class="col-sm-12">
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="card border-blue-bottom" style="padding:10px;">
           <a href="{{ route('DBasic.specs') }}">Manage ICAO Type, Subfleet or Aircraft Specs</a>
           <br><br>
           Specs will be used for detailed SimBrief Flight planning, also they will be shown at Aircraft and Subfleet listing pages.
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="card border-blue-bottom" style="padding:10px;">
           <a href="{{ route('DBasic.tech')}}">Manage Maintenance Periods, Pitch, Roll, Flap and Gear Limits</a>
           <br><br>
           Tech details, Flap and Gear Speeds may be used for Pirep evaluation purposes.
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="card border-blue-bottom" style="padding:10px;">
           <a href="{{ route('DBasic.runway')}}">Manage Runways</a>
           <br><br>
           Runways may be used for proper SimBrief flight planning and Pirep evaluation purposes.
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="card border-blue-bottom" style="padding:10px;">
+          <a href="{{ route('DBasic.health_check')}}">Database Check</a>
+          <br><br>
+          See missing airports or possible problematic records about mandatory relationships.
         </div>
       </div>
     </div>
@@ -78,17 +85,19 @@
           </div>
           <span class="text-danger"><b>If the aircraft has an active (in-progress) PIREP, it gets CANCELLED too !!!</b></span>
         </div>
-        {{-- IVAO and VATSIM --}}
-        <div class="card border-blue-bottom" style="padding:5px;">
-          <b>IVAO</b>
-          <br>
-          @include('DBasic::admin.settings_table', ['group' => 'IVAO'])
-        </div>
-        <div class="card border-blue-bottom" style="padding:5px;">
-          <b>VATSIM</b>
-          <br>
-          @include('DBasic::admin.settings_table', ['group' => 'VATSIM'])
-        </div>
+        {{-- IVAO and VATSIM Related Settings --}}
+        {{--}}
+          <div class="card border-blue-bottom" style="padding:5px;">
+            <b>IVAO</b>
+            <br>
+            @include('DBasic::admin.settings_table', ['group' => 'IVAO'])
+          </div>
+          <div class="card border-blue-bottom" style="padding:5px;">
+            <b>VATSIM</b>
+            <br>
+            @include('DBasic::admin.settings_table', ['group' => 'VATSIM'])
+          </div>
+        {{--}}
       </div>
     </div>
   </div>

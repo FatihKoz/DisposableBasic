@@ -68,9 +68,13 @@ if (!function_exists('DB_GetSpecs')) {
 
 // Get detailed addon specificatiions for a Subfleet
 if (!function_exists('DB_GetSpecs_SF')) {
-    function DB_GetSpecs_SF($subfleet)
+    function DB_GetSpecs_SF($subfleet, $deep_check = false)
     {
         $specs = DB_Spec::where(['subfleet_id' => $subfleet->id, 'active' => true])->orderby('saircraft')->get();
+
+        if ($deep_check && blank($specs)) {
+            $specs = DB_GetSpecs_ICAO(substr($subfleet->type, 0, 3));
+        }
         return filled($specs) ? $specs : null;
     }
 }

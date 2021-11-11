@@ -19,7 +19,6 @@
     <th>@lang('DBasic::common.status')</th>
   </tr>
   @foreach($aircraft as $ac)
-    @php if(!isset($subfleet)) { $subfleet = $ac->subfleet; } @endphp
     <tr @if($ac->simbriefs_count > 0) class="table-primary" @endif>
       <td class="text-start">
         <a href="{{ route('DBasic.aircraft', [$ac->registration]) }}">
@@ -30,20 +29,20 @@
       <td>{{ $ac->icao }}</td>
       @empty($compact_view)
         <td>
-          <a href="{{ route('DBasic.airline', [$subfleet->airline->icao ?? '']) }}">
-            {{ $subfleet->airline->name ?? '' }}
+          <a href="{{ route('DBasic.airline', [$ac->airline->icao ?? '']) }}">
+            {{ $ac->airline->name ?? '' }}
           </a>
         </td>
         <td>
-          <a href="{{ route('DBasic.subfleet', [$subfleet->type ?? '']) }}">
-            {{ $subfleet->name ?? '' }}
+          <a href="{{ route('DBasic.subfleet', [$ac->subfleet->type ?? '']) }}">
+            {{ $ac->subfleet->name ?? '' }}
           </a>
         </td>
       @endempty
       @empty($hub_ac)
         <td>
-          <a href="{{ route('DBasic.hub', [strtoupper($subfleet->hub_id) ?? '']) }}">
-            {{ $subfleet->hub_id ?? ''}}
+          <a href="{{ route('DBasic.hub', [strtoupper($ac->subfleet->hub_id) ?? '']) }}">
+            {{ $ac->subfleet->hub_id ?? ''}}
           </a>
         </td>
       @endempty

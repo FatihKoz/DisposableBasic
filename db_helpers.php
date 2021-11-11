@@ -43,6 +43,7 @@ if (!function_exists('DB_AircraftState')) {
     {
         $color = 'primary';
         $state = $aircraft->state;
+        $title = null;
 
         if ($state === AircraftState::PARKED) {
             $color = 'success';
@@ -52,12 +53,17 @@ if (!function_exists('DB_AircraftState')) {
             $color = 'warning';
         }
 
+        if ($aircraft->simbriefs_count > 0) {
+            $color = 'primary';
+            $title = 'Booked with SimBrief OFP';
+        }
+
         if ($type === 'bg') {
             $result = 'class="bg-' . $color . '"';
         } elseif ($type === 'row') {
             $result = 'class="table-' . $color . '"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftState::label($state) . '</span>';
+            $result = '<span class="badge bg-' . $color . ' text-black" title="'.$title.'">' . AircraftState::label($state) . '</span>';
         }
 
         return $result;

@@ -7,6 +7,8 @@
     <div class="col-5">
       @include('DBasic::fleet.aircraft_details')
 
+      @widget('DBasic::FuelCalculator', ['aircraft' => $aircraft->id])
+
       @if($image)
         <div class="card mb-2">
           <div class="card-header p-1">
@@ -20,8 +22,6 @@
           </div>
         </div>
       @endif
-
-      @widget('DBasic::FuelCalculator', ['aircraft' => $aircraft->id])
     </div>
     {{-- Right --}}
     <div class="col-7">
@@ -52,9 +52,8 @@
       @endif
 
       <div class="row row-cols-2">
-
+        {{-- Files --}}
         <div class="col">
-          {{-- Files --}}
           @if($files)
             <div class="card mb-2">
               <div class="card-header p-1">
@@ -69,12 +68,35 @@
             </div>
           @endif
         </div>
-
+        {{-- Basic Stats --}}
         <div class="col">
-          {{-- Stats --}}
-          @widget('DBasic::Stats', ['type' => 'aircraft', 'id' => $aircraft->id])
+          @if($stats)
+            <div class="card mb-2">
+              <div class="card-header p-1">
+                <h5 class="m-1">
+                  @lang('DBasic::widgets.stats')
+                  <i class="fas fa-cogs float-end"></i>
+                </h5>
+              </div>
+              <div class="card-body p-0 table-responsive">
+                <table class="table table-sm table-borderless table-striped text-start mb-0">
+                  @foreach($stats as $key => $value)
+                    <tr>
+                      <th>{{ $key }}</th>
+                      <td class="text-end">{{ $value }}</td>
+                    </tr>
+                  @endforeach
+                </table>
+              </div>
+              <div class="card-footer p-0 px-1 small text-end fw-bold">
+                {{ $aircraft->ident }}
+                @if($aircraft->name != $aircraft->registration)
+                  {{ ' "'.ucfirst($aircraft->name).'"' }}
+                @endif
+              </div>
+            </div>
+          @endif
         </div>
-
       </div>
     </div>
   </div>
