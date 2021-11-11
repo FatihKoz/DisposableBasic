@@ -7,9 +7,13 @@
               <th>
                 <a href="{{ route('DBasic.subfleet', [$subfleet->type ?? '']) }}">{{ $subfleet->name }}</a>
               </th>
-              <th class="text-end">
+              <td class="col-3 text-end">
+                 {{ $subfleet->type }}
+              </td>
+              <td class="col-2 text-end">
+                <span class="float-start">@lang('DBasic::common.aircraft'): {{ $subfleet->aircraft->count() }}</span>
                 <i class="fas fa-scroll" title="@lang('DBasic::common.show_hide')" type="button" data-bs-toggle="collapse" data-bs-target="#sf_{{ $subfleet->id }}" aria-expanded="false" aria-controls="sf_{{ $subfleet->id }}"></i>
-              </th>
+              </td>
             </tr>
           </table>
           <div class="collapse" id="sf_{{ $subfleet->id }}">
