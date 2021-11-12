@@ -1,7 +1,7 @@
 {
-    "name": "DisposableBasic",
+    "name": "fatihkoz/disposablebasic",
     "type": "phpvms-module",
-    "description": "Disposable Virtual Airline Pack (Basic)",
+    "description": "phpVMS v7 module for Basic VA features",
     "authors": [
         {
             "name": "B.Fatih KOZ",

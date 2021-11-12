@@ -1,7 +1,7 @@
 {
     "name": "DisposableBasic",
     "alias": "disposablebasic",
-    "description": "Disposable Virtual Airline Pack (Basic)",
+    "description": "phpVMS v7 module for Basic VA features",
     "keywords": [],
     "active": 0,
     "order": 9001,

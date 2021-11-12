@@ -93,8 +93,7 @@ class Map extends Widget
             $orwhere['visible'] = 1;
         }
 
-        $eager_load = array('airline:id,name,icao,iata', 'arr_airport:id,name,lat,lon,hub', 'dpt_airport:id,name,lat,lon,hub');
-
+        $eager_load = ['airline:id,name,icao,iata', 'arr_airport:id,name,lat,lon,hub', 'dpt_airport:id,name,lat,lon,hub'];
         // User Pireps Map
         if ($type === 'user') {
             $mapflights = Pirep::with($eager_load)
@@ -149,7 +148,7 @@ class Map extends Widget
                 $subfleets = array_intersect($subfleets, $user_subfleets);
             }
 
-            $aircraft = Aircraft::select('id', 'airport_id', 'subfleet_id', 'registration', 'icao')
+            $aircraft = DB::table('aircraft')->select('id', 'airport_id', 'subfleet_id', 'registration', 'icao')
                 ->where($awhere)
                 ->whereIn('subfleet_id', $subfleets)
                 ->orderby('registration')
@@ -158,7 +157,7 @@ class Map extends Widget
             // Build Unique Locations
             $aircraft_locations = $aircraft->pluck('airport_id')->toArray();
             $aircraft_locations = array_unique($aircraft_locations, SORT_STRING);
-            $airports = Airport::whereIn('id', $aircraft_locations)->get();
+            $airports = DB::table('airports')->select('id', 'hub', 'iata', 'icao', 'lat', 'lon', 'name')->whereIn('id', $aircraft_locations)->get();
         }
 
         // Build Unique City Pairs From Flights/Pireps
@@ -199,13 +198,13 @@ class Map extends Widget
         $YellowUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png';
 
         $shadowUrl = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png';
-        $iconSize = array(12, 20);
-        $shadowSize = array(20, 20);
+        $iconSize = [12, 20];
+        $shadowSize = [20, 20];
 
-        $mapIcons['RedIcon'] = json_encode(array('iconUrl' => $RedUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize));
-        $mapIcons['GreenIcon'] = json_encode(array('iconUrl' => $GreenUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize));
-        $mapIcons['BlueIcon'] = json_encode(array('iconUrl' => $BlueUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize));
-        $mapIcons['YellowIcon'] = json_encode(array('iconUrl' => $YellowUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize));
+        $mapIcons['RedIcon'] = json_encode(['iconUrl' => $RedUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['GreenIcon'] = json_encode(['iconUrl' => $GreenUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['BlueIcon'] = json_encode(['iconUrl' => $BlueUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['YellowIcon'] = json_encode(['iconUrl' => $YellowUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
 
         // Routes For PopUps
         $hroute = 'DBasic.hub';
@@ -219,7 +218,7 @@ class Map extends Widget
             if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $hub->id)->count() > 0 && $aircraft->where('airport_id', $hub->id)->count() < 6) {
                 $hpop = $hpop . '<hr>';
                 foreach ($aircraft->where('airport_id', $hub->id) as $ac) {
-                    $hpop = $hpop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->ident . '</a><br>';
+                    $hpop = $hpop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration .' ('.$ac->icao.') </a><br>';
                 }
             } elseif (isset($aircraft)) {
                 $hpop = $hpop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $hub->id)->count() . '<br>';
@@ -239,7 +238,7 @@ class Map extends Widget
             if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $airport->id)->count() > 0 && $aircraft->where('airport_id', $airport->id)->count() < 6) {
                 $apop = $apop . '<hr>';
                 foreach ($aircraft->where('airport_id', $airport->id) as $ac) {
-                    $apop = $apop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->ident . '</a><br>';
+                    $apop = $apop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration .' ('.$ac->icao.') </a><br>';
                 }
             } elseif (isset($aircraft)) {
                 $apop = $apop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $airport->id)->count();
