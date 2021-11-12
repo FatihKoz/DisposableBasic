@@ -90,7 +90,7 @@ class WhazzUp extends Widget
 
         $pilots = collect($pilots);
 
-        return view('DBasic::widgets.whazzup2', [
+        return view('DBasic::widgets.whazzup', [
             'pilots'  => isset($pilots) ? $pilots : null,
             'error'   => isset($error) ? $error : null,
             'network' => $network_selection,
