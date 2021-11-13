@@ -8,7 +8,6 @@ class HandleDisposableTechDetailsTable extends Migration
 {
     public function up()
     {
-        // Create Disposable flaps table
         if (!Schema::hasTable('disposable_flaps') && !Schema::hasTable('disposable_tech')) {
             Schema::create('disposable_flaps', function (Blueprint $table) {
                 $table->increments('id');
@@ -46,7 +45,6 @@ class HandleDisposableTechDetailsTable extends Migration
             });
         }
 
-        // Add maximums for pitch, roll, and maintenance intervals
         if (Schema::hasTable('disposable_flaps') && !Schema::hasTable('disposable_tech') && !Schema::hasColumn('disposable_flaps', 'max_pitch')) {
             Schema::table('disposable_flaps', function (Blueprint $table) {
                 $table->integer('max_pitch')->nullable()->after('gear_maxtire');
@@ -60,12 +58,10 @@ class HandleDisposableTechDetailsTable extends Migration
             });
         }
 
-        // Rename the table
         if (Schema::hasTable('disposable_flaps') && !Schema::hasTable('disposable_tech')) {
             Schema::rename('disposable_flaps', 'disposable_tech');
         }
 
-        // Add maintenance check durations
         if (Schema::hasTable('disposable_tech') && !Schema::hasColumn('disposable_tech', 'duration_a')) {
             Schema::table('disposable_tech', function (Blueprint $table) {
                 $table->decimal('duration_a', $precision = 6, $scale = 2)->nullable()->after('max_time_a');
@@ -74,16 +70,26 @@ class HandleDisposableTechDetailsTable extends Migration
             });
         }
 
-        // Add average fuel consumption field
         if (Schema::hasTable('disposable_tech') && !Schema::hasColumn('disposable_tech', 'avg_fuel')) {
             Schema::table('disposable_tech', function (Blueprint $table) {
                 $table->decimal('avg_fuel', $precision = 8, $scale = 2)->nullable()->after('duration_c');
             });
         }
 
-        // Rename the table
         if (Schema::hasTable('disposable_tech') && !Schema::hasTable('disposable_tech_details')) {
+            Schema::table('disposable_tech', function (Blueprint $table) {
+                $table->dropIndex('disposable_flaps_id_index');
+                $table->dropUnique('disposable_flaps_id_unique');
+                $table->dropUnique('disposable_flaps_icao_unique');
+            });
+
             Schema::rename('disposable_tech', 'disposable_tech_details');
+
+            Schema::table('disposable_tech_details', function (Blueprint $table) {
+                $table->index('id');
+                $table->unique('id');
+                $table->unique('icao');
+            });
         }
     }
 }

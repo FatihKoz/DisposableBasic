@@ -9,7 +9,7 @@
       <p>(2) : When used all three fields must be defined otherwise it will not be used for SimBrief planning.</p>
       <p>Order of loading/selection during usage is simple as <b>Aircraft > SubFleet > ICAO Type</b></p>
       <br>
-      <p>Developed by <a href="https://github.com/FatihKoz" target="_blank">B.Fatih KOZ</a> &copy; 2021</p>
+      <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>
   </div>
 

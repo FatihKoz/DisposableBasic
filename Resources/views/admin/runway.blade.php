@@ -10,7 +10,7 @@
         I highly and kindly advise to keep your runways updated via direct database imports periodically.
       </p>
       <br>
-      <p>Developed by <a href="https://github.com/FatihKoz" target="_blank">B.Fatih KOZ</a> &copy; 2021</p>
+      <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>
   </div>
 

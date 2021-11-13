@@ -6,7 +6,7 @@
     <div class="content">
       <p>Details defined here are based on <b>AIRCRAFT ICAO TYPE</b>. All values are optional, if defined properly per ICAO type, values may be used for pirep checks and maintenance events.</p>
       <br>
-      <p>Developed by <a href="https://github.com/FatihKoz" target="_blank">B.Fatih KOZ</a> &copy; 2021</p>
+      <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>
   </div>
 

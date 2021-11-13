@@ -1,5 +1,5 @@
 @extends('admin.app')
-@section('title', 'Disposable Basic VA Pack')
+@section('title', 'Disposable Basic')
 
 @section('content')
   <div class="card border-blue-bottom" style="margin-bottom: 10px;">
@@ -8,7 +8,7 @@
       <hr>
       <p><b>Documentation to be completed...</b></p>
       <hr>
-      <p>By <a href="https://github.com/FatihKoz" target="_blank">B.Fatih KOZ</a> &copy; @php echo date('Y'); @endphp</p>
+      <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>
   </div>
 

@@ -17,7 +17,7 @@
       </p>
       <p><b>MISSING</b> means either you deleted those records for some reason or they are not properly imported from your old install (v2, v5, v7, VAM etc).</p>
       <hr>
-      <p>By <a href="https://github.com/FatihKoz" target="_blank">B.Fatih KOZ</a> &copy; @php echo date('Y'); @endphp</p>
+      <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>
   </div>
 
