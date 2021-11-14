@@ -107,7 +107,7 @@
         </div>
       </div>
       {{-- Basic Stats --}}
-      <div class="card mb-2">
+      <div class="card mb-1">
         <div class="card-header p-1">
           <h5 class="m-1">
             @lang('DBasic::widgets.stats')
