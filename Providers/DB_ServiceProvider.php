@@ -43,65 +43,57 @@ class DB_ServiceProvider extends ServiceProvider
         // Frontend
         Route::group([
             'as'         => 'DBasic.',
-            'middleware' => ['web'],
+            'middleware' => ['web', 'auth'],
             'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
             'prefix'     => '',
         ], function () {
-            Route::group([
-                'middleware' => ['auth'],
-            ], function () {
-                // Airlines
-                Route::get('dairlines', 'DB_AirlineController@index')->name('airlines');
-                Route::get('dairlines/{icao}', 'DB_AirlineController@show')->name('airline');
-                Route::get('dairline/{id}', 'DB_AirlineController@myairline')->name('myairline');
-                // Awards
-                Route::get('dawards', 'DB_AwardController@index')->name('awards');
-                // Fleet
-                Route::get('dfleet', 'DB_FleetController@index')->name('fleet');
-                Route::get('dfleet/{subfleet_type}', 'DB_FleetController@subfleet')->name('subfleet');
-                Route::get('daircraft/{ac_reg}', 'DB_FleetController@aircraft')->name('aircraft');
-                // Hubs
-                Route::get('dhubs', 'DB_HubController@index')->name('hubs');
-                Route::get('dhubs/{icao}', 'DB_HubController@show')->name('hub');
-                // News
-                Route::get('dnews', 'DB_NewsController@index')->name('news');
-                // Ranks
-                Route::get('dranks', 'DB_RankController@index')->name('ranks');
-                // Roster
-                Route::get('droster', 'DB_RosterController@index')->name('roster');
-                // Pages
-                Route::get('dlivewx', 'DB_PageController@livewx')->name('livewx');
-                // Pireps
-                Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
-                // Statistics
-                Route::get('dstats', 'DB_StatisticController@index')->name('stats');
-                // Widgets
-                Route::match(['get', 'post'], 'djumpseat', 'DB_WidgetController@jumpseat')->name('jumpseat');
-                Route::match(['get', 'post'], 'dtransferac', 'DB_WidgetController@transferac')->name('transferac');
-            });
+            // Airlines
+            Route::get('dairlines', 'DB_AirlineController@index')->name('airlines');
+            Route::get('dairlines/{icao}', 'DB_AirlineController@show')->name('airline');
+            Route::get('dairline/{id}', 'DB_AirlineController@myairline')->name('myairline');
+            // Awards
+            Route::get('dawards', 'DB_AwardController@index')->name('awards');
+            // Fleet
+            Route::get('dfleet', 'DB_FleetController@index')->name('fleet');
+            Route::get('dfleet/{subfleet_type}', 'DB_FleetController@subfleet')->name('subfleet');
+            Route::get('daircraft/{ac_reg}', 'DB_FleetController@aircraft')->name('aircraft');
+            // Hubs
+            Route::get('dhubs', 'DB_HubController@index')->name('hubs');
+            Route::get('dhubs/{icao}', 'DB_HubController@show')->name('hub');
+            // News
+            Route::get('dnews', 'DB_NewsController@index')->name('news');
+            // Ranks
+            Route::get('dranks', 'DB_RankController@index')->name('ranks');
+            // Roster
+            Route::get('droster', 'DB_RosterController@index')->name('roster');
+            // Pages
+            Route::get('dlivewx', 'DB_PageController@livewx')->name('livewx');
+            // Pireps
+            Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
+            // Statistics
+            Route::get('dstats', 'DB_StatisticController@index')->name('stats');
+            // Widgets
+            Route::match(['get', 'post'], 'djumpseat', 'DB_WidgetController@jumpseat')->name('jumpseat');
+            Route::match(['get', 'post'], 'dtransferac', 'DB_WidgetController@transferac')->name('transferac');
         });
 
         // Admin
         Route::group([
             'as'         => 'DBasic.',
-            'middleware' => ['web', 'role:admin'],
+            'middleware' => ['web', 'auth', 'role:admin'],
             'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
             'prefix'     => 'admin',
         ], function () {
-            Route::group([
-                'middleware' => ['auth'],
-            ], function () {
-                Route::get('dbasic', 'DB_AdminController@index')->name('admin');
-                Route::get('dcheck', 'DB_AdminController@health_check')->name('health_check');
-                Route::match(['get', 'post'], 'dsettings_update', 'DB_AdminController@settings_update')->name('settings_update');
-                Route::match(['get', 'post'], 'dpark_aircraft', 'DB_AdminController@park_aircraft')->name('park_aircraft');
-                Route::match(['get', 'post'], 'dspecs', 'DB_SpecController@index')->name('specs');
-                Route::match(['get', 'post'], 'dspecs_store', 'DB_SpecController@store')->name('specs_store');
-                Route::match(['get', 'post'], 'dtech', 'DB_TechController@index')->name('tech');
-                Route::match(['get', 'post'], 'dtech_store', 'DB_TechController@store')->name('tech_store');
-                Route::match(['get', 'post'], 'drunway', 'DB_RunwayController@index')->name('runway');
-                Route::match(['get', 'post'], 'drunway_store', 'DB_RunwayController@store')->name('runway_store');
-            });
+            Route::get('dbasic', 'DB_AdminController@index')->name('admin');
+            Route::get('dcheck', 'DB_AdminController@health_check')->name('health_check');
+            Route::match(['get', 'post'], 'dsettings_update', 'DB_AdminController@settings_update')->name('settings_update');
+            Route::match(['get', 'post'], 'dpark_aircraft', 'DB_AdminController@park_aircraft')->name('park_aircraft');
+            Route::match(['get', 'post'], 'dspecs', 'DB_SpecController@index')->name('specs');
+            Route::match(['get', 'post'], 'dspecs_store', 'DB_SpecController@store')->name('specs_store');
+            Route::match(['get', 'post'], 'dtech', 'DB_TechController@index')->name('tech');
+            Route::match(['get', 'post'], 'dtech_store', 'DB_TechController@store')->name('tech_store');
+            Route::match(['get', 'post'], 'drunway', 'DB_RunwayController@index')->name('runway');
+            Route::match(['get', 'post'], 'drunway_store', 'DB_RunwayController@store')->name('runway_store');
         });
     }
 
