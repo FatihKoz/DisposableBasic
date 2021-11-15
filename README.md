@@ -37,7 +37,7 @@ Just follow the installation procedure by overwriting your old module files
 
 Below order and steps are really important for proper update from old modules to new combined module pack
 
-**Important: There is no going back to v2 series once v3 is installed !!!**  
+:warning: **Important: There is no going back to v2 series once v3 is installed !!!** :warning:  
 **Backup your database tables and old module files before this process**  
 **Only database tables starting with `disposable_` is needed to be backed up**  
 
@@ -160,22 +160,31 @@ When needed, you can use below widgets to enhance the data provided by your page
 
 ### Active Bookings
 
-Shows either active SimBrief bookings or bids.  
-`@widget('DBasic::ActiveBookings', ['source' => 'bids'])`
+Shows either active SimBrief bookings or bids.
+
+```php
+@widget('DBasic::ActiveBookings', ['source' => 'bids'])
+```
 
 * `'source'` can be `'bids'` or `'simbrief'`
 
 ### Active Users
 
 Show active users browsing your website (only members), needs the session to be handled by database.
-`@widget('DBasic::ActiveUsers', ['margin' => 5])`
+
+```php
+@widget('DBasic::ActiveUsers', ['margin' => 5])
+```
 
 * `'margin'` can be any number you wish for inactivity time limit (in minutes)
 
 ### Airport Assets
 
 Shows pilots, aircraft or pireps of an airport.
-`@widget('DBasic::AirportAssets', ['location' => $airport->id, 'type' => 'pireps', 'count' => 50])`
+
+```php
+@widget('DBasic::AirportAssets', ['location' => $airport->id, 'type' => 'pireps', 'count' => 50])
+```
 
 * `'location'` must be an ICAO code like `$airport->id` or plain text `ETNL`  
 * `'type'` can be either `'pilots'` , `'pireps'` or `'aircraft'`  
@@ -184,7 +193,10 @@ Shows pilots, aircraft or pireps of an airport.
 ### Airport Info
 
 Shows all your airports in a dropdown and provides a link to visit their pages.
-`@widget('DBasic::AirportInfo', ['type' => 'nohubs'])`
+
+```php
+@widget('DBasic::AirportInfo', ['type' => 'nohubs'])
+```
 
 * `'type'` can be `'all'` , `'hubs'` or `'nohubs'`
 
@@ -193,7 +205,10 @@ This widget is designed my @macofallico and slightly enhanced by me. Distributed
 ### Discord
 
 Shows real time data from your Discord Server. Be advised, you should enable widget support of your Discord server first.
-`@widget('DBasic::Discord', ['server' => 123456789123456789, 'bots' => true, 'bot' => ' Server Bot'])`
+
+```php
+@widget('DBasic::Discord', ['server' => 123456789123456789, 'bots' => true, 'bot' => ' Server Bot'])
+```
 
 * `'server'` is your Discord server id.  
 * `'bots'` can be `true` or `false` and control displaying of Bots as online users
@@ -202,7 +217,10 @@ Shows real time data from your Discord Server. Be advised, you should enable wid
 ### Fleet Overview
 
 Displays the airports your fleet is located or gives a SubFleet / ICAO type based count.
-`@widget('DBasic::FleetOverview', ['type' => 'location', 'hubs' => false])`
+
+```php
+@widget('DBasic::FleetOverview', ['type' => 'location', 'hubs' => false])
+```
 
 * `'type'` can be `'location'` , `'subfleet'` or `'icao'`  
 * `'hubs'` can be either `true` or `false`
@@ -210,19 +228,28 @@ Displays the airports your fleet is located or gives a SubFleet / ICAO type base
 ### Flight Board
 
 Shows current/active flights. It has no custom settings.
-`@widget('DBasic::FlightBoard')`
+
+```php
+@widget('DBasic::FlightBoard')
+```
 
 ### Flight Time Multiplier
 
 A Basic flight time calculator. No special settings.
-`@widget('DBasic::FlightTimeMultiplier')`
+
+```php
+@widget('DBasic::FlightTimeMultiplier')
+```
 
 Some VA's or platforms offer double or multiplied hours for some tours and events, thus this may come in handy.
 
 ### Fuel Calculator
 
 Basic fuel calculator.
-`@widget('DBasic::FuelCalculator', ['aircraft' => $aircraft->id])`
+
+```php
+@widget('DBasic::FuelCalculator', ['aircraft' => $aircraft->id])
+```
 
 * `'aircraft'` must be an aircraft's id (numeric value, not registration or name etc).
 
@@ -234,7 +261,10 @@ Considering the basic calculation, provided results should not be used for airli
 ### Jumpseat Travel
 
 Adds frontend pilot self transfer capability to phpVMS v7.
-`@widget('DBasic::JumpSeat', ['base' => 0.25, 'price' => 'auto'])`
+
+```php
+@widget('DBasic::JumpSeat', ['base' => 0.25, 'price' => 'auto'])
+```
 
 * `'base'` forces the auto price system to use any given numeric value (like `0.25` cents per nautical mile)  
 * `'price'` can be `'free'` , `'auto'` or a fixed numeric value like `250`. Currency is based on your phpvms v7 setttings  
@@ -244,7 +274,10 @@ Adds frontend pilot self transfer capability to phpVMS v7.
 ### Leader Board
 
 Provides a leader board according to config options defined.
-`@widget('DBasic::LeaderBoard', ['source' => 'pilot', 'hub' => $hub->id, 'count' => 3, 'period' => 'lastm', 'type' => 'lrate_low'])`
+
+```php
+@widget('DBasic::LeaderBoard', ['source' => 'pilot', 'hub' => $hub->id, 'count' => 3, 'period' => 'lastm', 'type' => 'lrate_low'])
+```
 
 * `'source'` should be `'pilot'`, `'airline'`, `'dep'` or `'arr'`
 * `'hub'` can be an airport ID like `$hub->id` or plain text `'EDDH'`
@@ -259,8 +292,11 @@ To save server resources, past time based results will be cached until the end o
 ### Map
 
 Generates a leaflet map according to config options defined.
-`@widget('DBasic::Map', ['source' => 'fleet', 'airline' => $airline->id])`
-`@widget('DBasic::Map', ['source' => $hub->id, 'limit' => 1000])`
+
+```php
+@widget('DBasic::Map', ['source' => 'fleet', 'airline' => $airline->id])
+@widget('DBasic::Map', ['source' => $hub->id, 'limit' => 1000])
+```
 
 * `'source'` can be an airport_id (like `$airport->id` or `'EHAM'`), an airline_id (like `$airline->id` or `3`), `'user'`, `'fleet'`
 * `'visible'` can be either `true` or `false` (to show or skip visible flights as per phpvms settings)
@@ -271,7 +307,10 @@ Generates a leaflet map according to config options defined.
 ### Personal Stats
 
 Provides personal pirep statistics per pilot according to config options defined.
-`@widget('DBasic::PersonalStats', ['user' => $user->id, 'period' => 'lastm', 'type' => 'avglanding'])`
+
+```php
+@widget('DBasic::PersonalStats', ['user' => $user->id, 'period' => 'lastm', 'type' => 'avglanding'])
+```
 
 * `'user'` can be a user's id like `$user->id` or `3`  
 * `'period'` can be any number of days (like `15`, except 0 of course), `'currentm'`, `'lastm'`, `'prevm'`, `'currenty'`, `'lasty'`, `'q1'`, `'q2'`, `'q3'`, `'q4'`  
@@ -285,7 +324,10 @@ To save server resources, past time based results will be cached until the end o
 ### Random Flights
 
 Picks up some random flights by following your phpVms settings and config options defined.
-`@widget('DBasic::RandomFlights', ['count' => 3, 'hub' => true, 'daily' => true])`
+
+```php
+@widget('DBasic::RandomFlights', ['count' => 3, 'hub' => true, 'daily' => true])
+```
 
 * `'count'` can be any number you wish like `3` (except 0 of course)
 * `'daily'` can be `true` or `false`. Which will force widget to pick random flights once per day
@@ -298,7 +340,10 @@ In any config, random flights will be refreshed each day.
 ### Statistics
 
 Provides mainly pirep based statistics for an airline, aircraft or your entire v7 installation.
-`@widget('DBasic::Stats', ['type' => 'aircraft', 'id' => $aircraft->id])`
+
+```php
+@widget('DBasic::Stats', ['type' => 'aircraft', 'id' => $aircraft->id])
+```
 
 * `'type'` can be `'airline'` , `'aircraft'`, `'home'` (for generic but slightly reduced result set)
 * `'id'` can be airline's or aircraft's numeric id like `$airline->id`, `$aircraft->id`, or just `3`
@@ -306,7 +351,10 @@ Provides mainly pirep based statistics for an airline, aircraft or your entire v
 ### Sunrise Sunset Details
 
 Provides times related to sun's position for a given location.
-`@widget('DBasic::SunriseSunset', ['location' => $airport->id, 'type' => 'civil', 'card' => true])`
+
+```php
+@widget('DBasic::SunriseSunset', ['location' => $airport->id, 'type' => 'civil', 'card' => true])
+```
 
 * `'location'` should be an airport's icao id like `$airport->id` or `LWSK`
 * `'type'` can be `'civil'` or `'nautical'` (defines the twilight periods)
@@ -315,7 +363,10 @@ Provides times related to sun's position for a given location.
 ### Transfer Aircraft
 
 Adds frontend pilot self aircraft transfer capability to phpVms v7.
-`@widget('DBasic::TransferAircraft', ['price' => 'auto', 'landing' => 6])`
+
+```php
+@widget('DBasic::TransferAircraft', ['price' => 'auto', 'landing' => 6])
+```
 
 * `'price'` can be `'free'`, `'auto'` or a fixed numeric value like `25000`
 * `'list'` can be `'hub'` (ac parked at its hub), `'hubs'` (ac parked at any hub), `'nohubs'` (ac parked at non hub locations)
@@ -328,7 +379,10 @@ There is no `base` price definition for this widget. It uses airport fuel prices
 ### WhazzUp
 
 Provides live server data for IVAO and VATSIM networks.
-`@widget('DBasic::WhazzUp', ['network' => 'IVAO', 'field_name' => 'IVAO ID', 'refresh' => 300])`
+
+```php
+@widget('DBasic::WhazzUp', ['network' => 'IVAO', 'field_name' => 'IVAO ID', 'refresh' => 300])
+```
 
 * `'network'` should be `'IVAO'` or `'VATSIM'`
 * `'refresh'` can be any number in seconds greater than `15` (as per network requirements)
@@ -344,8 +398,8 @@ I kindly suggest copying/duplicating them under your theme folder and do your ch
 
 All Disposable Modules are capable of displaying customized files located under your theme folders;
 
-* Original Location : phpvms root `/modules/DisposableBasic/Resources/Views/widgets/somefile.blade.php`
-* Target Location   : phpvms root `/resources/views/layouts/YourTheme/modules/DisposableBasic/widgets/somefile.blade.php`
+* Original Location : phpvms root `/modules/DisposableBasic/Resources/views/widgets/some_file.blade.php`
+* Target Location   : phpvms root `/resources/views/layouts/YourTheme/modules/DisposableBasic/widgets/some_file.blade.php`
 
 As you can see from the above example, filename and sub-folder location is not changed. We only copy a file from a location to another and have a copied version of it.  
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the updated/provided original works fine.
