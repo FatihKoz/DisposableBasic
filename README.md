@@ -29,7 +29,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Go to admin > dashboard (or /update) to trigger module migrations
 * When migration is completed, go to admin > maintenance and clean `application` cache
 
-:info: *There is a known bug in v7 core, which causes an error/exception when enabling/disabling modules manually. If you see a server error page or full stacktrace debug window when you enable a module just close that page and re-visit admin area in a different browser tab/window. You will see that the module is enabled and active, to be sure just clean your `application` cache*
+:information_source: *There is a known bug in v7 core, which causes an error/exception when enabling/disabling modules manually. If you see a server error page or full stacktrace debug window when you enable a module just close that page and re-visit admin area in a different browser tab/window. You will see that the module is enabled and active, to be sure just clean your `application` cache*
 
 ### Update (from v3.xx to v3.yy)
 
@@ -43,10 +43,11 @@ Below order and steps are really important for proper update from old modules to
 **Backup your database tables and old module files before this process**  
 **Only database tables starting with `disposable_` is needed to be backed up**
 
-* From admin > addons/modules DISABLE all old Disposable modules
-* From admin > addons/modules DELETE all old Disposable modules
+* From admin > addons/modules **DISABLE** all old Disposable modules
+* From admin > addons/modules **DELETE** all old Disposable modules
 * Go to admin > maintenance and clean `all` cache
 * Install Disposable Basic module (by following installation procedure)
+*This module covers all public Disposable modules published until today*
 
 ## Module links and routes
 
