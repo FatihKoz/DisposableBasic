@@ -29,6 +29,8 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Go to admin > dashboard (or /update) to trigger module migrations
 * When migration is completed, go to admin > maintenance and clean `application` cache
 
+:info: *There is a known bug in v7 core, which causes an error/exception when enabling/disabling modules manually. If you see a server error page or full stacktrace debug window when you enable a module just close that page and re-visit admin area in a different browser tab/window. You will see that the module is enabled and active, to be sure just clean your `application` cache*
+
 ### Update (from v3.xx to v3.yy)
 
 Just follow the installation procedure by overwriting your old module files
@@ -37,9 +39,9 @@ Just follow the installation procedure by overwriting your old module files
 
 Below order and steps are really important for proper update from old modules to new combined module pack
 
-:warning: **Important: There is no going back to v2 series once v3 is installed !!!** :warning:  
+:warning: **There is no easy going back to v2 series once v3 is installed !!!** :warning:  
 **Backup your database tables and old module files before this process**  
-**Only database tables starting with `disposable_` is needed to be backed up**  
+**Only database tables starting with `disposable_` is needed to be backed up**
 
 * From admin > addons/modules DISABLE all old Disposable modules
 * From admin > addons/modules DELETE all old Disposable modules
@@ -48,9 +50,10 @@ Below order and steps are really important for proper update from old modules to
 
 ## Module links and routes
 
-Module does not provide auto links to your phpvms theme, Disposable Theme v3 has some built in menu items but in case you need to manually adjust or use a different theme/menu below are the routes or url's module provide
+Module does not provide auto links to your phpvms theme, Disposable Theme v3 has some built in menu items but in case you need to manually adjust or use a different theme/menu, below are the routes and their respective url's module provide
 
 Named Routes and Url's
+
 ```php
 
 DBasic.airlines  /dairlines         // Airlines index page
@@ -74,10 +77,10 @@ DBasic.stats     /dstats            // Statistics index page
 Also for embedding in your main (landing) sites, two public url's are available.  
 These pages will have no logo images, background image or menu items. They are suitable for iframe'ing at your landing pages (or main sites)
 
-```php 
-/plain_roster  // Pilot roster                      
-/plain_stats   // Statsistics
-/plain_page    // Empty page in which you can place widgets like Flight Board etc as per your needs
+```php
+/dp_roster  // Pilot roster
+/dp_stats   // Statistics
+/dp_page    // Empty page in which you can place widgets like Flight Board etc as per your needs
 ```
 
 Usage examples;
