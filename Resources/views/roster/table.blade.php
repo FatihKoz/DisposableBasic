@@ -35,12 +35,12 @@
       @endif
       @if(!isset($type) || isset($type) && $type != 'hub')
         <td>
-          <a href="{{ route('DBasic.hub', [$user->home_airport_id]) }}">{{ $user->home_airport->full_name ?? $user->home_airport_id }}</a>
+          <a href="{{ route('DBasic.hub', [$user->home_airport_id ?? '']) }}">{{ $user->home_airport->full_name ?? $user->home_airport_id }}</a>
         </td>
       @endif
       @if(!isset($type) || isset($type) && $type != 'visitor')
         <td>
-          <a href="{{ route('frontend.airports.show', [$user->curr_airport_id]) }}">{{ $user->current_airport->full_name ?? $user->curr_airport_id }}</a>
+          <a href="{{ route('frontend.airports.show', [$user->curr_airport_id ?? '']) }}">{{ $user->current_airport->full_name ?? $user->curr_airport_id }}</a>
         </td>
       @endif
       @if(!isset($type))

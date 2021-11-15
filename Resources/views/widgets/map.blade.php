@@ -1,4 +1,4 @@
-@if(isset($flights) || !isset($flights) && count($mapAirports) > 0 || !isset($flights) && count($mapHubs) > 0)
+@if(isset($flights) && $flights > 0 || !isset($flights) && count($mapAirports) > 0 || !isset($flights) && count($mapHubs) > 0)
   {{-- Map Modal Button --}}
   <div class="row mb-2">
     <div class="col d-grid">

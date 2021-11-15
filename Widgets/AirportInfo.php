@@ -27,7 +27,7 @@ class AirportInfo extends Widget
             'airports'   => $airports,
             'apt_route'  => isset($apt_route) ? $apt_route : 'frontend.airports.show',
             'config'     => $this->config,
-            'is_visible' => isset($airports) ? true : false,
+            'is_visible' => filled($airports) ? true : false,
         ]);
     }
 }

@@ -68,13 +68,13 @@
             </tr>
             <tr>
               <th>@lang('common.country')</th>
-              <td class="text-end">{{ $country->alpha2($airline->country)['name'] }} ({{ strtoupper($airline->country) }})</td>
+              <td class="text-end">{{ $country->alpha2($airline->country)['name'] ?? '' }} {{ ' ('.strtoupper($airline->country).')' }}</td>
             </tr>
           </table>
         </div>
         @if(filled($airline->logo))
           <div class="card-footer p-1 text-center">
-            <img src="{{ $airline->logo }}" style="max-width: 90%; max-height: 50px;">
+            <img src="{{ $airline->logo }}" alt="" style="max-width: 90%; max-height: 50px;">
           </div>
         @endif
       </div>
@@ -122,12 +122,14 @@
                 <td class="text-end">{{ $value }}</td>
               </tr>
             @endforeach
-            @foreach($stats_p as $key => $value)
-              <tr>
-                <th>{{ $key }}</th>
-                <td class="text-end">{{ $value }}</td>
-              </tr>
-            @endforeach
+            @if($stats_p)
+              @foreach($stats_p as $key => $value)
+                <tr>
+                  <th>{{ $key }}</th>
+                  <td class="text-end">{{ $value }}</td>
+                </tr>
+              @endforeach
+            @endif
           </table>
         </div>
       </div>

@@ -31,7 +31,17 @@
       @endif
       {{-- Maintenance Status --}}
       @if($maint)
-        {{-- Include Maintenance Card --}}
+        <div class="card mb-2">
+          <div class="card-header p-1">
+            <h5 class="m-1">
+              Maintenance
+              <i class="fas fa-tools float-end"></i>
+            </h5>
+          </div>
+          <div class="card-body p-0">
+            @include('DSpecial::maintenance.table')
+          </div>
+        </div>
       @endif
       {{-- Latest Pireps --}}
       @if($pireps)

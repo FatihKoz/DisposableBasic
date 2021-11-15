@@ -8,6 +8,7 @@ use App\Models\Pirep;
 use App\Models\Subfleet;
 use Modules\DisposableBasic\Services\DB_FleetServices;
 use Modules\DisposableBasic\Services\DB_StatServices;
+use Modules\DisposableSpecial\Models\DS_Maintenance;
 
 class DB_FleetController extends Controller
 {
@@ -97,6 +98,9 @@ class DB_FleetController extends Controller
         // Specifications
         $specs = DB_GetSpecs($aircraft, true);
 
+        // Maintenance Status
+        $maint = DB_CheckModule('DisposableSpecial') ? DS_Maintenance::where('aircraft_id', $aircraft->id)->first() : null;
+
         // Stats
         $StatSvc = app(DB_StatServices::class);
         $stats = $StatSvc->PirepStats(null, $aircraft->id);
@@ -111,7 +115,7 @@ class DB_FleetController extends Controller
             'aircraft'   => $aircraft,
             'files'      => filled($files) ? $files : null,
             'image'      => $image,
-            'maint'      => null,
+            'maint'      => filled($maint) ? $maint : null,
             'pireps'     => filled($pireps) ? $pireps : null,
             'specs'      => $specs,
             'stats'      => $stats,

@@ -6,6 +6,7 @@ use App\Contracts\Widget;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
+use Theme;
 
 class Discord extends Widget
 {
@@ -23,7 +24,11 @@ class Discord extends Widget
 
     public function run()
     {
-        $server_id = $this->config['server'];
+        if (filled(Theme::getSetting('gen_discord_server')) && $this->config['server'] === null) {
+            $theme_server_id = Theme::getSetting('gen_discord_server');
+        }
+
+        $server_id =  isset($theme_server_id) ? $theme_server_id : $this->config['server'];
 
         if (empty($server_id) || !is_numeric($server_id)) {
             return null;
