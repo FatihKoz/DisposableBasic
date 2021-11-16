@@ -6,7 +6,7 @@
         <i class="fab fa-discord float-end"></i>
       </h5>
     </div>
-    <div class="card-body p-0 table-responsive">
+    <div class="card-body p-0 overflow-auto table-responsive">
       <table class="table table-borderless table-sm table-striped text-end align-middle mb-0">
         @foreach($members->sortBy('username') as $member)
           <tr>
