@@ -1,0 +1,23 @@
+name: 'Create Release'
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Archive Contents
+      uses: thedoctor0/zip-release@master
+      with:
+        directory: '..'
+        path: 'DisposableBasic'
+        filename: 'DisposableBasic.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+    - name: Upload Release
+      uses: ncipollo/release-action@v1
+      with:
+        name: 'Disposable Basic'
+        artifacts: "../DisposableBasic.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
