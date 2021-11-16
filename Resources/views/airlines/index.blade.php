@@ -9,7 +9,8 @@
           <div class="card-header p-1">
             <h5 class="m-1">
               <a href="{{ route('DBasic.airline', [$airline->icao]) }}">{{ $airline->name }}</a>
-              <span class="float-end flag-icon flag-icon-{{ strtolower($airline->country) }}" style="font-size: 1.1rem;"></span>
+              <img class="float-end img-h20 me-1" src="{{ public_asset('/image/flags_new/'.strtolower($airline->country).'.png') }}" alt="">
+              {{-- <span class="float-end flag-icon flag-icon-{{ strtolower($airline->country) }}" style="font-size: 1.1rem;"></span> --}}
             </h5>
           </div>
           <div class="card-body p-0">

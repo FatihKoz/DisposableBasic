@@ -17,9 +17,11 @@
               <img class="img-mh150" src="{{ $award->image_url }}" alt="{{ $award->name }}" title="{{ $award->description }}">
             @endif
           </div>
+          {{--}}
           <div class="card-footer p-1 text-center small">
             {{ $award->description }}
           </div>
+          {{--}}
         </div>
       </div>
     @endforeach
