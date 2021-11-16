@@ -77,6 +77,19 @@ class DB_ServiceProvider extends ServiceProvider
             Route::match(['get', 'post'], 'dtransferac', 'DB_WidgetController@transferac')->name('transferac');
         });
 
+        // Frontend Public
+        Route::group([
+            'as'         => 'DBasic.',
+            'middleware' => ['web'],
+            'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
+            'prefix'     => '',
+        ], function () {
+            // Plain Pages
+            Route::get('dp_roster', 'DB_WebController@roster')->name('dp_roster');
+            Route::get('dp_stats', 'DB_WebController@stats')->name('dp_stats');
+            Route::get('dp_page', 'DB_WebController@page')->name('dp_page');
+        });
+
         // Admin
         Route::group([
             'as'         => 'DBasic.',

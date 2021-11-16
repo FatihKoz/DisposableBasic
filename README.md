@@ -47,7 +47,6 @@ Below order and steps are really important for proper update from old modules to
 * From admin > addons/modules **DELETE** all old Disposable modules
 * Go to admin > maintenance and clean `all` cache
 * Install Disposable Basic module (by following installation procedure)
-*This module covers all public Disposable modules published until today*
 
 ## Module links and routes
 

@@ -26,6 +26,6 @@
         </div>
       @endforeach
     </div>
-    {{ $allnews->links('pagination.auto') }}
+    {{ $allnews->links('pagination.default') }}
   @endif
 @endsection

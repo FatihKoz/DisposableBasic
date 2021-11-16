@@ -5,8 +5,10 @@
   <div class="card border-blue-bottom" style="margin-bottom: 10px;">
     <div class="content">
       <p>This module is designed to provide basic features for a Virtual Airline to operate</p>
-      <hr>
-      <p><b>Documentation to be completed...</b></p>
+      <p>
+        Documentation about this module can be found in the <b>README.md</b> file or at GitHub via this link 
+        <a href="https://github.com/FatihKoz/DisposableBasic#readme" target="_blank" title="Online Readme">Online Readme</a>
+      </p>
       <hr>
       <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>

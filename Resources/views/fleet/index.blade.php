@@ -23,6 +23,6 @@
         </div>
       </div>
     </div>
-    {{ $aircraft->links('pagination.auto') }}
+    {{ $aircraft->links('pagination.default') }}
   @endif
 @endsection
