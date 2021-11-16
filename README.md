@@ -408,6 +408,6 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
-* 15.NOV.21
+* 16.NOV.21
 
-Initial release
+Initial Release
