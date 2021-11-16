@@ -1,10 +1,11 @@
 <?php
 
-use \App\Models\Enums\AircraftState;
-use \App\Models\Enums\AircraftStatus;
-use \App\Models\Enums\PirepState;
-use \App\Models\Enums\UserState;
-use \Nwidart\Modules\Facades\Module;
+use App\Models\User;
+use App\Models\Enums\AircraftState;
+use App\Models\Enums\AircraftStatus;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\UserState;
+use Nwidart\Modules\Facades\Module;
 
 // Aircraft Status Badge
 // Return string (with html tags)
@@ -252,6 +253,15 @@ if (!function_exists('DB_Setting')) {
     }
 }
 
+// Get Total User Count
+// Return integer
+if (!function_exists('DB_UserCount')) {
+    function DB_UserCount()
+    {
+        return User::count();
+    }
+}
+
 // User State
 // Return mixed
 if (!function_exists('DB_UserState')) {
@@ -277,7 +287,7 @@ if (!function_exists('DB_UserState')) {
         } elseif ($type === 'row') {
             $result = 'class="table-' . $color . '"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-light">' . UserState::label($state) . '</span>';
+            $result = '<span class="badge bg-' . $color . ' text-black">' . UserState::label($state) . '</span>';
         }
 
         return $result;

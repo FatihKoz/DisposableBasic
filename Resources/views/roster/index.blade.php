@@ -12,14 +12,18 @@
           </h5>
         </div>
         <div class="card-body p-0 table-responsive overflow-auto" style="max-height: 77vh;">
-          @include('DBasic::roster.table')
+          @include('DBasic::roster.table', ['state_badge' => true])
         </div>
         <div class="card-footer p-0 px-1 text-end small fw-bold">
-          @lang('DBasic::common.paginate', ['first' => $users->firstItem(), 'last' => $users->lastItem(), 'total' => $users->total()])
+          @if($users->hasPages())
+            @lang('DBasic::common.paginate', ['first' => $users->firstItem(), 'last' => $users->lastItem(), 'total' => $users->total()])
+          @else 
+            @lang('DBasic::common.total') {{ $users->total() }}
+          @endif
         </div>
       </div>
     </div>
   </div>
 
-  {{ $users->links('pagination.auto') }}
+  {{ $users->links('pagination.default') }}
 @endsection

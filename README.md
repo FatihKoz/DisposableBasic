@@ -71,11 +71,12 @@ DBasic.news      /dnews             // News index page
 DBasic.livewx    /dlivewx           // Live Weather Map index page
 DBasic.pireps    /dpireps           // All Pireps index page
 DBasic.ranks     /dranks            // Ranks index page
+DBasic.roster    /droster           // Roster index page (full roster)
 DBasic.stats     /dstats            // Statistics index page
 ```
 
 Also for embedding in your main (landing) sites, two public url's are available.  
-These pages will have no logo images, background image or menu items. They are suitable for iframe'ing at your landing pages (or main sites)
+These pages will have no logo, background image or menu items. They are suitable for iframe usage at your landing pages (or main sites)
 
 ```php
 /dp_roster  // Pilot roster
@@ -111,7 +112,7 @@ Usage examples;
   <i class="fas fa-plane mx-1"></i>
 </a>
 
-<iframe src="https://your.phpvms.site/plain_roster" style="border:none; display:block; width: 80vw; height: 80vh;" title="Roster"></iframe>
+<iframe src="https://your.phpvms.site/dp_roster" style="border:none; display:block; width: 500px; height: 600px;" title="Roster"></iframe>
 ```
 
 ## Usage and Module Settings
@@ -395,9 +396,7 @@ Providing a wrong `field name` value will result in `No Online .... flights foun
 
 ## Duplicating Module Blades/Views
 
-Technically all blade files should work with your template but they are mainly designed for Bootstrap v5.* compatible themes.  
-So if something looks weird in your template then you need to edit the blades files.  
-I kindly suggest copying/duplicating them under your theme folder and do your changes there, directly editing module files will only make updating harder for you.
+Technically all blade files should work with your template but they are mainly designed for Bootstrap v5.* compatible themes. So if something looks weird in your template then you need to edit the blades files. I kindly suggest copying/duplicating them under your theme folder and do your changes there, directly editing module files will only make updating harder for you.
 
 All Disposable Modules are capable of displaying customized files located under your theme folders;
 

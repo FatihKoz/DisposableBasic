@@ -16,12 +16,15 @@
     @endif
     <th class="text-center">@lang('DBasic::common.flights')</th>
     <th class="text-center">@lang('DBasic::common.ftime')</th>
+    @if(isset($state_badge))
+      <th class="text-center">@lang('DBasic::common.state')</th>
+    @endif
     @if(!isset($type))
       <th class="text-end">@lang('DBasic::common.last_flt')</td>
     @endif
   </tr>
   @foreach($users as $user)
-    <tr @if($user->state != 1) {!! DB_UserState($user, 'row') !!} @endif>
+    <tr @if(empty($state_badge) && $user->state != 1) {!! DB_UserState($user, 'row') !!} @endif>
       <td>
         <a href="{{ route('frontend.users.show.public', [$user->id]) }}">{{ $user->name_private }}</a>
       </td>
@@ -54,8 +57,17 @@
         @if($user->flights > 0) {{ number_format($user->flights) }} @endif
       </td>
       <td class="text-center">
-        {{ DB_ConvertMinutes($user->flight_time, '%2dh %2dm') }}
+        @if(Theme::getSetting('roster_combinetimes'))
+          {{ DB_ConvertMinutes(($user->flight_time + $user->transfer_time), '%2dh %2dm') }}
+        @else 
+          {{ DB_ConvertMinutes($user->flight_time, '%2dh %2dm') }}
+        @endif
       </td>
+      @if(isset($state_badge))
+        <td class="text-center">
+          {!! DB_UserState($user) !!}
+        </td>
+      @endif
       @if(!isset($type))
         <td class="text-end">
           @if($user->last_pirep)
