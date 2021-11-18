@@ -408,6 +408,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
-* 16.NOV.21
+18.NOV.21
 
-Initial Release
+* Fixed JumpSeat Travel widget's button (Quick Travel option)
+* Recuded Discord widget's vertical size for crowded servers (it uses overflow-auto now)
+
+16.NOV.21
+
+* Initial Release
