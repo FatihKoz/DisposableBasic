@@ -22,7 +22,7 @@
         </div>
       </div>
     @elseif($fixed_dest && $is_possible)
-      <button class="btn btn-sm bg-success p-0 px-1" type="submit">@lang('DBasic::widgets.js_buttonf') | {{ strtoupper($fixed_dest) }}</button>
+      <button class="btn btn-sm btn-success mx-1" type="submit" title="{{ $icon_title }}">@lang('DBasic::widgets.js_buttonf')</button>
       <input type="hidden" name="newloc" value="{{ $fixed_dest }}">
     @endif
     <input type="hidden" name="price" value="{{ $price }}">
