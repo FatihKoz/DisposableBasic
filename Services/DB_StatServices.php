@@ -439,24 +439,29 @@ class DB_StatServices
     // Airline Finance (uses cache)
     public function AirlineFinance($journal_id)
     {
+        $currency = setting('units.currency');
         $finance = [];
 
         // Cache
-        $cache_key = 'journal-'.$journal_id;
+        $cache_key = 'journal-' . $journal_id . '-overall';
         $cache_until = Carbon::now()->endOfDay();
 
-        $income = cache()->remember($cache_key . '-credit', $cache_until, function () use ($journal_id) {
-            return DB::table('journal_transactions')->where('journal_id', $journal_id)->sum('credit');
+        $overall = cache()->remember($cache_key, $cache_until, function () use ($journal_id) {
+            return DB::table('journal_transactions')->where('journal_id', $journal_id)
+            ->selectRaw('sum(credit) as ov_credit, sum(debit) as ov_debit, sum(credit) - sum(debit) as ov_balance')
+            ->first();
         });
-        $expense = cache()->remember($cache_key . '-debit', $cache_until, function () use ($journal_id) {
-            return DB::table('journal_transactions')->where('journal_id', $journal_id)->sum('debit');
-        });
-        $balance = $income - $expense;
+
+        $income = $overall->ov_credit ?? 0;
+        $expense = $overall->ov_debit ?? 0;
+        $balance = $overall->ov_balance ?? 0;
+        // $balance = $income - $expense;
+
         $color = ($balance < 0) ? 'darkred' : 'darkgreen';
 
-        $finance[__('DBasic::common.income')] = Money::createFromAmount($income);
-        $finance[__('DBasic::common.expense')] = Money::createFromAmount($expense);
-        $finance[__('DBasic::common.balance')] = '<span style="color: ' . $color . ';"><b>' . Money::createFromAmount($balance) . '</b></span>';
+        $finance[__('DBasic::common.income')] = money($income, $currency);
+        $finance[__('DBasic::common.expense')] = money($expense, $currency);
+        $finance[__('DBasic::common.balance')] = '<span style="color: ' . $color . ';"><b>' . money($balance, $currency) . '</b></span>';
 
         return $finance;
     }

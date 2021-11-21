@@ -404,9 +404,13 @@ All Disposable Modules are capable of displaying customized files located under 
 * Target Location   : phpvms root `/resources/views/layouts/YourTheme/modules/DisposableBasic/widgets/some_file.blade.php`
 
 As you can see from the above example, filename and sub-folder location is not changed. We only copy a file from a location to another and have a copied version of it.  
-If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the updated/provided original works fine.
+If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+21.NOV.21
+
+* Fix monetary value display issues (Airline overall finance)
 
 18.NOV.21
 
