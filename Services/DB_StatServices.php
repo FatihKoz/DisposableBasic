@@ -238,7 +238,7 @@ class DB_StatServices
 
         if ($type === 'lrate' || $type === 'lrate_low' || $type === 'lrate_high') {
             $where['source'] = PirepSource::ACARS;
-            $where[] = ['landing_rate', '!=', 0];
+            $where[] = ['landing_rate', '<', 0];
         } elseif ($type === 'score') {
             $where['source'] = PirepSource::ACARS;
         }
