@@ -89,6 +89,7 @@ class DB_StatServices
 
         if ($type === 'avglanding') { // Average Landing Rate - Acars Only
             $where['source'] = PirepSource::ACARS;
+            $where[] = ['landing_rate', '<', 0];
             $select_raw = 'avg(landing_rate)';
             $personal['stat_name'] = __('DBasic::widgets.avglanding');
         } elseif ($type === 'avgscore') { // Average Score - Acars Only
