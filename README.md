@@ -408,6 +408,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+26.NOV.21
+
+* Added some failsafe for positive (or zero) landing rates
+* Italian translation (Thanks Fabietto for his support)
+
 21.NOV.21
 
 * Fix monetary value display issues (Airline overall finance)
