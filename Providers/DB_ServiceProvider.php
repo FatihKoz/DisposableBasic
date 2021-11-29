@@ -70,6 +70,8 @@ class DB_ServiceProvider extends ServiceProvider
             Route::get('dlivewx', 'DB_PageController@livewx')->name('livewx');
             // Pireps
             Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
+            // Stable Approach
+            Route::get('dstable', 'DB_StableApproachController@index')->name('stable');
             // Statistics
             Route::get('dstats', 'DB_StatisticController@index')->name('stats');
             // Widgets
@@ -88,6 +90,8 @@ class DB_ServiceProvider extends ServiceProvider
             Route::get('dp_roster', 'DB_WebController@roster')->name('dp_roster');
             Route::get('dp_stats', 'DB_WebController@stats')->name('dp_stats');
             Route::get('dp_page', 'DB_WebController@page')->name('dp_page');
+            // Stable Approach Plugin Report
+            Route::post('dstable/new', 'DB_StableApproachController@store')->name('stable_store');
         });
 
         // Admin

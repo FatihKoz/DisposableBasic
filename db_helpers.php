@@ -227,6 +227,50 @@ if (!function_exists('DB_PirepState')) {
     }
 }
 
+// Read Json File
+// Return object
+if (!function_exists('DB_ReadJson')) {
+    function DB_ReadJson($file = null)
+    {
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $string = file_get_contents($file);
+        $result = json_decode($string);
+
+        return (json_last_error() === 0) ? $result : null;
+    }
+}
+
+// Read Transmitted Stable Approach Plugin Report
+// Return processed json object
+if (!function_exists('DB_ReadSapReport')) {
+    function DB_ReadSapReport($file = null)
+    {
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $string = file_get_contents($file);
+
+        // Convert Touchdowns to json array
+        $position_start = strpos($string, '"touchdown": {');
+        $string = substr_replace($string, '"touchdowns": [ ', $position_start, 0);
+        $string = str_replace('"touchdown": ', '', $string);
+        $position_end = strpos($string, '"touchdown_combined": {');
+        $string = substr_replace($string, '], ', $position_end, 0);
+        $string = str_replace('},' . "\r\n" . '        ], "touchdown_combined": {', '} ], "touchdown_combined": {', $string);
+
+        // Convert ResultsGroups to json array
+        $string = str_replace('"message": ', '', $string);
+        $string = str_replace('"requirementResultsGroups": {', '"requirementResultsGroups": [', $string);
+        $string = str_replace('},' . "\r\n" . '    "hash":', '],' . "\r\n" . '    "hash":', $string);
+
+        return json_decode($string);
+    }
+}
+
 // Check Disposable Module Setting
 // Return mixed, either boolean or the value itself as string
 // If setting is not found, return either false or provided default
