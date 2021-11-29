@@ -22,10 +22,14 @@ class DB_StableApproachController extends Controller
 
     public function store(Request $request)
     {
-        $received_file = $request->file('report');
-        $extension = $received_file->extension();
+        $status = (DB_Setting('dbasic.stable_app_control', false) === true) ? null : 'Plugin Support Disabled';
 
-        $status = ($extension != 'json') ? 'Report not in proper format ! Process aborted' : null;
+        if (!isset($status)) {
+            $received_file = $request->file('report');
+            $extension = $received_file->extension();
+    
+            $status = ($extension != 'json') ? 'Report not in proper format ! Process aborted' : null;
+        }
 
         if (!isset($status)) {
             $report = DB_ReadSapReport($received_file->path());
@@ -33,7 +37,8 @@ class DB_StableApproachController extends Controller
             $status = (isset($report->userID) && isset($report->plugin_version)) ? null : 'Report is not valid ! Process aborted';
 
             if (!isset($status)) {
-                $field_id = DB::table('user_fields')->where(['name' => 'Stable Approach ID', 'active' => true])->value('id');
+                $where = ['name' => DB_Setting('dbasic.stable_app_field', 'Stable Approach ID'), 'active' => true];
+                $field_id = DB::table('user_fields')->where($where)->value('id');
                 $user_id = DB::table('user_field_values')->where(['user_field_id' => $field_id, 'value' => $report->userID])->value('user_id');
 
                 $status = isset($user_id) ? null : 'No matching user found ! Process aborted';

@@ -22,5 +22,17 @@ class CreateDisposableSapReportsTable extends Migration
                 $table->unique('id');
             });
         }
+
+        // Add Settings related to Stable Approach Plugin
+        if (Schema::hasTable('disposable_settings')) {
+            DB::table('disposable_settings')->updateOrInsert(
+                ['key' => 'dbasic.stable_app_control'],
+                ['group' => 'Stable Approach', 'name' => 'Receive Reports', 'default' => 'false', 'field_type' => 'check', 'order' => '7001']
+            );
+            DB::table('disposable_settings')->updateOrInsert(
+                ['key' => 'dbasic.stable_app_field'],
+                ['group' => 'Stable Approach', 'name' => 'User Field Name', 'default' => 'Stable Approach ID', 'order' => '7002']
+            );
+        }
     }
 }

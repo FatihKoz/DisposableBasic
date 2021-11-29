@@ -142,7 +142,8 @@ by either import problems or hard deleting records from your database. Provided 
 For auto receiving approach reports and matching them with pireps, below steps required to be completed at phpvms side;
 
 1. Add a new custom user profile field with the name `Stable Approach ID`, and make it active and private *(only admins and the owner needs to see it)*
-2. Pilots using X-Plane and Stable Approach Plugin then should add their plugin generated user id's by editing their profile
+2. Enable setting from admin > Disposable Basic page. *(Also it is possible to define a custom name for the user profile field here if you wish)*
+3. Pilots using X-Plane and Stable Approach Plugin then should add their plugin generated user id's by editing their profile
 
 Rest is updating and setting up the plugin for auto report uploads, below url should be used by pilots at plugin settings.
 
