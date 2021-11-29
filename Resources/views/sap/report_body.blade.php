@@ -17,9 +17,17 @@
 {{-- Main Display --}}
 <div class="d-grid text-center p-1">
   @if($report->is_stable == 1)
-    <span class="badge bg-success py-2 text-black"><h6 class="m-0 p-0 fw-bold">STABLE</h6></span>
+    <span class="badge bg-success py-2 text-black">
+      <h6 class="m-0 p-0 fw-bold">
+        STABLE
+      </h6>
+    </span>
   @elseif($report->is_stable == 0)
-    <span class="badge bg-danger py-2 text-black"><h6 class="m-0 p-0 fw-bold">UNSTABLE</h6></span>
+    <span class="badge bg-danger py-2 text-black">
+      <h6 class="m-0 p-0 fw-bold">
+        UNSTABLE
+      </h6>
+    </span>
   @endif
 </div>
 <div class="accordion accordion-flush" id="StableApproachReport{{ $report->id }}">
