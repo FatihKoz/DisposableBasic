@@ -8,20 +8,17 @@
   }
 
   $analysis = isset($stable) ? $stable->analysis : null;
-
   $airport = isset($analysis) ? $analysis->apt : null;
   $approach = isset($analysis) ? $analysis->app : null;
   $rollout = isset($analysis) ? $analysis->rollout : null;
   $runway = isset($analysis) ? $analysis->rwy : null;
   $touchdown_combined = isset($analysis) ? $analysis->touchdown_combined : null;
-
-  $is_stable = (isset($requirements) && $requirements->where('type', '2')->count()) ? false : true;
 @endphp
 {{-- Main Display --}}
 <div class="d-grid text-center p-1">
-  @if(isset($requirements) && $is_stable === true)
-    <span class="badge bg-success py-2 text-black"><h6 class="m-0 p-0 fw-bold">STABLE</h6></span>   
-  @elseif(isset($requirements) && $is_stable === false)
+  @if($report->is_stable == 1)
+    <span class="badge bg-success py-2 text-black"><h6 class="m-0 p-0 fw-bold">STABLE</h6></span>
+  @elseif($report->is_stable == 0)
     <span class="badge bg-danger py-2 text-black"><h6 class="m-0 p-0 fw-bold">UNSTABLE</h6></span>
   @endif
 </div>

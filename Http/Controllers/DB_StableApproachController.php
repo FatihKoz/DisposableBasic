@@ -27,7 +27,7 @@ class DB_StableApproachController extends Controller
         if (!isset($status)) {
             $received_file = $request->file('report');
             $extension = $received_file->extension();
-    
+
             $status = ($extension != 'json') ? 'Report not in proper format ! Process aborted' : null;
         }
 
@@ -35,6 +35,11 @@ class DB_StableApproachController extends Controller
             $report = DB_ReadSapReport($received_file->path());
 
             $status = (isset($report->userID) && isset($report->plugin_version)) ? null : 'Report is not valid ! Process aborted';
+
+            if (isset($report) && !isset($status)) {
+                $requirements = is_array($report->requirementResultsGroups) ? collect($report->requirementResultsGroups) : null;
+                $is_stable = (isset($requirements) && $requirements->where('type', '2')->count()) ? false : true;
+            }
 
             if (!isset($status)) {
                 $where = ['name' => DB_Setting('dbasic.stable_app_field', 'Stable Approach ID'), 'active' => true];
@@ -51,11 +56,13 @@ class DB_StableApproachController extends Controller
             }
         }
 
-        $new_report = isset($status) ? null : DB_StableApproach::create([
+        $new_report = isset($status) ? null : DB_StableApproach::updateOrCreate([
             'sap_userID'     => $report->userID,
             'sap_analysisID' => $report->analysis->id,
+        ], [
             'user_id'        => $user_id,
             'pirep_id'       => $pirep_id,
+            'is_stable'      => isset($is_stable) ? $is_stable : false,
             'raw_report'     => json_encode($report),
         ]);
 

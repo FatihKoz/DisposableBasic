@@ -18,16 +18,11 @@ class StableApproach extends Widget
             $sap_report = DB_StableApproach::where($where)->first();
         }
 
-        if (isset($sap_report)) {
-            $stable = json_decode($sap_report->raw_report);
-            $requirements = is_array($stable->requirementResultsGroups) ? collect($stable->requirementResultsGroups) : null;
-        }
-
         return view('DBasic::widgets.stable_approach', [
-            'is_stable'  => (isset($requirements) && $requirements->where('type', '2')->count()) ? false : true,
+            'is_stable'  => (isset($sap_report) && $sap_report->is_stable == 1) ? true : false,
             'is_visible' => isset($sap_report) ? true : false,
             'report'     => isset($sap_report) ? $sap_report : null,
-            'stable'     => isset($stable) ? $stable : null,
+            'stable'     => isset($sap_report) ? json_decode($sap_report->raw_report) : null,
             'use_button' => is_bool($this->config['button']) ? $this->config['button'] : false,
         ]);
     }

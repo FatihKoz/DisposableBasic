@@ -15,6 +15,7 @@ class DB_StableApproach extends Model
         'sap_userID',
         'user_id',
         'pirep_id',
+        'is_stable',
         'raw_report',
     ];
 
@@ -24,6 +25,7 @@ class DB_StableApproach extends Model
         'sap_userID'     => 'required',
         'user_id'        => 'required|numeric',
         'pirep_id'       => 'required',
+        'is_stable'      => 'nullable|numeric',
         'raw_report'     => 'required',
     ];
 

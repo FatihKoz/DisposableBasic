@@ -16,6 +16,7 @@ class CreateDisposableSapReportsTable extends Migration
                 $table->string('sap_userID', 100);
                 $table->unsignedInteger('user_id');
                 $table->string('pirep_id')->nullable();
+                $table->boolean('is_stable')->nullable()->default(false);
                 $table->mediumText('raw_report');
                 $table->timestamps();
                 $table->index('id');

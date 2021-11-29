@@ -14,6 +14,4 @@
   $rollout = isset($analysis) ? $analysis->rollout : null;
   $runway = isset($analysis) ? $analysis->rwy : null;
   $touchdown_combined = isset($analysis) ? $analysis->touchdown_combined : null;
-
-  $is_stable = (isset($requirements) && $requirements->where('type', '2')->count()) ? false : true;
 @endphp
