@@ -172,6 +172,7 @@ When needed, you can use below widgets to enhance the data provided by your page
 @widget('DBasic::Map')
 @widget('DBasic::PersonalStats')
 @widget('DBasic::RandomFlights')
+@widget('DBasic::StableApproach')
 @widget('DBasic::Stats')
 @widget('DBasic::SunriseSunset')
 @widget('DBasic::TransferAircraft')
