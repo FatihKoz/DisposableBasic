@@ -155,8 +155,8 @@
                 <td>{{ number_format($touchdown->centerline_dist, 2).' m' }}</td>
               </tr>
               <tr>
-                <th>Descend Rate</th>
-                <td>{{ number_format($touchdown->fpm, 2).' fpm' }}</td>
+                <th>Touchdown Rate</th>
+                <td>{{ number_format($touchdown->fpm_agl, 2).' fpm' }}</td>
               </tr>
               <tr>
                 <th>G-Force</th>
