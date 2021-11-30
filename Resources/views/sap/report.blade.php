@@ -2,7 +2,7 @@
   <div class="card-header p-1">
     <h5 class="m-1">
       Stable Approach Report
-      <i class="fas fa-plane-arrival float-end m-1"></i>
+      <i class="fas fa-plane-arrival float-end"></i>
     </h5>
   </div>
   <div class="card-body p-0 table-responsive">
