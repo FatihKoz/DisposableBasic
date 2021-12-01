@@ -6,6 +6,8 @@ use App\Contracts\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request as Req;
 use Modules\DisposableBasic\Models\DB_StableApproach;
 
 class DB_StableApproachController extends Controller
@@ -25,10 +27,15 @@ class DB_StableApproachController extends Controller
         // Check Settings
         $status = (DB_Setting('dbasic.stable_app_control', false) === true) ? null : 'Plugin support disabled';
 
+        // Request Debug
+        $formdata = Req::post();
+        Log::debug($formdata);
+        Log::debug($request);
+
         if (!isset($status)) {
             // Check Contents
             $received_file = $request->file('report');
-            $extension = $received_file->extension();
+            $extension = optional($received_file)->extension();
             $status = ($extension != 'json') ? 'Report not in proper format' : null;
         }
 
@@ -55,13 +62,13 @@ class DB_StableApproachController extends Controller
             $where = ['name' => DB_Setting('dbasic.stable_app_field', 'Stable Approach ID'), 'active' => true];
             $field_id = DB::table('user_fields')->where($where)->value('id');
             $user_id = DB::table('user_field_values')->where(['user_field_id' => $field_id, 'value' => $report->userID])->value('user_id');
-            $status = isset($user_id) ? null : 'No matching user found.';
+            $status = isset($user_id) ? null : 'No matching user';
         }
 
         if (!isset($status)) {
             // Check Pirep
             $pirep_id = DB::table('pireps')->where(['user_id' => $user_id, 'state' => 0])->orderBy('created_at', 'desc')->value('id');
-            $status = isset($pirep_id) ? null : 'No active pirep found.';
+            $status = isset($pirep_id) ? null : 'No active pirep';
         }
 
         if (!isset($status)) {
@@ -77,12 +84,14 @@ class DB_StableApproachController extends Controller
             ]);
 
             $response['received'] = 'OK';
+            Log::debug('Disposable Basic, Stable Approach report ' . $report->analysis->id . ' RECEIVED for Pirep: ' . $pirep_id . ' of User: ' . $user_id);
         } else {
             // Add reason to the response
             $response['received'] = 'rejected';
             $response['reason'] = $status;
+            Log::debug('Disposable Basic, Stable Approach report REJECTED with reason ' . $status);
         }
 
-        return json_encode($response);
+        return response()->json($response);
     }
 }

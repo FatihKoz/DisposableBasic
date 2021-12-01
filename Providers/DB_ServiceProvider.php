@@ -91,7 +91,18 @@ class DB_ServiceProvider extends ServiceProvider
             Route::get('dp_stats', 'DB_WebController@stats')->name('dp_stats');
             Route::get('dp_page', 'DB_WebController@page')->name('dp_page');
             // Stable Approach Plugin Report
-            Route::post('dstable/new', 'DB_StableApproachController@store')->name('stable_store');
+            // Route::post('dstable/new', 'DB_StableApproachController@store')->withoutMiddleware(['web']);
+        });
+
+        // API Public
+        Route::group([
+            'as'         => 'DBasic.',
+            'middleware' => ['api'],
+            'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
+            'prefix'     => '',
+        ], function () {
+            // Stable Approach Plugin Report
+            Route::post('dstable/new', 'DB_StableApproachController@store');
         });
 
         // Admin
