@@ -29,23 +29,21 @@ class DB_StableApproachController extends Controller
         // Request Debug
         Log::debug('Request HEADER :' . json_encode($request->header()));
         Log::debug('Request IP :' . json_encode($request->ip()));
-        Log::debug('PHP $_REQUEST: ' . json_encode($_REQUEST));
-        Log::debug('Laravel Request: ' . json_encode($request));
-        Log::debug('Request ALL :' . json_encode($request->all()));
-        Log::debug('Request GET :' . json_encode($request->input()));
         Log::debug('Request POST :' . json_encode($request->post()));
         Log::debug('Request FILE :' . json_encode($request->file()));
 
+        /*
         if (!isset($status)) {
             // Check Contents
             $received_file = $request->file('report');
             $extension = optional($received_file)->extension();
             $status = ($extension != 'json') ? 'Report not in proper format' : null;
         }
+        */
 
         if (!isset($status)) {
             // Check Report Fields
-            $report = DB_ReadSapReport($received_file->path());
+            $report = DB_ProcessSapReport($request->post());
             $status = (isset($report->userID) && isset($report->plugin_version) && isset($report->requirementResultsGroups)) ? null : 'Report is not valid';
         }
 
@@ -88,12 +86,12 @@ class DB_StableApproachController extends Controller
             ]);
 
             $response['received'] = 'OK';
-            Log::debug('Disposable Basic, Stable Approach report ' . $report->analysis->id . ' RECEIVED for Pirep: ' . $pirep_id . ' of User: ' . $user_id);
+            Log::debug('Disposable Basic, Stable Approach Report RECEIVED (A: ' . $report->analysis->id . ', P: ' . $pirep_id . ', U: ' . $user_id . ')');
         } else {
             // Add reason to the response
             $response['received'] = 'rejected';
             $response['reason'] = $status;
-            Log::debug('Disposable Basic, Stable Approach report REJECTED with reason ' . $status);
+            Log::debug('Disposable Basic, Stable Approach Report REJECTED (' . $status . ')');
         }
 
         return response()->json($response);

@@ -64,7 +64,7 @@ if (!function_exists('DB_AircraftState')) {
         } elseif ($type === 'row') {
             $result = 'class="table-' . $color . '"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-black" title="'.$title.'">' . AircraftState::label($state) . '</span>';
+            $result = '<span class="badge bg-' . $color . ' text-black" title="' . $title . '">' . AircraftState::label($state) . '</span>';
         }
 
         return $result;
@@ -245,14 +245,14 @@ if (!function_exists('DB_ReadJson')) {
 
 // Read Transmitted Stable Approach Plugin Report
 // Return processed json object
-if (!function_exists('DB_ReadSapReport')) {
-    function DB_ReadSapReport($file = null)
+if (!function_exists('DB_ProcessSapReport')) {
+    function DB_ProcessSapReport($request_body = null)
     {
-        if (!is_file($file)) {
+        if (!isset($request_body)) {
             return null;
         }
 
-        $string = file_get_contents($file);
+        $string = json_encode($request_body);
 
         // Convert Touchdowns to json array
         $position_start = strpos($string, '"touchdown": {');
