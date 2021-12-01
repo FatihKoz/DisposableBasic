@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request as Req;
 use Modules\DisposableBasic\Models\DB_StableApproach;
 
 class DB_StableApproachController extends Controller
@@ -28,9 +27,14 @@ class DB_StableApproachController extends Controller
         $status = (DB_Setting('dbasic.stable_app_control', false) === true) ? null : 'Plugin support disabled';
 
         // Request Debug
-        $formdata = Req::post();
-        Log::debug($formdata);
-        Log::debug($request);
+        Log::debug('Request HEADER :' . json_encode($request->header()));
+        Log::debug('Request IP :' . json_encode($request->ip()));
+        Log::debug('PHP $_REQUEST: ' . json_encode($_REQUEST));
+        Log::debug('Laravel Request: ' . json_encode($request));
+        Log::debug('Request ALL :' . json_encode($request->all()));
+        Log::debug('Request GET :' . json_encode($request->input()));
+        Log::debug('Request POST :' . json_encode($request->post()));
+        Log::debug('Request FILE :' . json_encode($request->file()));
 
         if (!isset($status)) {
             // Check Contents
