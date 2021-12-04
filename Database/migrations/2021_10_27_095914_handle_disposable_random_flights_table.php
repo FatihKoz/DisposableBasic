@@ -34,8 +34,8 @@ class HandleDisposableRandomFlightsTable extends Migration
         // Rename to Disposable Random Flights
         if (Schema::hasTable('disposable_randomflight') && !Schema::hasTable('disposable_random_flights')) {
             Schema::table('disposable_randomflight', function (Blueprint $table) {
-                $table->dropIndex('disposable_randomflight_id_index');
-                $table->dropUnique('disposable_randomflight_id_unique');
+                $table->dropIndex(['id']);
+                $table->dropUnique(['id']);
             });
 
             Schema::rename('disposable_randomflight', 'disposable_random_flights');

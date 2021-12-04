@@ -11,8 +11,8 @@ class HandleDisposableRunwaysTable extends Migration
         if (Schema::hasTable('turksim_runways')) {
             // Drop indexes for MariaDB compatibility
             Schema::table('turksim_runways', function (Blueprint $table) {
-                $table->dropIndex('turksim_runways_id_index');
-                $table->dropUnique('turksim_runways_id_unique');
+                $table->dropIndex(['id']);
+                $table->dropUnique(['id']);
             });
 
             // Rename table
