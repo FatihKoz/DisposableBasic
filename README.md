@@ -441,9 +441,13 @@ If you have duplicated blades and encounter problems after updating the module o
 
 XX.DEC.21
 
-* Updated Aircraft details page (following core changes, Aircraft > Hub is now possible)
 * Added support for receiving Stable Approach (X-Plane) reports.
 * Added new widget for Stable Approach support
+
+04.DEC.21
+
+* Fixed migration errors when a custom table prefix is used during phpvms install
+* Added "Aircraft Hub" support (apart from Subfleet Hub, as per the core changes about it)
 
 26.NOV.21
 
