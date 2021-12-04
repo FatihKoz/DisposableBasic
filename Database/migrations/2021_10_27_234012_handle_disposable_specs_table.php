@@ -10,8 +10,8 @@ class HandleDisposableSpecsTable extends Migration
     {
         if (Schema::hasTable('turksim_specs')) {
             Schema::table('turksim_specs', function (Blueprint $table) {
-                $table->dropIndex('turksim_specs_id_index');
-                $table->dropUnique('turksim_specs_id_unique');
+                $table->dropIndex(['id']);
+                $table->dropUnique(['id']);
             });
 
             Schema::rename('turksim_specs', 'disposable_specs');

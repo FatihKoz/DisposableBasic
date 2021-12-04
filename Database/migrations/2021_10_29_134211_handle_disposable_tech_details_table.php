@@ -59,7 +59,19 @@ class HandleDisposableTechDetailsTable extends Migration
         }
 
         if (Schema::hasTable('disposable_flaps') && !Schema::hasTable('disposable_tech')) {
+            Schema::table('disposable_flaps', function (Blueprint $table) {
+                $table->dropIndex(['id']);
+                $table->dropUnique(['id']);
+                $table->dropUnique(['icao']);
+            });
+
             Schema::rename('disposable_flaps', 'disposable_tech');
+
+            Schema::table('disposable_tech', function (Blueprint $table) {
+                $table->index('id');
+                $table->unique('id');
+                $table->unique('icao');
+            });
         }
 
         if (Schema::hasTable('disposable_tech') && !Schema::hasColumn('disposable_tech', 'duration_a')) {
@@ -78,9 +90,9 @@ class HandleDisposableTechDetailsTable extends Migration
 
         if (Schema::hasTable('disposable_tech') && !Schema::hasTable('disposable_tech_details')) {
             Schema::table('disposable_tech', function (Blueprint $table) {
-                $table->dropIndex('disposable_flaps_id_index');
-                $table->dropUnique('disposable_flaps_id_unique');
-                $table->dropUnique('disposable_flaps_icao_unique');
+                $table->dropIndex(['id']);
+                $table->dropUnique(['id']);
+                $table->dropUnique(['icao']);
             });
 
             Schema::rename('disposable_tech', 'disposable_tech_details');
