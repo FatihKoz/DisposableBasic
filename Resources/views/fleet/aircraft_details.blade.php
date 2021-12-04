@@ -35,11 +35,15 @@
           <a href="{{ route('DBasic.subfleet', [$aircraft->subfleet->type ?? '']) }}">{{ $aircraft->subfleet->name ?? '' }}</a>
         </td>
       </tr>
-      @if(filled(optional($aircraft->subfleet)->hub_id))
+      @if(filled($aircraft->hub_id) || filled(optional($aircraft->subfleet)->hub_id))
         <tr>
           <th>@lang('DBasic::common.base')</th>
           <td>
-            <a href="{{ route('DBasic.hub', [$aircraft->subfleet->hub_id ?? '']) }}">{{ $aircraft->subfleet->hub->full_name ?? '' }}</a>
+            @if(filled($aircraft->hub_id))
+              <a href="{{ route('DBasic.hub', [$aircraft->hub_id ?? '']) }}">{{ $aircraft->hub->full_name ?? '' }}</a>
+            @else
+              <a href="{{ route('DBasic.hub', [$aircraft->subfleet->hub_id ?? '']) }}">{{ $aircraft->subfleet->hub->full_name ?? '' }}</a>
+            @endif
           </td>
         </tr>
       @endif

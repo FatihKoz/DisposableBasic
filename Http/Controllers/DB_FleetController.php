@@ -78,7 +78,7 @@ class DB_FleetController extends Controller
         $units = $this->GetUnits();
 
         $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
-        $eager_aircraft = ['airline', 'airport', 'files', 'subfleet.fares', 'subfleet.files', 'subfleet.hub'];
+        $eager_aircraft = ['airline', 'airport', 'files', 'hub', 'subfleet.fares', 'subfleet.files', 'subfleet.hub'];
         $aircraft = Aircraft::withCount($withCount)->with($eager_aircraft)->where('registration', $ac_reg)->first();
 
         if (!$aircraft) {
