@@ -444,10 +444,16 @@ XX.DEC.21
 * Added support for receiving Stable Approach (X-Plane) reports.
 * Added new widget for Stable Approach support
 
+05.DEC.21
+
+* Added "Type Ratings" support (to display at aircraft/subfleet details and use in restrictions where needed)
+* Improved "Aircraft Hub" support (mainly fixed blades to use the correct hub where needed)
+
 04.DEC.21
 
 * Fixed migration errors when a custom table prefix is used during phpvms install
 * Added "Aircraft Hub" support (apart from Subfleet Hub, as per the core changes about it)
+* Requires updated phpvms dev build released after 30.NOV.21
 
 26.NOV.21
 

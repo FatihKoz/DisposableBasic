@@ -53,17 +53,19 @@ class DB_HubController extends Controller
 
             // Aircraft
             $hub_subfleets = Subfleet::where('hub_id', $hub->id)->pluck('id')->toArray();
-
             $eager_aircraft = ['airline', 'subfleet'];
             $withCount_aircraft = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+
             $aircraft_hub = Aircraft::withCount($withCount_aircraft)->with($eager_aircraft)
                 ->whereIn('subfleet_id', $hub_subfleets)
+                ->orWhere('hub_id', $hub->id)
                 ->orderby('icao')->orderby('registration')
                 ->get();
             $aircraft_off = Aircraft::withCount($withCount_aircraft)->with($eager_aircraft)
-                ->whereNotIn('subfleet_id', $hub_subfleets)
                 ->where('airport_id', $hub->id)
-                ->orderby('icao')->orderby('registration')
+                ->where(function ($query) use ($hub_subfleets, $hub) {
+                    return $query->whereNotIn('subfleet_id', $hub_subfleets)->orWhere('hub_id', '!=', $hub->id);
+                })->orderby('icao')->orderby('registration')
                 ->get();
 
             $is_visible['aircraft'] = ($aircraft_hub->count() > 0 || $aircraft_off->count() > 0) ? true : false;
@@ -79,6 +81,7 @@ class DB_HubController extends Controller
 
             $flights_dpt = $flights->where('dpt_airport_id', $hub->id);
             $flights_arr = $flights->where('arr_airport_id', $hub->id);
+
             $is_visible['flights'] = ($flights_dpt->count() > 0 || $flights_arr->count() > 0) ? true : false;
 
             // Pilots
@@ -97,6 +100,7 @@ class DB_HubController extends Controller
 
             $users_hub = User::with($eager_users)->where($hub_where)->orderby('id')->get();
             $users_off = User::with($eager_users)->where($off_where)->orderby('id')->get();
+
             $is_visible['pilots'] = ($users_hub->count() > 0 || $users_off->count() > 0) ? true : false;
 
             // Pilot Reports

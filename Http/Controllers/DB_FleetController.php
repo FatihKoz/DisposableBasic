@@ -16,7 +16,9 @@ class DB_FleetController extends Controller
     public function index()
     {
         $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
-        $aircraft = Aircraft::withCount($withCount)->with(['airline', 'subfleet'])->orderby('icao')->orderby('registration')->paginate(50);
+        $with = ['airline', 'subfleet'];
+
+        $aircraft = Aircraft::withCount($withCount)->with($with)->orderby('icao')->orderby('registration')->paginate(50);
 
         return view('DBasic::fleet.index', [
             'aircraft' => $aircraft,
@@ -29,16 +31,22 @@ class DB_FleetController extends Controller
     {
         $units = $this->GetUnits();
 
-        $subfleet = Subfleet::withCount(['flights', 'fares'])->with(['airline', 'fares', 'hub'])->where('type', $subfleet_type)->first();
+        $withCount_sf = ['flights', 'fares'];
+        $with_sf = ['airline', 'fares', 'files', 'hub', 'typeratings'];
 
-        $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
-        $aircraft = Aircraft::withCount($withCount)->with(['airline', 'subfleet'])->where('subfleet_id', $subfleet->id)->orderby('registration')->get();
-        
+        $subfleet = Subfleet::withCount($withCount_sf)->with($with_sf)->where('type', $subfleet_type)->first();
+
+        $withCount_ac = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+        $with_ac = ['airline', 'subfleet'];
+
+        $aircraft = Aircraft::withCount($withCount_ac)->with($with_ac)->where('subfleet_id', $subfleet->id)->orderby('registration')->get();
+
         // Latest Pireps
-        $where = ['state' => 2];
+        $where = ['state' => 2, 'status' => 'ONB'];
         $aircraft_array = $aircraft->pluck('id')->toArray();
-        $eager_pireps = ['airline', 'arr_airport', 'dpt_airport', 'user'];
-        $pireps = Pirep::with($eager_pireps)->where($where)->whereIn('aircraft_id', $aircraft_array)->orderby('submitted_at', 'desc')->take(5)->get();
+        $with_pireps = ['airline', 'arr_airport', 'dpt_airport', 'user'];
+
+        $pireps = Pirep::with($with_pireps)->where($where)->whereIn('aircraft_id', $aircraft_array)->orderby('submitted_at', 'desc')->take(5)->get();
 
         if (!$subfleet) {
             flash()->error('Subfleet not found !');
@@ -55,6 +63,7 @@ class DB_FleetController extends Controller
         // Files (only Subfleet level)
         $files = $subfleet->files;
 
+        // Overflow Size Adjustment for blade
         $overflow_mh = 78;
         if(filled($files)) { $overflow_mh = $overflow_mh - 20; }
         if(filled($specs)) { $overflow_mh = $overflow_mh - 20; }
@@ -64,7 +73,7 @@ class DB_FleetController extends Controller
             'aircraft' => $aircraft,
             'files'    => filled($files) ? $files : null,
             'image'    => $image,
-            'over_mh'  => $overflow_mh, 
+            'over_mh'  => $overflow_mh,
             'pireps'   => filled($pireps) ? $pireps : null,
             'specs'    => $specs,
             'subfleet' => $subfleet,
@@ -78,8 +87,9 @@ class DB_FleetController extends Controller
         $units = $this->GetUnits();
 
         $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
-        $eager_aircraft = ['airline', 'airport', 'files', 'hub', 'subfleet.fares', 'subfleet.files', 'subfleet.hub'];
-        $aircraft = Aircraft::withCount($withCount)->with($eager_aircraft)->where('registration', $ac_reg)->first();
+        $with_aircraft = ['airline', 'airport', 'files', 'hub', 'subfleet.fares', 'subfleet.files', 'subfleet.hub', 'subfleet.typeratings'];
+
+        $aircraft = Aircraft::withCount($withCount)->with($with_aircraft)->where('registration', $ac_reg)->first();
 
         if (!$aircraft) {
             flash()->error('Aircraft not found !');
@@ -88,8 +98,9 @@ class DB_FleetController extends Controller
 
         // Latest Pireps
         $where = ['aircraft_id' => $aircraft->id, 'state' => 2];
-        $eager_pireps = ['dpt_airport', 'arr_airport', 'user', 'airline'];
-        $pireps = Pirep::with($eager_pireps)->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
+        $with_pirep = ['dpt_airport', 'arr_airport', 'user', 'airline'];
+
+        $pireps = Pirep::with($with_pirep)->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
 
         // Aircraft or Subfleet Image
         $FleetSvc = app(DB_FleetServices::class);

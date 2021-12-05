@@ -18,10 +18,12 @@ class FleetOverview extends Widget
         if ($type === 'icao') {
             $col_header = __('DBasic::common.icao');
             $footer_note = __('DBasic::widgets.icaotype');
+
             $fleet = Aircraft::selectRaw('icao, count(id) as totals')->groupBy('icao')->orderBy('icao', 'asc')->get();
         } elseif ($type === 'subfleet') {
             $col_header = __('DBasic::common.subfleet');
             $footer_note = __('DBasic::widgets.bysubfleet');
+
             $fleet = Aircraft::with('subfleet.airline')->selectRaw('subfleet_id, count(id) as totals')
                 ->groupBy('subfleet_id')->orderBy('totals', 'desc')->orderBy('subfleet_id')->get();
         } else {

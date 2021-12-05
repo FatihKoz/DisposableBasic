@@ -24,6 +24,17 @@
           </td>
         </tr>
       @endif
+      @if(filled($subfleet->typeratings))
+        <tr>
+          <th scope="row">Type Rating(s)</th>
+          <td>
+            @foreach($subfleet->typeratings as $rating)
+              @if(!$loop->first) &bull; @endif
+              {{ $rating->name }}
+            @endforeach
+          </td>
+        </tr>
+      @endif
       <tr>
         <th scope="row">@lang('DBasic::common.airline')</th>
         <td>

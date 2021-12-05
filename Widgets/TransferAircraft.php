@@ -6,6 +6,7 @@ use App\Contracts\Widget;
 use App\Models\Aircraft;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,8 @@ class TransferAircraft extends Widget
             $price = 'auto';
         }
         $rank_restriction = setting('pireps.restrict_aircraft_to_rank', true);
+        $rate_restriction = setting('pireps.restrict_aircraft_to_typerating', false);
+
         $user = Auth::user();
 
         $form_route = 'DBasic.transferac';
@@ -50,8 +53,10 @@ class TransferAircraft extends Widget
                 $where['id'] = $fixed_ac;
             }
 
-            if ($rank_restriction) {
-                $allowed_subfleets = DB::table('subfleet_rank')->where('rank_id', $user->rank_id)->pluck('subfleet_id')->toArray();
+            if ($rank_restriction || $rate_restriction) {
+                $userSvc = app(UserService::class);
+                $restricted_to = $userSvc->getAllowableSubfleets($user);
+                $allowed_subfleets = $restricted_to->pluck('id')->toArray();
             } else {
                 $allowed_subfleets = null;
             }
@@ -76,7 +81,7 @@ class TransferAircraft extends Widget
                     return $query->whereIn('airport_id', $hubs_array);
                 })->when($list === 'nohubs', function ($query) use ($hubs_array) {
                     return $query->whereNotIn('airport_id', $hubs_array);
-                })->when($rank_restriction, function ($query) use ($allowed_subfleets) {
+                })->when(($rank_restriction || $rate_restriction), function ($query) use ($allowed_subfleets) {
                     return $query->whereIn('subfleet_id', $allowed_subfleets);
                 })->when(is_numeric($landing_time_margin), function ($query) use ($before) {
                     return $query->where(function ($group) use ($before) {

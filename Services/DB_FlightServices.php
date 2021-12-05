@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Services;
 
 use App\Models\Enums\PirepState;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Modules\DisposableBasic\Models\DB_RandomFlight;
@@ -25,8 +26,11 @@ class DB_FlightServices
         }
 
         $allowed_flights = null;
-        if (setting('pireps.restrict_aircraft_to_rank', false)) {
-            $allowed_subfleets = DB::table('subfleet_rank')->where('rank_id', $user->rank_id)->pluck('subfleet_id')->toArray();
+
+        if (setting('pireps.restrict_aircraft_to_rank', true) || setting('pireps.restrict_aircraft_to_typerating', false)) {
+            $userSvc = app(UserService::class);
+            $restricted_to = $userSvc->getAllowableSubfleets($user);
+            $allowed_subfleets = $restricted_to->pluck('id')->toArray();
             $allowed_flights = DB::table('flight_subfleet')->whereIn('subfleet_id', $allowed_subfleets)->pluck('flight_id')->toArray();
         }
 

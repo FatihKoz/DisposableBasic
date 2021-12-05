@@ -41,9 +41,15 @@
       @endempty
       @empty($hub_ac)
         <td>
-          <a href="{{ route('DBasic.hub', [strtoupper($ac->subfleet->hub_id) ?? '']) }}">
-            {{ $ac->subfleet->hub_id ?? ''}}
-          </a>
+          @if(filled($ac->hub_id))
+            <a href="{{ route('DBasic.hub', [$ac->hub_id ?? '']) }}">
+              {{ $ac->hub_id ?? '' }}
+            </a>
+          @else          
+            <a href="{{ route('DBasic.hub', [$ac->subfleet->hub_id ?? '']) }}">
+              {{ $ac->subfleet->hub_id ?? ''}}
+            </a>
+          @endif
         </td>
       @endempty
       @empty($visitor_ac)

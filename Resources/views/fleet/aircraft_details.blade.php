@@ -27,6 +27,17 @@
           </td>
         </tr>
       @endif
+      @if(filled(optional($aircraft->subfleet)->typeratings))
+        <tr>
+          <th scope="row">Type Rating(s)</th>
+          <td>
+            @foreach($aircraft->subfleet->typeratings as $rating)
+              @if(!$loop->first) &bull; @endif
+              {{ $rating->name }}
+            @endforeach
+          </td>
+        </tr>
+      @endif
       <tr>
         <th>@lang('DBasic::common.airline') / @lang('DBasic::common.subfleet')</th>
         <td>
