@@ -453,13 +453,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
-XX.DEC.21
+18.DEC.21
 
 * Added support for receiving Stable Approach Plugin (X-Plane) reports.
 * Added new widget for Stable Approach Plugin support
-
-18.DEC.21
-
 * Fixed a typo in EventServiceProvider (Cron Listeners)
 
 05.DEC.21
