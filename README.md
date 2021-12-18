@@ -408,6 +408,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+18.DEC.21
+
+* Fixed a typo in EventServiceProvider (Cron Listeners)
+
 05.DEC.21
 
 * Added "Type Ratings" support (to display at aircraft/subfleet details and use in restrictions where needed)
