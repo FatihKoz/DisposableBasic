@@ -45,6 +45,22 @@
                 </td>
               </tr>
             @endforeach
+            @if(filled($analysis->aircraft_profile_type))
+              <tr>
+                <th>Aircraft Profile Type</th>
+                <td>
+                  <i
+                    @if($analysis->aircraft_profile_type->va === true)
+                      class="fas fa-check-circle text-success pe-1" title="{{ config('app.name') }} Profile"
+                    @elseif($analysis->aircraft_profile_type->official === true)
+                      class="fas fa-check-circle text-primary pe-1" title="Official Profile"
+                    @else
+                      class="fas fa-times-circle text-danger pe-1" title="No Profile Defined !"
+                    @endif
+                  ></i>
+                </td>
+              </tr>
+            @endif
           </table>
         </div>
       </div>
