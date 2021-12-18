@@ -138,15 +138,22 @@ by either import problems or hard deleting records from your database. Provided 
 
 ### Stable Approach Plugin Support
 
-For auto receiving approach reports and matching them with users/pireps, below steps required to be completed;
+Stable Approach Plugin is a FDM (Flight Data Monitoring) tool for X-Plane. For more details check documents of the plugin.
+
+For auto receiving FDM reports and matching them with users/pireps, below steps are required to be completed;
+
+Virtual Airline Requirements;
 
 1. Add a new custom user profile field with the name `Stable Approach ID`, make it active and private *(only admins and the owner needs to see it)*
 2. Enable setting from admin > Disposable Basic page. *(Also it is possible to define a custom name for the user profile field here if you wish)*
-3. Follow Stable Approach plugin's wiki/documents to have your own custom repository, settings and aircraft profiles
+3. Follow Stable Approach Plugin's wiki/documents to have your own custom repository, va based settings and (optionally) aircraft profiles
 
-`https:://your.phpvms.url` and `/dstable/new` should be used in settings json file to receive reports.
+`your.phpvms.url` (for host field) and `/dstable` (for target field) should be used in `plugin_version.json` file to receive reports.
 
-4. Pilots then need to enter your forked repository url in their plugin settings to finalize the process.
+Pilot/User Requirements;
+
+4. Pilots should enter your va's GitHub repository url (like `your_github_username/stableapproach`) to their plugin settings (X-Plane > Stable Approach > Settings)
+5. Pilots should enter their plugin userID's to their user profiles (phpvms > Profile > Edit)
 
 :warning: *Stable Approach Plugin ONLY support SSL/Secure connections for report uploads* :warning:
 
@@ -440,8 +447,8 @@ If you have duplicated blades and encounter problems after updating the module o
 
 XX.DEC.21
 
-* Added support for receiving Stable Approach (X-Plane) reports.
-* Added new widget for Stable Approach support
+* Added support for receiving Stable Approach Plugin (X-Plane) reports.
+* Added new widget for Stable Approach Plugin support
 
 18.DEC.21
 
