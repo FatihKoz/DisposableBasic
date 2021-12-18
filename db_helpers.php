@@ -64,7 +64,7 @@ if (!function_exists('DB_AircraftState')) {
         } elseif ($type === 'row') {
             $result = 'class="table-' . $color . '"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-black" title="'.$title.'">' . AircraftState::label($state) . '</span>';
+            $result = '<span class="badge bg-' . $color . ' text-black" title="' . $title . '">' . AircraftState::label($state) . '</span>';
         }
 
         return $result;
@@ -224,6 +224,22 @@ if (!function_exists('DB_PirepState')) {
         }
 
         return $result;
+    }
+}
+
+// Read Json File
+// Return object
+if (!function_exists('DB_ReadJson')) {
+    function DB_ReadJson($file = null)
+    {
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $string = file_get_contents($file);
+        $result = json_decode($string);
+
+        return (json_last_error() === 0) ? $result : null;
     }
 }
 

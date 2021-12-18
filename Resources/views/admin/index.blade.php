@@ -87,6 +87,12 @@
           </div>
           <span class="text-danger"><b>If the aircraft has an active (in-progress) PIREP, it gets CANCELLED too !!!</b></span>
         </div>
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Stable Approach Plugin</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'Stable Approach'])
+          <span class="text-info">When enabled, module will be able to receive reports sent by Stable Approach plugin</span>
+        </div>
         {{-- IVAO and VATSIM Related Settings --}}
         {{--}}
           <div class="card border-blue-bottom" style="padding:5px;">
