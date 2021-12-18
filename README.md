@@ -55,7 +55,6 @@ Module does not provide auto links to your phpvms theme, Disposable Theme v3 has
 Named Routes and Url's
 
 ```php
-
 DBasic.airlines  /dairlines         // Airlines index page
 DBasic.airline   /dairlines/DSP     // Airline details page, needs an {icao} code to run
 
@@ -443,6 +442,10 @@ XX.DEC.21
 
 * Added support for receiving Stable Approach (X-Plane) reports.
 * Added new widget for Stable Approach support
+
+18.DEC.21
+
+* Fixed a typo in EventServiceProvider (Cron Listeners)
 
 05.DEC.21
 

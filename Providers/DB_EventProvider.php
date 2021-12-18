@@ -8,7 +8,7 @@ use App\Events\PirepFiled;
 use App\Events\PirepPrefiled;
 use App\Events\PirepUpdated;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\DisposableBasic\Listener\Gen_CronHourly;
+use Modules\DisposableBasic\Listeners\Gen_CronHourly;
 use Modules\DisposableBasic\Listeners\Pirep_Cancelled;
 use Modules\DisposableBasic\Listeners\Pirep_Filed;
 use Modules\DisposableBasic\Listeners\Pirep_Prefiled;
