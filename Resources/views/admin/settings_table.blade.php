@@ -1,6 +1,6 @@
 @if($settings)
   <div style="margin-bottom: 5px;">
-    {{ Form::open(array('route' => 'DBasic.settings_update', 'method' => 'post')) }}
+    {{ Form::open(['route' => 'DBasic.settings_update', 'method' => 'post']) }}
       <table class="table table-striped text-left" style="margin-bottom: 2px;">
         @foreach($settings->where('group', $group)->sortBy('order') as $st)
           <tr>
