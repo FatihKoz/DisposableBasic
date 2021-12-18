@@ -148,7 +148,15 @@ Virtual Airline Requirements;
 2. Enable setting from admin > Disposable Basic page. *(Also it is possible to define a custom name for the user profile field here if you wish)*
 3. Follow Stable Approach Plugin's wiki/documents to have your own custom repository, va based settings and (optionally) aircraft profiles
 
-`your.phpvms.url` (for host field) and `/dstable` (for target field) should be used in `plugin_version.json` file to receive reports.
+`your.phpvms.url` (for host field) and `/dstable` (for target field) should be used in `plugin_version.json` file to receive reports, like below;
+
+```json
+    "report_server":{
+      "enabled": true,
+      "host": "flightops.turksim.org",
+      "target": "/dstable"
+    },
+```
 
 Pilot/User Requirements;
 
