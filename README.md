@@ -153,7 +153,7 @@ Virtual Airline Requirements;
 Pilot/User Requirements;
 
 4. Pilots should enter your va's GitHub repository url (like `your_github_username/stableapproach`) to their plugin settings (X-Plane > Stable Approach > Settings)
-5. Pilots should enter their plugin userID's to their user profiles (phpvms > Profile > Edit)
+5. Finally pilots should enter their plugin userID's to their user profiles (phpvms > Profile > Edit)
 
 :warning: *Stable Approach Plugin ONLY support SSL/Secure connections for report uploads* :warning:
 
