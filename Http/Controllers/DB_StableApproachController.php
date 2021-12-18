@@ -14,10 +14,10 @@ class DB_StableApproachController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $reports = DB_StableApproach::with('user', 'pirep')->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(12);
+        $sap_reports = DB_StableApproach::with('user', 'pirep')->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(12);
 
         return view('DBasic::sap.index', [
-            'reports' => $reports,
+            'sap_reports' => $sap_reports,
         ]);
     }
 
@@ -26,25 +26,21 @@ class DB_StableApproachController extends Controller
         // Check Settings
         $status = (DB_Setting('dbasic.stable_app_control', false) === true) ? null : 'Plugin support disabled';
 
-        // Request Debug
-        Log::debug('Request HEADER :' . json_encode($request->header()));
-        Log::debug('Request IP :' . json_encode($request->ip()));
-        Log::debug('Request POST :' . json_encode($request->post()));
-        Log::debug('Request FILE :' . json_encode($request->file()));
-
-        /*
-        if (!isset($status)) {
-            // Check Contents
-            $received_file = $request->file('report');
-            $extension = optional($received_file)->extension();
-            $status = ($extension != 'json') ? 'Report not in proper format' : null;
-        }
-        */
+        // Handle Request
+        // Log::debug('Request HEADER :' . json_encode($request->header()));
+        // Log::debug('Request IP :' . json_encode($request->ip()));
+        // Log::debug('Request POST :' . json_encode($request->post()));
+        $request_post = json_encode($request->post());
 
         if (!isset($status)) {
             // Check Report Fields
-            $report = DB_ProcessSapReport($request->post());
-            $status = (isset($report->userID) && isset($report->plugin_version) && isset($report->requirementResultsGroups)) ? null : 'Report is not valid';
+            $report = json_decode($request_post); // DB_ProcessSapReport($request->post());
+            $status = (isset($report->userID) && isset($report->plugin_version)) ? null : 'Report is not valid';
+        }
+
+        if (!isset($status)) {
+            // Check Messages Section
+            $status = (isset($report->messages) && filled($report->messages)) ? null : 'Report is not complete'; 
         }
 
         if (!isset($status)) {
@@ -55,7 +51,7 @@ class DB_StableApproachController extends Controller
 
         if (!isset($status)) {
             // Check Results
-            $requirements = is_array($report->requirementResultsGroups) ? collect($report->requirementResultsGroups) : null;
+            $requirements = is_array($report->messages) ? collect($report->messages) : null;
             $is_stable = (isset($requirements) && $requirements->where('type', '2')->count()) ? false : true;
         }
 

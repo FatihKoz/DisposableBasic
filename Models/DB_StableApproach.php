@@ -29,6 +29,27 @@ class DB_StableApproach extends Model
         'raw_report'     => 'required',
     ];
 
+    // Attributes
+    public function getStableAttribute()
+    {
+        return ($this->is_stable == 1) ? true : false;
+    }
+
+    public function getReportAttribute() 
+    {
+        return filled($this->raw_report) ? json_decode($this->raw_report) : null;
+    }
+
+    public function getMessagesAttribute()
+    {
+        return (filled($this->report) && is_array($this->report->messages)) ? collect($this->report->messages) : null;
+    }
+
+    public function getTouchdownsAttribute()
+    {
+        return (filled($this->report) && is_array(optional($this->report->analysis)->touchdowns)) ? collect($this->report->analysis->touchdowns) : null;
+    }
+
     // Relationships
     public function user()
     {

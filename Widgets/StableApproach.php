@@ -15,14 +15,13 @@ class StableApproach extends Widget
 
         if ($pirep) {
             $where = ['user_id' => $pirep->user_id, 'pirep_id' => $pirep->id];
-            $sap_report = DB_StableApproach::where($where)->first();
+            $sap = DB_StableApproach::where($where)->first();
         }
 
         return view('DBasic::widgets.stable_approach', [
-            'is_stable'  => (isset($sap_report) && $sap_report->is_stable == 1) ? true : false,
-            'is_visible' => isset($sap_report) ? true : false,
-            'report'     => isset($sap_report) ? $sap_report : null,
-            'stable'     => isset($sap_report) ? json_decode($sap_report->raw_report) : null,
+            'is_visible' => isset($sap) ? true : false,
+            'is_stable'  => isset($sap) ? $sap->stable : false,
+            'report'     => (isset($sap) && filled($sap->report)) ? $sap->report : null,
             'use_button' => is_bool($this->config['button']) ? $this->config['button'] : false,
         ]);
     }

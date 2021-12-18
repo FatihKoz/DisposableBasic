@@ -22,7 +22,7 @@
           <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body p-0">
-          @include('DBasic::sap.report_body', ['stable' => $stable])
+          @include('DBasic::sap.report_body', ['analysis' => $report->analysis])
         </div>
         <div class="modal-footer p-1">
           <button type="button" class="btn btn-sm btn-warning m-0 mx-1 p-0 px-1" data-bs-dismiss="modal">Close</button>

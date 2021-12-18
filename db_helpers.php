@@ -243,34 +243,6 @@ if (!function_exists('DB_ReadJson')) {
     }
 }
 
-// Read Transmitted Stable Approach Plugin Report
-// Return processed json object
-if (!function_exists('DB_ProcessSapReport')) {
-    function DB_ProcessSapReport($request_body = null)
-    {
-        if (!isset($request_body)) {
-            return null;
-        }
-
-        $string = json_encode($request_body);
-
-        // Convert Touchdowns to json array
-        $position_start = strpos($string, '"touchdown": {');
-        $string = substr_replace($string, '"touchdowns": [ ', $position_start, 0);
-        $string = str_replace('"touchdown": ', '', $string);
-        $position_end = strpos($string, '"touchdown_combined": {');
-        $string = substr_replace($string, '], ', $position_end, 0);
-        $string = str_replace('},' . "\r\n" . '        ], "touchdown_combined": {', '} ], "touchdown_combined": {', $string);
-
-        // Convert ResultsGroups to json array
-        $string = str_replace('"message": ', '', $string);
-        $string = str_replace('"requirementResultsGroups": {', '"requirementResultsGroups": [', $string);
-        $string = str_replace('},' . "\r\n" . '    "hash":', '],' . "\r\n" . '    "hash":', $string);
-
-        return json_decode($string);
-    }
-}
-
 // Check Disposable Module Setting
 // Return mixed, either boolean or the value itself as string
 // If setting is not found, return either false or provided default
