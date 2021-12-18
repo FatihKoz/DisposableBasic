@@ -40,17 +40,18 @@ class DB_StableApproachController extends Controller
 
         if (!isset($status)) {
             // Check Messages Section
-            $status = (isset($report->messages) && filled($report->messages)) ? null : 'Report is not complete'; 
+            $status = (isset($report->messages) && filled($report->messages)) ? null : 'Report is not complete';
         }
 
         if (!isset($status)) {
-            // Duplicate Report Check
+            // Check Duplicate
             $duplicate = DB_StableApproach::where('sap_analysisID', $report->analysis->id)->count();
             $status = ($duplicate > 0) ? 'Already received' : null;
         }
 
         if (!isset($status)) {
-            // Check Results
+            // Check if this is a "Stable Approach"
+            // type 1 is used for informations, type 2 is for warnings/non acceptable items
             $requirements = is_array($report->messages) ? collect($report->messages) : null;
             $is_stable = (isset($requirements) && $requirements->where('type', '2')->count()) ? false : true;
         }
