@@ -15,16 +15,16 @@
   <div class="modal fade" id="StableApproachModal" tabindex="-1" aria-labelledby="StableApproachModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header p-1">
+        <div class="modal-header border-0 p-1">
           <h5 class="modal-title m-0" id="StableApproachModalLabel">
             Stable Approach Report
           </h5>
           <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body p-0">
+        <div class="modal-body border-0 p-0">
           @include('DBasic::sap.report_body', ['analysis' => $report->analysis])
         </div>
-        <div class="modal-footer p-1">
+        <div class="modal-footer border-0 p-1">
           <button type="button" class="btn btn-sm btn-warning m-0 mx-1 p-0 px-1" data-bs-dismiss="modal">Close</button>
         </div>
       </div>

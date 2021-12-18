@@ -1,13 +1,13 @@
 {{-- Main Display --}}
-<div class="d-grid text-center p-1">
+<div class="d-grid text-center m-0 p-0">
   @if($sap->stable === true)
-    <span class="badge bg-success py-2 text-black">
+    <span class="badge bg-success rounded-0 py-2 text-black">
       <h6 class="m-0 p-0 fw-bold">
         STABLE
       </h6>
     </span>
   @elseif($sap->stable === false)
-    <span class="badge bg-danger py-2 text-black">
+    <span class="badge bg-danger rounded-0 py-2 text-black">
       <h6 class="m-0 p-0 fw-bold">
         UNSTABLE
       </h6>
@@ -28,7 +28,7 @@
           <table class="table table-sm table-borderless table-striped mb-0 align-middle">
             @foreach($sap->messages as $message)
               <tr>
-                <th>{{ $message->name }}</th>
+                <th>{{ ucwords($message->name) }}</th>
                 <td>
                   <i
                     @if($message->type == 0)
