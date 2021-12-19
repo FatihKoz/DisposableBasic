@@ -144,10 +144,10 @@ For auto receiving FDM reports and matching them with users/pireps, below steps 
 
 Virtual Airline Requirements;
 
-1. Add a new custom user profile field with the name `Stable Approach ID`, make it active and private 
-  *(only admins and the owner needs to see it)*
-2. Enable setting from admin > Disposable Basic page. 
-  *(Also it is possible to define a custom name for the user profile field here if you wish)*
+1. Add a new custom user profile field with the name `Stable Approach ID`, make it active and private  
+  *(only admins and the owner needs to see it)*  
+2. Enable setting from admin > Disposable Basic page.  
+  *(Also it is possible to define a custom name for the user profile field here if you wish)*  
 3. Follow Stable Approach Plugin's wiki/documents to have your own custom repository, va based settings and (optionally) aircraft profiles
 
 `your.phpvms.url` (for host field) and `/dstable` (for target field) should be used in `plugin_version.json` file to receive reports, like below;
@@ -162,10 +162,10 @@ Virtual Airline Requirements;
 
 Pilot/User Requirements;
 
-4. Pilots should enter your va's GitHub repository url (`YourGithubUsername/StableApproach`) to their plugin settings 
-   *(X-Plane > Stable Approach > Settings)*
-5. Finally pilots should enter their Stable Approach userID's to their user va profiles (visible at plugin settings)
-   *(phpvms > Profile > Edit)*
+4. Pilots should enter your va's GitHub repository url (`YourGithubUsername/StableApproach`) to their plugin settings  
+   *(X-Plane > Stable Approach > Settings)*  
+5. Finally pilots should enter their Stable Approach userID's to their user va profiles (visible at plugin settings)  
+   *(phpvms > Profile > Edit)*  
    
 Just a generic note for pilots; Report sending is automatic and this process must be completed before your current/active pirep gets filed. Normally a report gets generated while you and the aircraft is still taxiing out from the runway and plugin inform you about this. So be reasonable, do not land and instantly try filing your pirep. In such cases report will still be sent but it will be rejected.  
 
