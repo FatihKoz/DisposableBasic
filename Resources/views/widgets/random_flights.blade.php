@@ -16,24 +16,28 @@
         </tr>
         @foreach($random_flights as $rf)
           <tr>
-            <td class="text-start">
-              <a href="{{ route('frontend.flights.show', [$rf->flight_id]) }}">{{ optional($rf->flight->airline)->code.' '.$rf->flight->flight_number }}</a>
-            </td>
-            <td>
-              <a href="{{ route('frontend.airports.show', [$rf->flight->dpt_airport_id]) }}" title="{{ optional($rf->flight->dpt_airport)->name }}">{{ $rf->flight->dpt_airport_id }}</a>
-            </td>
-            <td>
-              <a href="{{ route('frontend.airports.show', [$rf->flight->arr_airport_id]) }}" title="{{ optional($rf->flight->arr_airport)->name }}">{{ $rf->flight->arr_airport_id }}</a>
-            </td>
-            <td class="text-end">
-              @if($rf->completed)
-                @lang('DBasic::common.completed')
-                <i class="fas fa-check-circle ms-2 text-success"></i>
-              @else
-                {{ $today->endOfDay()->DiffForHumans() }}
-                <i class="fas fa-stopwatch ms-2 text-danger"></i>
-              @endif
-            </td>
+            @if($rf->flight)
+              <td class="text-start">
+                <a href="{{ route('frontend.flights.show', [$rf->flight_id]) }}">{{ optional($rf->flight->airline)->code.' '.$rf->flight->flight_number }}</a>
+              </td>
+              <td>
+                <a href="{{ route('frontend.airports.show', [$rf->flight->dpt_airport_id]) }}" title="{{ optional($rf->flight->dpt_airport)->name }}">{{ $rf->flight->dpt_airport_id }}</a>
+              </td>
+              <td>
+                <a href="{{ route('frontend.airports.show', [$rf->flight->arr_airport_id]) }}" title="{{ optional($rf->flight->arr_airport)->name }}">{{ $rf->flight->arr_airport_id }}</a>
+              </td>
+              <td class="text-end">
+                @if($rf->completed)
+                  @lang('DBasic::common.completed')
+                  <i class="fas fa-check-circle ms-2 text-success"></i>
+                @else
+                  {{ $today->endOfDay()->DiffForHumans() }}
+                  <i class="fas fa-stopwatch ms-2 text-danger"></i>
+                @endif
+              </td>
+            @else 
+              <td colspan="4" class="small fw-bold text-danger">Error: Flight Not Found !</td>
+            @endif
           </tr>
         @endforeach
       </table>
