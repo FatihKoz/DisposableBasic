@@ -118,31 +118,26 @@ Usage examples;
 
 Check module admin page to view all features and possible settings module offers.
 
-When enabled module can listen pirep events and change Aircraft states (PARKED, IN USE, PARKED) which simply blocks simultaneous usage of aircraft by multiple pilots.
-Even though there are some background checks and a cron feature to release possible stuck aircraft admins can also manually park an aircraft from admin panel.
+When enabled module can listen pirep events and change Aircraft states (PARKED, IN USE, PARKED) which simply blocks simultaneous usage of aircraft by multiple pilots. Even though there are some background checks and a cron feature to release possible stuck aircraft admins can also manually park an aircraft from admin panel.
 
 Also module can send customized Discord notifications when a pirep gets filed, it is a separate feature compared to phpvms core system. It only sends one message per pirep.
 
 As additional features, you can define addon based specifications for your fleet members. Like defining two profiles for a Boeing B737-800 like one for `Zibo` and another for `PMDG`.
-These definitions can be per aircraft, per subfleet or per icao type and used both for visual display at respective pages (aircraft/subfleet) and be used with SimBrief API for proper 
-flight planning.
+These definitions can be per aircraft, per subfleet or per icao type and used both for visual display at respective pages (aircraft/subfleet) and be used with SimBrief API for proper flight planning.
 
-If you are not developing your own pirep checks and/or not using Disposable Special/Extended module solutions you can simply skip using Maintenance periods etc. They are here just for 
-backward compatibility and some va's already based their custom code on them.
+If you are not developing your own pirep checks and/or not using Disposable Special/Extended module solutions you can simply skip using Maintenance periods etc. They are here just for backward compatibility and some va's already based their custom code on them.
 
-For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old but still usefull for most airports. You can import those runways 
-and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
+For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old but still usefull for most airports. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
 
-As an additional feature, module provides a quick database health check here. Technically it is a helper for you to solve problems, like finding out missing airports or broken relationships 'caused 
-by either import problems or hard deleting records from your database. Provided results are mostly for usage in your sql queries to fix things manually when needed.
+As an additional feature, module provides a quick database health check here. Technically it is a helper for you to solve problems, like finding out missing airports or broken relationships 'caused by either import problems or hard deleting records from your database. Provided results are mostly for usage in your sql queries to fix things manually when needed.
 
-### Stable Approach Plugin Support
+## Stable Approach Plugin Support
 
 Stable Approach Plugin is a FDM (Flight Data Monitoring) tool for X-Plane. For more details check documents of the plugin.
 
 For auto receiving FDM reports and matching them with users/pireps, below steps are required to be completed;
 
-Virtual Airline Requirements;
+**Virtual Airline Requirements;**
 
 1. Add a new custom user profile field with the name `Stable Approach ID`, make it active and private  
   *Only admins and the owner needs to see it*  
@@ -160,13 +155,13 @@ Virtual Airline Requirements;
     },
 ```
 
-Pilot/User Requirements;
+**Pilot/User Requirements;**
 
-4. Pilots should enter your va's GitHub repository url `YourGithubUsername/StableApproach` to their plugin settings  
+1. Pilots should enter your va's GitHub repository url `YourGithubUsername/StableApproach` to their plugin settings  
    *X-Plane > Stable Approach > Settings*  
-5. Finally pilots should enter their Stable Approach userID's to their user va profiles   
+2. Finally pilots should enter their Stable Approach userID's to their user va profiles  
    *phpvms > Profile > Edit*  
-   
+
 Just a generic note for pilots; Report sending is automatic and this process must be completed before your current/active pirep gets filed. Normally a report gets generated while you and the aircraft is still taxiing out from the runway and plugin inform you about this. So be reasonable, do not land and instantly try filing your pirep. In such cases report will still be sent but it will be rejected.  
 
 :warning: *Stable Approach Plugin ONLY support SSL/Secure connections for report uploads* :warning:
@@ -458,6 +453,12 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+20.DEC.21
+
+* Added a failsafe for Random Flights widget (for assigned but somehow deleted flights)
+* Fixed the failsafe for Stable Approach reports
+* Enhanced the readme section for Stable Approach Plugin support
 
 18.DEC.21
 
