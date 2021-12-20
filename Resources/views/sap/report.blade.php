@@ -16,7 +16,7 @@
         </a>
       </span>
     @else
-      <span class="float-start">{{ $analysis->id }}</span>
+      <span class="float-start">{{ $sap->report->analysis->id ?? '' }}</span>
     @endif
     @if($sap->report)
       <a href="https://stableapproach.net" target="_blank">Version {{ $sap->report->plugin_version }}</a>
