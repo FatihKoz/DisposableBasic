@@ -162,7 +162,7 @@ For auto receiving FDM reports and matching them with users/pireps, below steps 
 2. Finally pilots should enter their Stable Approach userID's to their user va profiles  
    *phpvms > Profile > Edit*  
 
-Just a generic note for pilots; Report sending is automatic and this process must be completed before your current/active pirep gets filed. Normally a report gets generated while you and the aircraft is still taxiing out from the runway and plugin inform you about this. So be reasonable, do not land and instantly try filing your pirep. In such cases report will still be sent but it will be rejected.  
+Just a generic note for pilots; Report sending is automatic and this process must be completed before your current/active pirep gets filed. Normally a report gets generated while you and the aircraft is still taxiing out from the runway and plugin informs you about this. So be reasonable, do not land and instantly try filing your pirep. In such cases report will still be sent but it will be rejected.  
 
 :warning: *Stable Approach Plugin ONLY support SSL/Secure connections for report uploads* :warning:
 
