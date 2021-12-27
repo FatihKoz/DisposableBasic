@@ -30,6 +30,6 @@
       <input type="hidden" name="ac_selection" value="{{ $fixed_ac }}">
     @endif
     <input type="hidden" name="price" value="{{ $price }}">
-    <input type="hidden" name="croute" value="{{ url()->full() }}">
+    <input type="hidden" name="croute" value="{{ url()->current() }}">
   {{ Form::close() }}
 @endif

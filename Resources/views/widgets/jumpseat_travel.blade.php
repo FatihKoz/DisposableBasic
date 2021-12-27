@@ -27,6 +27,6 @@
     @endif
     <input type="hidden" name="price" value="{{ $price }}">
     <input type="hidden" name="basep" value="{{ $base_price }}">
-    <input type="hidden" name="croute" value="{{ url()->full() }}">
+    <input type="hidden" name="croute" value="{{ url()->current() }}">
   {{ Form::close() }}
 @endif
