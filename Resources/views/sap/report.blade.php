@@ -12,6 +12,9 @@
     @if($sap->pirep)
       <span class="float-start">
         <a href="{{ route('frontend.pireps.show', [$sap->pirep->id]) }}">
+          @if(isset($sap->report->analysis->aircraft->acf->icao))
+            {{ '['.$sap->report->analysis->aircraft->acf->icao.'] ' }}
+          @endif
           {{ $sap->pirep->ident.' ('.$sap->pirep->dpt_airport_id.'-'.$sap->pirep->arr_airport_id.')' }}
         </a>
       </span>

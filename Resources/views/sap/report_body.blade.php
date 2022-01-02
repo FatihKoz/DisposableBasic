@@ -47,7 +47,12 @@
             @endforeach
             @if(filled($analysis->aircraft_profile_type))
               <tr>
-                <th>Aircraft Profile Type</th>
+                <th>
+                  Aircraft Profile
+                  @if(isset($sap->report->analysis->aircraft->acf->icao))
+                    {{ ' ['.$sap->report->analysis->aircraft->acf->icao.']' }}
+                  @endif
+                </th>
                 <td>
                   <i
                     @if($analysis->aircraft_profile_type->va === true)
