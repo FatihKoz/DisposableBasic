@@ -332,11 +332,19 @@ Generates a leaflet map according to config options defined.
 ```php
 @widget('DBasic::Map', ['source' => 'fleet', 'airline' => $airline->id])
 @widget('DBasic::Map', ['source' => $hub->id, 'limit' => 1000])
+@widget('DBasic::Map', ['location' => true])
 ```
 
 * `'source'` can be an airport_id (like `$airport->id` or `'EHAM'`), an airline_id (like `$airline->id` or `3`), `'user'`, `'fleet'`
 * `'visible'` can be either `true` or `false` (to show or skip visible flights as per phpvms settings)
 * `'limit'` can be a numeric value like `500` (to limit the drawn flights/pireps on the map due to performance reasons)
+
+Below two settings can be used to improve map performance WHEN admin settings are set to show/search all flights at search page.  
+
+* `'location'` can be `true` or `false` (to limit the drawn flights to user's current location only)
+* `'company'` can be `true` or `false` (to limit the drawn flights to user's company only)
+
+Additionally;
 
 * When `'source' => 'fleet'` is used then you can define a specific airline with `'airline' => $airline->id` (or `'airline' => 3`) to show results for that airline
 
@@ -453,6 +461,10 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+02.JAN.22
+
+* Added two new config options to Map Widget to have better control of drawn flights and increase performance
 
 20.DEC.21
 

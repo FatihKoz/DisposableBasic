@@ -17,11 +17,23 @@ use Illuminate\Support\Facades\DB;
 
 class Map extends Widget
 {
-    protected $config = ['source' => 0, 'visible' => true, 'limit' => null, 'airline' => null];
+    protected $config = ['source' => 0, 'visible' => true, 'limit' => null, 'airline' => null, 'location' => null, 'company' => null];
 
     public function run()
     {
         $mapcenter = setting('acars.center_coords');
+
+        if (setting('pilots.only_flights_from_current')) {
+            $limit_location = true;
+        } else {
+            $limit_location = is_bool($this->config['location']) ? $this->config['location'] : false;
+        }
+
+        if (setting('pilots.restrict_to_company')) {
+            $limit_company = true;
+        } else {
+            $limit_company = is_bool($this->config['company']) ? $this->config['company'] : false;
+        }
 
         // Get The Flights/Pireps With Applied Limit
         $take_limit = is_numeric($this->config['limit']) ? $this->config['limit'] : null;
@@ -76,13 +88,13 @@ class Map extends Widget
         }
 
         // Filter Flights To User's Current Location
-        if ($type === 'generic' && setting('pilots.only_flights_from_current')) {
+        if ($type === 'generic' && $limit_location) {
             $where['dpt_airport_id'] = $user_a;
             $mapcenter = $user_loc;
         }
 
         // Filter Flights to User's Company
-        if ($type === 'generic' && setting('pilots.restrict_to_company') || $type === 'airport' && setting('pilots.restrict_to_company')) {
+        if ($type === 'generic' && $limit_company || $type === 'airport' && $limit_company) {
             $where['airline_id'] = $user->airline_id;
             $orwhere['airline_id'] = $user->airline_id;
         }
