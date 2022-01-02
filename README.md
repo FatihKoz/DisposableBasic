@@ -465,6 +465,7 @@ If you have duplicated blades and encounter problems after updating the module o
 02.JAN.22
 
 * Added two new config options to Map Widget to have better control of drawn flights and increase performance
+* Added used aircraft ICAO to Stable Approach reports (both to Analysis and card footer)
 
 20.DEC.21
 
