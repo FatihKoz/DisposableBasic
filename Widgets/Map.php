@@ -3,25 +3,24 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
-use App\Models\Aircraft;
-use App\Models\Airline;
-use App\Models\Airport;
 use App\Models\Flight;
 use App\Models\Pirep;
 use App\Models\Subfleet;
 use App\Models\User;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Map extends Widget
 {
-    protected $config = ['source' => 0, 'visible' => true, 'limit' => null, 'airline' => null, 'location' => null, 'company' => null];
+    protected $config = ['source' => 0, 'visible' => true, 'limit' => null, 'airline' => null, 'location' => null, 'company' => null, 'popups' => null];
 
     public function run()
     {
         $mapcenter = setting('acars.center_coords');
+        $detailed_popups = is_bool($this->config['popups']) ? $this->config['popups'] : null;
 
         if (setting('pilots.only_flights_from_current')) {
             $limit_location = true;
@@ -57,6 +56,7 @@ class Map extends Widget
         } elseif (is_numeric($this->config['source']) && $this->config['source'] != 0) {
             $airline_id = $this->config['source'];
             $type = 'airline';
+            $detailed_popups = is_bool($this->config['popups']) ? $this->config['popups'] : false;
         } elseif ($this->config['source'] === 'user') {
             $type = 'user';
         } elseif ($this->config['source'] === 'fleet') {
@@ -109,7 +109,7 @@ class Map extends Widget
         // User Pireps Map
         if ($type === 'user') {
             $mapflights = Pirep::with($eager_load)
-                ->select('id', 'airline_id', 'dpt_airport_id', 'arr_airport_id')
+                ->select('id', 'airline_id', 'flight_number', 'dpt_airport_id', 'arr_airport_id')
                 ->where(['user_id' => $user->id, 'state' => 2])
                 ->orderby('submitted_at', 'desc')
                 ->when(is_numeric($take_limit), function ($query) use ($take_limit) {
@@ -155,8 +155,10 @@ class Map extends Widget
             $subfleets = Subfleet::where($sfwhere)->pluck('id')->toArray();
 
             // Get User's Allowed Aircraft
-            if (setting('pireps.restrict_aircraft_to_rank')) {
-                $user_subfleets = $user->rank->subfleets()->pluck('id')->toArray();
+            if (setting('pireps.restrict_aircraft_to_rank', true) || setting('pireps.restrict_aircraft_to_typerating', false)) {
+                $userSvc = app(UserService::class);
+                $restricted_to = $userSvc->getAllowableSubfleets($user);
+                $user_subfleets = $restricted_to->pluck('id')->toArray();
                 $subfleets = array_intersect($subfleets, $user_subfleets);
             }
 
@@ -201,6 +203,11 @@ class Map extends Widget
             }
         }
 
+        // Auto disable popups to increase performance and reduce php timeout errors
+        if ($type != 'fleet' && is_countable($mapflights) && count($mapflights) >= 1000) {
+            $detailed_popups = false;
+        }
+
         // Map Icons
         $mapIcons = [];
 
@@ -230,7 +237,7 @@ class Map extends Widget
             if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $hub->id)->count() > 0 && $aircraft->where('airport_id', $hub->id)->count() < 6) {
                 $hpop = $hpop . '<hr>';
                 foreach ($aircraft->where('airport_id', $hub->id) as $ac) {
-                    $hpop = $hpop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration .' ('.$ac->icao.') </a><br>';
+                    $hpop = $hpop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration . ' (' . $ac->icao . ') </a><br>';
                 }
             } elseif (isset($aircraft)) {
                 $hpop = $hpop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $hub->id)->count() . '<br>';
@@ -250,7 +257,7 @@ class Map extends Widget
             if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $airport->id)->count() > 0 && $aircraft->where('airport_id', $airport->id)->count() < 6) {
                 $apop = $apop . '<hr>';
                 foreach ($aircraft->where('airport_id', $airport->id) as $ac) {
-                    $apop = $apop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration .' ('.$ac->icao.') </a><br>';
+                    $apop = $apop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration . ' (' . $ac->icao . ') </a><br>';
                 }
             } elseif (isset($aircraft)) {
                 $apop = $apop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $airport->id)->count();
@@ -267,26 +274,29 @@ class Map extends Widget
 
         if (isset($citypairs)) {
             foreach ($citypairs as $citypair) {
-                $popuptext = '';
-
-                foreach ($mapflights->where('dpt_airport_id', substr($citypair['name'], 0, 4))->where('arr_airport_id', substr($citypair['name'], 4, 4)) as $mf) {
-                    if ($type === 'user') {
-                        $popuptext = $popuptext . '<a href="/pireps/';
-                    } else {
-                        $popuptext = $popuptext . '<a href="/flights/';
+                if ($detailed_popups === false) {
+                    $popuptext = substr($citypair['name'], 0, 4) . ' - ' . substr($citypair['name'], 4, 4);
+                } else {
+                    $popuptext = '';
+                    foreach ($mapflights->where('dpt_airport_id', substr($citypair['name'], 0, 4))->where('arr_airport_id', substr($citypair['name'], 4, 4)) as $mf) {
+                        if ($type === 'user') {
+                            $popuptext = $popuptext . '<a href="/pireps/';
+                        } else {
+                            $popuptext = $popuptext . '<a href="/flights/';
+                        }
+                        $popuptext = $popuptext . $mf->id . '" target="_blank">';
+                        $popuptext = $popuptext . $mf->airline->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
                     }
-                    $popuptext = $popuptext . $mf->id . '" target="_blank">';
-                    $popuptext = $popuptext . $mf->airline->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
-                }
 
-                foreach ($mapflights->where('dpt_airport_id', substr($citypair['name'], 4, 4))->where('arr_airport_id', substr($citypair['name'], 0, 4)) as $mf) {
-                    if ($type === 'user') {
-                        $popuptext = $popuptext . '<a href="/pireps/';
-                    } else {
-                        $popuptext = $popuptext . '<a href="/flights/';
+                    foreach ($mapflights->where('dpt_airport_id', substr($citypair['name'], 4, 4))->where('arr_airport_id', substr($citypair['name'], 0, 4)) as $mf) {
+                        if ($type === 'user') {
+                            $popuptext = $popuptext . '<a href="/pireps/';
+                        } else {
+                            $popuptext = $popuptext . '<a href="/flights/';
+                        }
+                        $popuptext = $popuptext . $mf->id . '" target="_blank">';
+                        $popuptext = $popuptext . $mf->airline->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
                     }
-                    $popuptext = $popuptext . $mf->id . '" target="_blank">';
-                    $popuptext = $popuptext . $mf->airline->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
                 }
 
                 if ($user_citypairs->contains($citypair['name'])) {

@@ -339,10 +339,11 @@ Generates a leaflet map according to config options defined.
 * `'visible'` can be either `true` or `false` (to show or skip visible flights as per phpvms settings)
 * `'limit'` can be a numeric value like `500` (to limit the drawn flights/pireps on the map due to performance reasons)
 
-Below two settings can be used to improve map performance WHEN admin settings are set to show/search all flights at search page.  
+Below settings can be used to improve map performance WHEN admin settings are set to show/search all flights at search page.  
 
 * `'location'` can be `true` or `false` (to limit the drawn flights to user's current location only)
 * `'company'` can be `true` or `false` (to limit the drawn flights to user's company only)
+* `'popups'` can be `true` or `false` (to disable detailed popups over great circle lines)
 
 Additionally;
 
@@ -461,6 +462,11 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+03.JAN.22
+
+* Fixed Map Widget (it now consider type rating restrictions like rank restrictions for fleet display)
+* Performance improvements for Map Widget (Maps will not display detailed popups if the flight count is over 1000)
 
 02.JAN.22
 

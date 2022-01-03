@@ -78,7 +78,11 @@
         @if(count($mapCityPairs) > 0)
           var mFlights = L.layerGroup();
           @foreach ($mapCityPairs as $citypair)
-            var FLT_{{ $citypair['name'] }} = L.geodesic([{{ $citypair['geod'] }}], {weight: 2, opacity: 0.8, steps: 5, color: '{{$citypair['geoc']}}'}).bindPopup({!! "'".$citypair['pop']."'" !!}).addTo(mFlights);
+            @if($citypair['pop'])
+              var FLT_{{ $citypair['name'] }} = L.geodesic([{{ $citypair['geod'] }}], {weight: 2, opacity: 0.8, steps: 5, color: '{{$citypair['geoc']}}'}).bindPopup({!! "'".$citypair['pop']."'" !!}).addTo(mFlights);
+            @else
+              var FLT_{{ $citypair['name'] }} = L.geodesic([{{ $citypair['geod'] }}], {weight: 2, opacity: 0.8, steps: 5, color: '{{$citypair['geoc']}}'}).addTo(mFlights);
+            @endif
           @endforeach
         @endif
         // Define Base Layers For Control Box
