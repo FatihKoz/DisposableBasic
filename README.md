@@ -343,7 +343,7 @@ Below settings can be used to improve map performance WHEN admin settings are se
 
 * `'location'` can be `true` or `false` (to limit the drawn flights to user's current location only)
 * `'company'` can be `true` or `false` (to limit the drawn flights to user's company only)
-* `'popups'` can be `true` or `false` (to disable detailed popups over great circle lines)
+* `'popups'` can be `true` or `false` (to enable/disable detailed popups over great circle lines)
 
 Additionally;
 
