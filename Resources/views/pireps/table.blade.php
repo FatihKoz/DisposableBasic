@@ -10,7 +10,10 @@
       <th>@lang('DBasic::common.btime')</th>
       <th>@lang('DBasic::common.fuelused')</th>
       {{-- <th>@lang('DBasic::common.score')</th> --}}
-      {{-- <th>@lang('DBasic::common.lndrate')</th> --}}
+      {{-- <th>@lang('DBasic::common.lrate')</th> --}}
+      @ability('admin', 'admin-access')
+        <th>FDM Result</th>
+      @endability
       <th>@lang('DBasic::common.pilot')</th>
       <th class="text-end">@lang('DBasic::common.submitted')</th>
     </tr>
@@ -49,10 +52,15 @@
         <td>{{ DB_ConvertWeight($pirep->fuel_used, $units['fuel']) }}</td>
         {{-- <td>{{ $pirep->score }}</td> --}}
         {{-- <td>@if($pirep->landing_rate) {{ $pirep->landing_rate.' ft/min' }} @endif</td> --}}
+        @ability('admin', 'admin-access')
+          <td>@widget('DBasic::StableApproach', ['pirep' => $pirep])</td>
+        @endability
         <td>
           <a href="{{ route('frontend.users.show.public', [$pirep->user_id]) }}">{{ optional($pirep->user)->name_private }}</a>
         </td>
-        <td class="text-end">{{ $pirep->submitted_at->diffForHumans() }}</td>
+        <td class="text-end">
+          {{ $pirep->submitted_at->diffForHumans().' ('.$pirep->submitted_at->format('d.M.y').')' }}
+        </td>
       </tr>
     @endforeach
   </tbody>
