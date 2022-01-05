@@ -362,7 +362,7 @@ Provides personal pirep statistics per pilot according to config options defined
 * `'disp'` can be `'full'` to display the results in a pre-defined card  
 * `'type'` can be `'avglanding'`, `'avgscore'`, `'avgtime'`, '`tottime'`, `'avgdistance'`, `'totdistance'`, `'avgfuel'`, `'totfuel'`, `'totflight'`, `'fdm'` or `'assignment'`
 
-Please note; `fdm` can be used if you are using *Stable Approach Plugin*, also `assignment` is stats are tied to Monthly Flight Assignments.
+Please note; `fdm` can be used if you are using *Stable Approach Plugin*, also `assignment` stats are tied to *Monthly Flight Assignments*.
 
 Above example will give the average landing rate of that user for last month.
 
@@ -464,6 +464,12 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+05.JAN.22
+
+* Added two new options for Personal Stats Widget (for Stable Approach Plugin and Monthly Flight Assignments)
+* Added FDM Results to Pireps display/listing page (visible only to admins)
+* Improved Stable Approach Report modal (for to be compatible table/list views)
 
 03.JAN.22
 
