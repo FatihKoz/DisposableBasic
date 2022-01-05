@@ -1,22 +1,22 @@
 @if($is_visible)
   @if($use_button === true)
     {{-- Modal Button --}}
-    <button type="button" class="btn btn-sm @if($is_stable) btn-success @else btn-danger @endif m-0 mx-1 p-0 px-1" data-bs-toggle="modal" data-bs-target="#StableApproachModal">
+    <button type="button" class="btn btn-sm @if($is_stable) btn-success @else btn-danger @endif m-0 mx-1 p-0 px-1" data-bs-toggle="modal" data-bs-target="#FDM{{$sap->id}}">
       @if($is_stable) STABLE @else UNSTABLE @endif
     </button>
   @else
     {{-- Modal Badge --}}
-    <span type="button" class="badge @if($is_stable) bg-success @else bg-danger @endif text-black" data-bs-toggle="modal" data-bs-target="#StableApproachModal">
+    <span type="button" class="badge @if($is_stable) bg-success @else bg-danger @endif text-black" data-bs-toggle="modal" data-bs-target="#FDM{{$sap->id}}">
       @if($is_stable) STABLE @else UNSTABLE @endif
     </span>
   @endif
 
   {{-- Modal --}}
-  <div class="modal fade" id="StableApproachModal" tabindex="-1" aria-labelledby="StableApproachModalLabel" aria-hidden="true">
+  <div class="modal fade" id="FDM{{$sap->id}}" tabindex="-1" aria-labelledby="FDMLBL{{$sap->id}}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header border-0 p-1">
-          <h5 class="modal-title m-0" id="StableApproachModalLabel">
+          <h5 class="modal-title m-0" id="FDMLBL{{$sap->id}}">
             Stable Approach Report
           </h5>
           <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
