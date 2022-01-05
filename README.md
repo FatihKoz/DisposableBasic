@@ -360,7 +360,9 @@ Provides personal pirep statistics per pilot according to config options defined
 * `'user'` can be a user's id like `$user->id` or `3`  
 * `'period'` can be any number of days (like `15`, except 0 of course), `'currentm'`, `'lastm'`, `'prevm'`, `'currenty'`, `'lasty'`, `'q1'`, `'q2'`, `'q3'`, `'q4'`  
 * `'disp'` can be `'full'` to display the results in a pre-defined card  
-* `'type'` can be `'avglanding'`, `'avgscore'`, `'avgtime'`, '`tottime'`, `'avgdistance'`, `'totdistance'`, `'avgfuel'`, `'totfuel'` or `'totflight'`
+* `'type'` can be `'avglanding'`, `'avgscore'`, `'avgtime'`, '`tottime'`, `'avgdistance'`, `'totdistance'`, `'avgfuel'`, `'totfuel'`, `'totflight'`, `'fdm'` or `'assignment'`
+
+Please note; `fdm` can be used if you are using *Stable Approach Plugin*, also `assignment` is stats are tied to Monthly Flight Assignments.
 
 Above example will give the average landing rate of that user for last month.
 

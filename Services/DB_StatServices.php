@@ -87,6 +87,9 @@ class DB_StatServices
         $where['user_id'] = $user_id;
         $where['state'] = PirepState::ACCEPTED;
 
+        $table_name = 'pireps';
+        $date_field = 'submitted_at';
+
         if ($type === 'avglanding') { // Average Landing Rate - Acars Only
             $where['source'] = PirepSource::ACARS;
             $where[] = ['landing_rate', '<', 0];
@@ -117,14 +120,26 @@ class DB_StatServices
         } elseif ($type === 'totflight') { // Total Flights
             $select_raw = 'count(id)';
             $personal['stat_name'] = __('DBasic::widgets.totflight');
+        } elseif ($type === 'fdm') {
+            $select_raw = '(100 * sum(if(is_stable = 1, 1, 0))) / count(user_id)';
+            unset($where['state']);
+            $table_name = 'disposable_sap_reports';
+            $date_field = 'created_at';
+            $personal['stat_name'] = __('DBasic::widgets.fdm');
+        } elseif ($type === 'assignment') {
+            $select_raw = '(100 * sum(if(pirep_id IS NOT NULL, 1, 0))) / count(user_id)';
+            unset($where['state']);
+            $table_name = 'disposable_assignments';
+            $date_field = 'updated_at';
+            $personal['stat_name'] = __('DBasic::widgets.assignment');
         }
 
         // Execute
-        $result = cache()->remember($cache_key, $cache_until, function () use ($select_raw, $where, $period, $s_date, $e_date) {
-            return DB::table('pireps')->selectRaw($select_raw . ' as uresult')
+        $result = cache()->remember($cache_key, $cache_until, function () use ($select_raw, $where, $period, $s_date, $e_date, $table_name, $date_field) {
+            return DB::table($table_name)->selectRaw($select_raw . ' as uresult')
                 ->where($where)
-                ->when(isset($period), function ($query) use ($s_date, $e_date) {
-                    $query->whereBetween('submitted_at', [$s_date, $e_date]);
+                ->when(isset($period), function ($query) use ($s_date, $e_date, $date_field) {
+                    $query->whereBetween($date_field, [$s_date, $e_date]);
                 })->value('uresult');
             }
         );
@@ -149,6 +164,8 @@ class DB_StatServices
             } else {
                 $personal['formatted'] = number_format($result) . ' lbs';
             }
+        } elseif ($type === 'fdm' || $type === 'assignment') {
+            $personal['formatted'] = '%' . number_format($result);
         } else {
             $personal['formatted'] = round($result);
         }

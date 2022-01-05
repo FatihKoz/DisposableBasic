@@ -112,7 +112,8 @@ return [
     'totflight'   => 'Total Flights',
     'totfuel'     => 'Total Fuel Burn',
     'tottime'     => 'Total Flight Time',
-
+    'fdm'         => 'Stable Approaches',
+    'assignment'  => 'Monthly Assignments',
     // Map Widget
     'flights_map'  => 'Flights Map',
     'personal_map' => 'My Flights / PIREPs Map',
