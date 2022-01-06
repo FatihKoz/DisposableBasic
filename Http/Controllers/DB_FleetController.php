@@ -36,6 +36,11 @@ class DB_FleetController extends Controller
 
         $subfleet = Subfleet::withCount($withCount_sf)->with($with_sf)->where('type', $subfleet_type)->first();
 
+        if (!$subfleet) {
+            flash()->error('Subfleet not found !');
+            return redirect(route('DBasic.fleet'));
+        }
+
         $withCount_ac = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
         $with_ac = ['airline', 'subfleet'];
 
@@ -47,11 +52,6 @@ class DB_FleetController extends Controller
         $with_pireps = ['airline', 'arr_airport', 'dpt_airport', 'user'];
 
         $pireps = Pirep::with($with_pireps)->where($where)->whereIn('aircraft_id', $aircraft_array)->orderby('submitted_at', 'desc')->take(5)->get();
-
-        if (!$subfleet) {
-            flash()->error('Subfleet not found !');
-            return redirect(route('DBasic.fleet'));
-        }
 
         // Subfleet Image
         $FleetSvc = app(DB_FleetServices::class);
