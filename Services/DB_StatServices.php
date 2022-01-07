@@ -165,7 +165,7 @@ class DB_StatServices
                 $personal['formatted'] = number_format($result) . ' lbs';
             }
         } elseif ($type === 'fdm' || $type === 'assignment') {
-            $personal['formatted'] = '%' . number_format($result);
+            $personal['formatted'] = number_format($result).'%';
         } else {
             $personal['formatted'] = round($result);
         }
