@@ -94,6 +94,8 @@ class DB_AdminController extends Controller
         $airports_pirep_arr = DB::table('pireps')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
         $airports_flight_dep = DB::table('flights')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
         $airports_flight_arr = DB::table('flights')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
+        // Additional Checks
+        $rwy_ident_errors = DB::table('pirep_field_values')->where('slug', 'arrival-heading-deviation')->whereBetween('value', [160, 200])->pluck('pirep_id')->toArray();
 
         $missing_airports = array_merge($airports_pirep_dep, $airports_pirep_arr, $airports_flight_dep, $airports_flight_arr);
         $missing_airports = array_unique($missing_airports, SORT_STRING);
@@ -112,6 +114,7 @@ class DB_AdminController extends Controller
             'pirep_acft'  => $pirep_acft,
             'users_comp'  => $users_comp,
             'users_field' => $users_field,
+            'rwy_errors'  => $rwy_ident_errors,
         ]);
     }
 }

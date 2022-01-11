@@ -160,11 +160,25 @@
         @endif
       </div>
     </div>
+  </div>
+  {{-- Not Harmfull Problems --}}
+  <div class="row text-center" style="margin-left:5px; margin-right:5px;">
     <div class="col-sm-3">
       <div class="card border-blue-bottom" style="padding:10px;">
         {{ count($acars_pirep) }}
         <br>
         <span class="text-danger"><b>Acars data entries associated with MISSING pireps</b></span>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card border-blue-bottom" style="padding:10px;">
+        {{ count($rwy_errors) }}
+        <br>
+        <span class="text-danger" title="Which are opposite to the actual landing runway"><b>False Landing Runway Detections</b></span>
+        @if(count($rwy_errors) > 0)
+          <hr>
+          @foreach($rwy_errors as $list){{ $list }}@if(!$loop->last){{ ', ' }}@endif @endforeach
+        @endif
       </div>
     </div>
   </div>
