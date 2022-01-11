@@ -40,7 +40,7 @@ class DB_SpecController extends Controller
         $icao_types = DB::table('aircraft')->select('icao')->whereNotNull('icao')->groupBy('icao')->orderby('icao')->pluck('icao')->toArray();
         $subfleets = DB::table('subfleets')->select('id', 'name', 'type')->orderby('name')->get();
         $aircraft = DB::table('aircraft')->select('id', 'name', 'registration', 'icao')->orderby('registration')->get();
-        $all_specs = DB_Spec::with('aircraft', 'subfleet')->get();
+        $all_specs = DB_Spec::with('aircraft', 'subfleet')->orderBy('id')->get();
 
         return view('DBasic::admin.specs', [
             'icaotypes' => $icao_types,
