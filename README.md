@@ -465,6 +465,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+11.JAN.22
+
+* Small fixes (Subfleet details page failsafe, Specs ordering, Personal Stats Widget text grammar correction)
+* Added "False Runway Identifications" check to Disposable Database Checks (for vmsAcars users, just for info)
+
 05.JAN.22
 
 * Added two new options for Personal Stats Widget (for Stable Approach Plugin and Monthly Flight Assignments)
