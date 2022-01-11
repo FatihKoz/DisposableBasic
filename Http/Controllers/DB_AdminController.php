@@ -95,7 +95,9 @@ class DB_AdminController extends Controller
         $airports_flight_dep = DB::table('flights')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
         $airports_flight_arr = DB::table('flights')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
         // Additional Checks
-        $rwy_ident_errors = DB::table('pirep_field_values')->where('slug', 'arrival-heading-deviation')->whereBetween('value', [160, 200])->pluck('pirep_id')->toArray();
+        $rwy_ident_errors = DB::table('pirep_field_values')->where(function ($query) {
+            $query->where('slug', 'arrival-heading-deviation')->orWhere('slug', 'landing-heading-deviation');
+        })->whereBetween('value', [160, 200])->orderBy('created_at', 'desc')->pluck('pirep_id')->toArray();
 
         $missing_airports = array_merge($airports_pirep_dep, $airports_pirep_arr, $airports_flight_dep, $airports_flight_arr);
         $missing_airports = array_unique($missing_airports, SORT_STRING);
