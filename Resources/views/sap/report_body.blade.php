@@ -86,13 +86,23 @@
       <div class="accordion-body p-0">
         <table class="table table-sm table-borderless table-striped mb-0 align-middle">
           <tr>
-            <td class="text-center">{{ $airport->icao.' '.$airport->name }}</td>
+            <td class="text-center" colspan="2">{{ $airport->icao.' | '.$airport->name }}</td>
           </tr>
           <tr>
-            <td class="text-center">
-              {{ 'Rwy '.$runway->begin->name.'/'.$runway->end->name }}
-              {{ ' ('.number_format(floor($runway->width)).'m | '.number_format($runway->length->useable).'m)' }}
-            </td>
+            <th>Ident</th> 
+            <td>{{ 'Rwy '.$runway->begin->name.'/'.$runway->end->name }}</td>
+          </tr>
+          <tr>
+            <th>Width</th> 
+            <td>{{ number_format(floor($runway->width)).'m' }}</td>
+          </tr>
+          <tr>
+            <th>Usable Length</th> 
+            <td>{{ number_format($runway->length->useable).'m' }}</td>
+          </tr>
+          <tr>
+            <th>Touchdown Zone (TDZ)</th> 
+            <td>{{ number_format($runway->length->tdz).'m' }}</td>
           </tr>
         </table>
       </div>
