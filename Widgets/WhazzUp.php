@@ -70,6 +70,10 @@ class WhazzUp extends Widget
 
                 $airline = in_array($airline_icao, $this->AirlinesArray());
 
+                // Skip online users not flying for the VA
+                // Airline check false and no live pireps
+                if (!$airline && !$pirep) { continue; }
+
                 $pilots[] = [
                     'user_id'      => isset($user) ? $user->id : null,
                     'name'         => isset($user) ? $user->name : null,
