@@ -58,7 +58,7 @@ return [
     // Aircraft - Pirep - Flight
     'altitude'  => 'Altitudine',
     'avg'       => 'Media',
-    'btime'     => 'empo Ai Blocchi',
+    'btime'     => 'Tempo Ai Blocchi',
     'config'    => 'Configurazione',
     'dest'      => 'Destinazione',
     'dest_abr'  => 'Dest',
