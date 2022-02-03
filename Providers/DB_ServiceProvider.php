@@ -90,8 +90,7 @@ class DB_ServiceProvider extends ServiceProvider
             Route::get('dp_roster', 'DB_WebController@roster')->name('dp_roster');
             Route::get('dp_stats', 'DB_WebController@stats')->name('dp_stats');
             Route::get('dp_page', 'DB_WebController@page')->name('dp_page');
-            // Stable Approach Plugin Report
-            // Route::post('dstable/new', 'DB_StableApproachController@store')->withoutMiddleware(['web']);
+            Route::get('dp_pireps', 'DB_WebController@pireps')->name('dp_pireps');
         });
 
         // API Public
