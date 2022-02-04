@@ -79,6 +79,7 @@ These pages will have no logo, background image or menu items. They are suitable
 
 ```php
 /dp_roster  // Pilot roster
+/dp_pireps  // Latest pireps (amount can be customized with ?count=25, default is 10)
 /dp_stats   // Statistics
 /dp_page    // Empty page in which you can place widgets like Flight Board etc as per your needs
 ```
@@ -464,6 +465,15 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+04.FEB.22
+
+* Added French translation (Thanks to Jbaltazar67, from phpVMS Forum)
+* Added new external page for latest pireps / suitable for iframe usage
+* Fixed Italian translation
+* Updated WhazzUp Widget (it will not show pilots not flying for the VA)
+* Updated Stable Approach Report Widget **blade**, it will not show the TDZ lenght too
+* Updated Flight Board Widget to skip "initiated" but stuck flights (edge case)
 
 11.JAN.22
 
