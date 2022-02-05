@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use App\Models\UserField;
+use App\Models\UserFieldValue;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Models\Enums\PirepState;
@@ -78,6 +80,43 @@ if (!function_exists('DB_CheckModule')) {
     {
         $phpvms_module = Module::find($module_name);
         return isset($phpvms_module) ? $phpvms_module->isEnabled() : false;
+    }
+}
+
+// Check Duplicate Custom Field
+// Return boolean
+if (!function_exists('DB_CheckDuplicateCustom')) {
+    function DB_CheckDuplicateCustom($field)
+    {
+        // Check the value of the same custom profile field for duplicates
+        // Can be used to check IVAO, VATSIM IDs to be unique
+        $where = [];
+        $where['user_field_id'] = $field->user_field_id;
+        $where['value'] = $field->value;
+
+        if (is_null($field->value)) {
+            return false;
+        }
+
+        $check = UserFieldValue::where($where)->count();
+
+        return ($check > 1) ? true : false;
+    }
+}
+
+if (!function_exists('DB_CheckPilotIdent')) {
+    function DB_CheckPilotIdent($field, $user)
+    {
+        // This is usefull for something like "Preferred Callsign" field
+        // ( which a new pilot fills out during registration )
+        // It will check the value agains assigned Pilot IDs (idents)
+        $where = [];
+        $where['pilot_id'] = intval($field->value);
+        $where[] = ['id', '!=', $user->id];
+
+        $check = User::where($where)->count();
+
+        return ($check != 0) ? true : false;
     }
 }
 
@@ -192,6 +231,30 @@ if (!function_exists('DB_GetUnits')) {
         }
 
         return $units;
+    }
+}
+
+// Get Used Pilot ID's (Idents, Callsigns)
+// Return array
+if (!function_exists('DB_GetPilotIdents')) {
+    function DB_GetPilotIdents()
+    {
+        return User::select('pilot_id')->orderBy('pilot_id')->pluck('pilot_id')->toArray();
+    }
+}
+
+// Get Used Online Network Member ID's
+// Return array
+if (!function_exists('DB_GetNetworkMembers')) {
+    function DB_GetNetworkMembers($field_name)
+    {
+        $result = [];
+        $field = UserField::where('name', $field_name)->first();
+        if (isset($field)) {
+            $result = UserFieldValue::whereNotNull('value')->where('user_field_id', $field->id)->orderBy('value')->pluck('value')->toArray();
+        }
+
+        return $result;
     }
 }
 
