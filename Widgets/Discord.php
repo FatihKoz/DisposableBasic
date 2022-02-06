@@ -12,7 +12,7 @@ class Discord extends Widget
 {
     public $reloadTimeout = 60;
 
-    protected $config = ['server' => null, 'bots' => false, 'bot' => ' Bot'];
+    protected $config = ['server' => null, 'bots' => false, 'bot' => ' Bot', 'gdpr' => false, 'icao' => null];
 
     public function __construct(
         array $config = [],
@@ -65,6 +65,12 @@ class Discord extends Widget
             if ($this->config['bots'] === false && strpos($rm->username, $this->config['bot']) !== false) {
                 continue;
             }
+            if (is_null($this->config['icao']) === false && strpos($rm->username, $this->config['icao']) === false) {
+                continue;
+            }
+            if ($this->config['gdpr'] === true) {
+                $rm->username = $this->GDPR_Names($rm->username);
+            }
             $members->push($rm);
         }
 
@@ -76,5 +82,28 @@ class Discord extends Widget
             'name'       => $name,
             'presence'   => $presence,
         ]);
+    }
+
+    public function GDPR_Names($full_name)
+    {
+        $parts = explode(' ', $full_name);
+        $count = count($parts);
+
+        if ($count === 1) {
+            return $parts[0];
+        }
+
+        $gdpr_name = '';
+        $last_name = $parts[$count - 1];
+        $loop_count = 0;
+
+        while ($loop_count < ($count - 1)) {
+            $gdpr_name .= ' ' . $parts[$loop_count];
+            $loop_count++;
+        }
+
+        $gdpr_name .= ' ' . mb_substr($last_name, 0, 1);
+
+        return $gdpr_name;
     }
 }
