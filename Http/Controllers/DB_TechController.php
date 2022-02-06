@@ -94,6 +94,10 @@ class DB_TechController extends Controller
                 'max_time_c'   => $request->max_time_c,
                 'duration_c'   => $request->duration_c,
                 'avg_fuel'     => $request->avg_fuel,
+                'mzfw'         => $request->mzfw,
+                'mrw'          => $request->mrw,
+                'mtow'         => $request->mtow,
+                'mlaw'         => $request->mlaw,
                 'active'       => $request->active,
             ]
         );

@@ -134,8 +134,26 @@
             </div>
           </div>
         </div>
-        {{-- Gear Speeds, Pitch and Roll --}}
+        {{-- Manufacturer Weights, Gear Speeds, Pitch and Roll --}}
         <hr>
+        <div class="row" style="margin-bottom: 10px;">
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="mzfw">Maximum Zero Fuel Weight</label>
+            <input name="mzfw" type="number" class="form-control" placeholder="61500" min="0" max="999999" value="{{ $tech->mzfw ?? '' }}">
+          </div>
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="mrw">Maximum Ramp Weight</label>
+            <input name="mrw" type="number" class="form-control" placeholder="77400" min="0" max="999999" value="{{ $tech->mrw ?? '' }}">
+          </div>
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="mtow">Maximum Take Off Weight</label>
+            <input name="mtow" type="number" class="form-control" placeholder="77000" min="0" max="999999" value="{{ $tech->mtow ?? '' }}">
+          </div>
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="mlaw">Maximum Landing Weight</label>
+            <input name="mlaw" type="number" class="form-control" placeholder="66500" min="0" max="999999" value="{{ $tech->mlaw ?? '' }}">
+          </div>
+        </div>
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="gear_extend">Gear Extension Speed</label>

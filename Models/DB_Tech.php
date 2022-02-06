@@ -47,6 +47,10 @@ class DB_Tech extends Model
         'max_time_c',
         'duration_c',
         'avg_fuel',
+        'mzfw',
+        'mrw',
+        'mtow',
+        'mlaw',
         'active',
     ];
 
@@ -90,6 +94,10 @@ class DB_Tech extends Model
         'max_time_c'   => 'nullable|numeric',
         'duration_c'   => 'nullable|numeric',
         'avg_fuel'     => 'nullable|numeric',
+        'mzfw'         => 'nullable|numeric',
+        'mrw'          => 'nullable|numeric',
+        'mtow'         => 'nullable|numeric',
+        'mlaw'         => 'nullable|numeric',
         'active'       => 'nullable',
     ];
 
