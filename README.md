@@ -466,13 +466,18 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+06.FEB.22
+
+* Updated French Translation (Thanks to @arthurpar06)
+* Added weights to tech (can be used to define ICAO type based checks)
+
 04.FEB.22
 
 * Added French translation (Thanks to Jbaltazar67, from phpVMS Forum)
 * Added new external page for latest pireps / suitable for iframe usage
 * Fixed Italian translation
 * Updated WhazzUp Widget (it will not show pilots not flying for the VA)
-* Updated Stable Approach Report Widget **blade**, it will not show the TDZ lenght too
+* Updated Stable Approach Report Widget **blade**, it will now show the TDZ length too
 * Updated Flight Board Widget to skip "initiated" but stuck flights (edge case)
 
 11.JAN.22
