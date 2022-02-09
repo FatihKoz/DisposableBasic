@@ -15,7 +15,7 @@
         <a href="{{ route('DBasic.airline', [optional($pilot->airline)->icao ?? '']) }}">{{ optional($pilot->airline)->name }}</a>
       </td>
       <td>
-        {{ $pilot->rank->name }}
+        {{ optional($pilot->rank)->name }}
       </td>
       <td>
         <a href="{{ route('DBasic.hub', [$pilot->home_airport_id]) }}" title="{{ optional($pilot->home_airport)->name }}">{{ $pilot->home_airport_id }}</a>
