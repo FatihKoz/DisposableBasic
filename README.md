@@ -250,6 +250,12 @@ Shows real time data from your Discord Server. Be advised, you should enable wid
 * `'server'` is your Discord server id.  
 * `'bots'` can be `true` or `false` and control displaying of Bots as online users
 * `'bot'` should be the distinctive name part you give to your bots. For hiding 'Weahter Bot' and 'MEE6 Bot' for example, use `' Bot'` for this option
+* `'gdrp'` can be `true` or `false` (default is false) and applies a similar privatized naming as like phpVMS core $user->name_private result
+* `'icao'` can be any text you wish to filter the users displayed by the bot
+
+If you are forcing (or manually renaming) your Discord members to use something like DSP978 - Name Surname etc, then you can use `'icao' => 'DSP'` within the option set. Widget will only show users whose names are starting with DSP.
+
+In a similar manner, setting `'gdpr' => true` will result nicknames to be displayed like `DSP978 - Name S` by the widget.
 
 ### Fleet Overview
 
@@ -465,6 +471,11 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+11.FEB.22
+
+* Added a failsafe to AirportAssets widget for deleted user ranks
+* Added two new options to Discord Widget (GDPR naming and Username filtering)
 
 06.FEB.22
 
