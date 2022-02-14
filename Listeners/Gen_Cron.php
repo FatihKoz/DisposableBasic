@@ -16,55 +16,48 @@ use Modules\DisposableBasic\Services\DB_CronServices;
 class Gen_Cron extends Listener
 {
     public static $callbacks = [
-        CronFiveMinute::class => 'handle_05min',
-        CronFifteenMinute::class => 'handle_15min',
-        CronThirtyMinute::class => 'handle_30min',
-        CronHourly::class  => 'handle_hourly',
-        CronNightly::class => 'handle_nightly',
-        CronWeekly::class => 'handle_weekly',
-        CronMonthly::class => 'handle_monthly',
+        CronFiveMinute::class => 'cron_05min',
+        CronFifteenMinute::class => 'cron_15min',
+        CronThirtyMinute::class => 'cron_30min',
+        CronHourly::class  => 'cron_hourly',
+        CronNightly::class => 'cron_nightly',
+        CronWeekly::class => 'cron_weekly',
+        CronMonthly::class => 'cron_monthly',
     ];
 
-    // Cron 5 Mins
-    public function handle_05min()
+    public function cron_05min()
     {
         // $this->DB_WriteToLog('05 mins test');
     }
 
-    // Cron 15 Mins
-    public function handle_15min()
+    public function cron_15min()
     {
+        // $this->DB_WriteToLog('15 mins test');
         $DB_CronSVC = app(DB_CronServices::class);
         $DB_CronSVC->ReleaseStuckAircraft();
-        // $this->DB_WriteToLog('15 mins test');
     }
 
-    // Cron 30 Mins
-    public function handle_30min()
+    public function cron_30min()
     {
         // $this->DB_WriteToLog('30 mins test');
     }
 
-    // Cron Hourly Mins
-    public function handle_hourly()
+    public function cron_hourly()
     {
         // $this->DB_WriteToLog('Hourly test');
     }
 
-    // Cron Nightly
-    public function handle_nightly()
+    public function cron_nightly()
     {
         // $this->DB_WriteToLog('Nightly test');
     }
 
-    // Cron Weekly
-    public function handle_weekly()
+    public function cron_weekly()
     {
         // $this->DB_WriteToLog('Weekly test');
     }
 
-    // Cron Monthly Mins
-    public function handle_monthly()
+    public function cron_monthly()
     {
         // $this->DB_WriteToLog('Monthly test');
     }
