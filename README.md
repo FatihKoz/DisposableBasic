@@ -2,7 +2,7 @@
 
 phpVMS v7 module for Basic VA features
 
-Compatible with any latest development (dev) build of phpVMS v7 released after **30.NOV.21**.  
+Compatible with any latest development (dev) build of phpVMS v7 released after **10.FEB.22**.  
 Module blades are designed for themes using **Bootstrap v5.x** and FontAwesome v5.x (not v6) icons.
 
 This module pack aims to cover basic needs of any Virtual Airline with some new pages, widgets and backend tools. Provides;
@@ -471,6 +471,10 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+14.FEB.22
+
+* Updated cron based features (Requries phpVms 7.0.0-dev+220211.78fd83 or later)
 
 11.FEB.22
 
