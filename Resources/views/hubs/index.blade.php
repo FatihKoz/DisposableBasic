@@ -34,6 +34,10 @@
                     @endif
                   </td>
                 </tr>
+                <tr>
+                  <th>{{ trans_choice('common.pilot', 2) }}</th>
+                  <td class="text-end">{{ $pilots[$hub->icao] ?? '-'}}</td>
+                </tr>
               </table>
             </div>
           </div>

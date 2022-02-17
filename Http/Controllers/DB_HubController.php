@@ -9,8 +9,10 @@ use App\Models\Flight;
 use App\Models\Pirep;
 use App\Models\Subfleet;
 use App\Models\User;
+use App\Models\Enums\UserState;
 use League\ISO3166\ISO3166;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Modules\DisposableBasic\Services\DB_AirportServices;
 
 class DB_HubController extends Controller
@@ -25,9 +27,23 @@ class DB_HubController extends Controller
             return redirect(route('frontend.dashboard.index'));
         }
 
+        if (setting('pilots.hide_inactive', true) === true) {
+            $states = [UserState::ACTIVE];
+        } else {
+            $states = [UserState::ACTIVE, UserState::ON_LEAVE];
+        }
+
+        $counts = DB::table('users')->selectRaw('home_airport_id as hub, count(id) as members')->whereIn('state', $states)->groupBy('hub')->orderBy('hub', 'asc')->get();
+
+        $pc = [];
+        foreach ($counts as $count) {
+            $pc[$count->hub] = $count->members;
+        }
+
         return view('DBasic::hubs.index', [
             'country' => new ISO3166(),
             'hubs'    => $hubs,
+            'pilots'  => $pc,
         ]);
     }
 
