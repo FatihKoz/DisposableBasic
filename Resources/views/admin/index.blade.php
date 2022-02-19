@@ -15,7 +15,7 @@
   </div>
 
   <div class="row text-center" style="margin-left:5px; margin-right:5px;">
-    <h4 style="margin:5px;"><b>Admin Features</b></h4>
+    <h5 style="margin:5px;"><b>Module Features & Settings</b></h5>
     <div class="col-sm-12">
       <div class="col-sm-3">
         <div class="card border-blue-bottom" style="padding:10px;">
@@ -49,7 +49,6 @@
   </div>
 
   <div class="row text-center" style="margin-left:5px; margin-right:5px;">
-    <h4 style="margin:5px;"><b>Module Settings</b></h4>
     <div class="col-sm-12">
       <div class="col-sm-7">
         {{-- Aircraft Group --}}
