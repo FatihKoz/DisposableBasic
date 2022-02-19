@@ -116,8 +116,9 @@ class WhazzUp extends Widget
 
     public function NetworkUsersArray($field_name = null)
     {
+        $inactive_users = User::where('state', '!=', 1)->pluck('id')->toArray();
         $user_field_id = optional(UserField::select('id')->where('name', $field_name)->first())->id;
-        $network_users = UserFieldValue::where('user_field_id', $user_field_id)->whereNotNull('value')->pluck('value')->toArray();
+        $network_users = UserFieldValue::where('user_field_id', $user_field_id)->whereNotIn('user_id', $inactive_users)->whereNotNull('value')->pluck('value')->toArray();
 
         return filled($network_users) ? $network_users : null;
     }
