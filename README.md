@@ -472,6 +472,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+19.FEB.22
+
+* Added pilot counts to Hubs index page
+
 14.FEB.22
 
 * Updated cron based features (Requries phpVms 7.0.0-dev+220211.78fd83 or later)
