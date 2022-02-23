@@ -209,7 +209,7 @@
               @if(isset($touchdown->kias))
                 <tr>
                   <th>Touchdown Speed</th>
-                  <td>{{ number_format($touchdown->kias, 2).' knots' }}</td>
+                  <td>{{ number_format($touchdown->kias, 2).' kt' }}</td>
                 </tr>
               @endif
               <tr>
