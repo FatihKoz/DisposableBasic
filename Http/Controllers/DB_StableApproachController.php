@@ -17,7 +17,10 @@ class DB_StableApproachController extends Controller
         $sap_reports = DB_StableApproach::with('user', 'pirep')->where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(12);
 
         return view('DBasic::sap.index', [
-            'sap_reports' => $sap_reports,
+            'sap_reports'     => $sap_reports,
+            'approach_lights' => DB_XPlane_SDK('applights'),
+            'runway_marking'  => DB_XPlane_SDK('markings'),
+            'runway_surface'  => DB_XPlane_SDK('surface'),
         ]);
     }
 
@@ -27,14 +30,11 @@ class DB_StableApproachController extends Controller
         $status = (DB_Setting('dbasic.stable_app_control', false) === true) ? null : 'Plugin support disabled';
 
         // Handle Request
-        // Log::debug('Request HEADER :' . json_encode($request->header()));
-        // Log::debug('Request IP :' . json_encode($request->ip()));
-        // Log::debug('Request POST :' . json_encode($request->post()));
         $request_post = json_encode($request->post());
 
         if (!isset($status)) {
             // Check Report Fields
-            $report = json_decode($request_post); // DB_ProcessSapReport($request->post());
+            $report = json_decode($request_post);
             $status = (isset($report->userID) && isset($report->plugin_version)) ? null : 'Report is not valid';
         }
 

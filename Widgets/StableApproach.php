@@ -19,11 +19,14 @@ class StableApproach extends Widget
         }
 
         return view('DBasic::widgets.stable_approach', [
-            'is_visible' => isset($sap) ? true : false,
-            'is_stable'  => isset($sap) ? $sap->stable : false,
-            'sap'        => isset($sap) ? $sap : null,
-            'report'     => (isset($sap) && filled($sap->report)) ? $sap->report : null,
-            'use_button' => is_bool($this->config['button']) ? $this->config['button'] : false,
+            'is_visible'      => isset($sap) ? true : false,
+            'is_stable'       => isset($sap) ? $sap->stable : false,
+            'sap'             => isset($sap) ? $sap : null,
+            'report'          => (isset($sap) && filled($sap->report)) ? $sap->report : null,
+            'use_button'      => is_bool($this->config['button']) ? $this->config['button'] : false,
+            'approach_lights' => DB_XPlane_SDK('applights'),
+            'runway_marking'  => DB_XPlane_SDK('markings'),
+            'runway_surface'  => DB_XPlane_SDK('surface'),
         ]);
     }
 }

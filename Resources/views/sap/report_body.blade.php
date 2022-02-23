@@ -93,6 +93,10 @@
             <td>{{ 'Rwy '.$runway->begin->name.'/'.$runway->end->name }}</td>
           </tr>
           <tr>
+            <th>Surface Type</th>
+            <td>{{ $runway_surface[$runway->surface] ?? '-' }}</td>
+          </tr>
+          <tr>
             <th>Width</th> 
             <td>{{ number_format(floor($runway->width)).'m' }}</td>
           </tr>
@@ -104,6 +108,30 @@
             <th>Touchdown Zone (TDZ)</th> 
             <td>{{ number_format($runway->length->tdz).'m' }}</td>
           </tr>
+          @if(isset($runway->begin->disp) && $runway->begin->disp > 0)
+            <tr>
+              <th>Displaced Threshold</th>
+              <td>{{ number_format($runway->begin->disp).'m' }}</td>
+            </tr>
+          @endif
+          @if(isset($runway->begin->overrun) && $runway->begin->overrun > 0)
+            <tr>
+              <th>Overrun Area</th>
+              <td>{{ number_format($runway->begin->overrun).'m' }}</td>
+            </tr>
+          @endif
+          @if(isset($runway->begin->marking))
+            <tr>
+              <th>Markings</th>
+              <td>{{ $runway_marking[$runway->begin->marking] ?? '-' }}</td>
+            </tr>
+          @endif
+          @if(isset($runway->begin->appLights))
+            <tr>
+              <th>Approach Lights System</th>
+              <td>{{ $approach_lights[$runway->begin->appLights] ?? '-' }}</td>
+            </tr>
+          @endif
         </table>
       </div>
     </div>
@@ -178,6 +206,12 @@
                 <th>Touchdown Rate</th>
                 <td>{{ number_format($touchdown->fpm_agl, 2).' fpm' }}</td>
               </tr>
+              @if(isset($touchdown->kias))
+                <tr>
+                  <th>Touchdown Speed</th>
+                  <td>{{ number_format($touchdown->kias, 2).' knots' }}</td>
+                </tr>
+              @endif
               <tr>
                 <th>G-Force</th>
                 <td>{{ number_format($touchdown->g_vertical, 2).' g' }}</td>

@@ -408,3 +408,59 @@ if (!function_exists('DB_InArray_MD')) {
         return false;
     }
 }
+
+if (!function_exists('DB_XPlane_SDK')) {
+    function DB_XPlane_SDK($type = null)
+    {
+        // X-Plane Runway Surface Types
+        $runway_surface = [
+            '0' => 'Not Defined',
+            '1' => 'Asphalt',
+            '2' => 'Concrete',
+            '3' => 'Grass',
+            '4' => 'Dirt',
+            '5' => 'Gravel',
+            '12' => 'Dry Lakebed',
+            '13' => 'Water',
+            '14' => 'Snow/Ice',
+            '15' => 'Custom',
+        ];
+        // X-Plane Runway Markings
+        $runway_marking = [
+            '0' => 'None',
+            '1' => 'Visual Markings',
+            '2' => 'Non-precision Approach Markings',
+            '3' => 'Precision Approach Markings',
+            '4' => 'Non-precision Approach Markings II',
+            '5' => 'Precision Approach Markings II',
+        ];
+        // X-Plane Approach Lightning Types
+        $approach_lights = [
+            '0' => 'None',
+            '1' => 'ALSF-I',
+            '2' => 'ALSF-II',
+            '3' => 'Calvert',
+            '4' => 'Calvert II',
+            '5' => 'SSALR',
+            '6' => 'SSALF',
+            '7' => 'SALS',
+            '8' => 'MALSR',
+            '9' => 'MALSF',
+            '10' => 'MALS',
+            '11' => 'ODALS',
+            '12' => 'RAIL',
+        ];
+
+        $result = [];
+
+        if ($type === 'surface') {
+            $result = $runway_surface;
+        } elseif ($type === 'markings') {
+            $result = $runway_marking;
+        } elseif ($type === 'applights') {
+            $result = $approach_lights;
+        }
+
+        return $result;
+    }
+}
