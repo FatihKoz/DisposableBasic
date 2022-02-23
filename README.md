@@ -472,6 +472,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+23.FEB.22
+
+* Added more details to Stable Approach Plugin reports (touchdown speed, runway details)
+* Removed inactive users from WhazzUp widget (skip inactives/rejected/suspended users)
+
 19.FEB.22
 
 * Added pilot counts to Hubs index page
