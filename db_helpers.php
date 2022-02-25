@@ -9,36 +9,6 @@ use App\Models\Enums\PirepState;
 use App\Models\Enums\UserState;
 use Nwidart\Modules\Facades\Module;
 
-// Aircraft Status Badge
-// Return string (with html tags)
-if (!function_exists('DB_AircraftStatus')) {
-    function DB_AircraftStatus($aircraft, $type = 'badge')
-    {
-        $color = 'primary';
-        $status = $aircraft->status;
-
-        if ($status === AircraftStatus::ACTIVE) {
-            $color = 'success';
-        } elseif ($status === AircraftStatus::MAINTENANCE) {
-            $color = 'info';
-        } elseif ($status === AircraftStatus::STORED || $status === AircraftStatus::RETIRED) {
-            $color = 'warning';
-        } elseif ($status === AircraftStatus::SCRAPPED || $status === AircraftStatus::WRITTEN_OFF) {
-            $color = 'danger';
-        }
-
-        if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
-        } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
-        } else {
-            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftStatus::label($status) . '</span>';
-        }
-
-        return $result;
-    }
-}
-
 // Aircraft State
 // Return mixed
 if (!function_exists('DB_AircraftState')) {
@@ -73,13 +43,33 @@ if (!function_exists('DB_AircraftState')) {
     }
 }
 
-// Check phpVMS Module
-// Return boolean
-if (!function_exists('DB_CheckModule')) {
-    function DB_CheckModule($module_name)
+// Aircraft Status Badge
+// Return string (with html tags)
+if (!function_exists('DB_AircraftStatus')) {
+    function DB_AircraftStatus($aircraft, $type = 'badge')
     {
-        $phpvms_module = Module::find($module_name);
-        return isset($phpvms_module) ? $phpvms_module->isEnabled() : false;
+        $color = 'primary';
+        $status = $aircraft->status;
+
+        if ($status === AircraftStatus::ACTIVE) {
+            $color = 'success';
+        } elseif ($status === AircraftStatus::MAINTENANCE) {
+            $color = 'info';
+        } elseif ($status === AircraftStatus::STORED || $status === AircraftStatus::RETIRED) {
+            $color = 'warning';
+        } elseif ($status === AircraftStatus::SCRAPPED || $status === AircraftStatus::WRITTEN_OFF) {
+            $color = 'danger';
+        }
+
+        if ($type === 'bg') {
+            $result = 'class="bg-' . $color . '"';
+        } elseif ($type === 'row') {
+            $result = 'class="table-' . $color . '"';
+        } else {
+            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftStatus::label($status) . '</span>';
+        }
+
+        return $result;
     }
 }
 
@@ -101,6 +91,16 @@ if (!function_exists('DB_CheckDuplicateCustom')) {
         $check = UserFieldValue::where($where)->count();
 
         return ($check > 1) ? true : false;
+    }
+}
+
+// Check phpVMS Module
+// Return boolean
+if (!function_exists('DB_CheckModule')) {
+    function DB_CheckModule($module_name)
+    {
+        $phpvms_module = Module::find($module_name);
+        return isset($phpvms_module) ? $phpvms_module->isEnabled() : false;
     }
 }
 
@@ -214,6 +214,30 @@ if (!function_exists('DB_FuelCost')) {
     }
 }
 
+// Get Used Online Network Member ID's
+// Return array
+if (!function_exists('DB_GetNetworkMembers')) {
+    function DB_GetNetworkMembers($field_name)
+    {
+        $result = [];
+        $field = UserField::where('name', $field_name)->first();
+        if (isset($field)) {
+            $result = UserFieldValue::whereNotNull('value')->where('user_field_id', $field->id)->orderBy('value')->pluck('value')->toArray();
+        }
+
+        return $result;
+    }
+}
+
+// Get Used Pilot ID's (Idents, Callsigns)
+// Return array
+if (!function_exists('DB_GetPilotIdents')) {
+    function DB_GetPilotIdents()
+    {
+        return User::select('pilot_id')->orderBy('pilot_id')->pluck('pilot_id')->toArray();
+    }
+}
+
 // Get Required Units
 // Return array
 if (!function_exists('DB_GetUnits')) {
@@ -231,30 +255,6 @@ if (!function_exists('DB_GetUnits')) {
         }
 
         return $units;
-    }
-}
-
-// Get Used Pilot ID's (Idents, Callsigns)
-// Return array
-if (!function_exists('DB_GetPilotIdents')) {
-    function DB_GetPilotIdents()
-    {
-        return User::select('pilot_id')->orderBy('pilot_id')->pluck('pilot_id')->toArray();
-    }
-}
-
-// Get Used Online Network Member ID's
-// Return array
-if (!function_exists('DB_GetNetworkMembers')) {
-    function DB_GetNetworkMembers($field_name)
-    {
-        $result = [];
-        $field = UserField::where('name', $field_name)->first();
-        if (isset($field)) {
-            $result = UserFieldValue::whereNotNull('value')->where('user_field_id', $field->id)->orderBy('value')->pluck('value')->toArray();
-        }
-
-        return $result;
     }
 }
 
@@ -303,6 +303,17 @@ if (!function_exists('DB_ReadJson')) {
         $result = json_decode($string);
 
         return (json_last_error() === 0) ? $result : null;
+    }
+}
+
+// Check if the user has any SAP Reports
+// Return boolean
+if (!function_exists('DB_SapReports')) {
+    function DB_SapReports($user_id = null)
+    {
+        $count = DB::table('disposable_sap_reports')->where('user_id', $user_id)->count();
+
+        return ($count > 0) ? true : false;
     }
 }
 
@@ -373,6 +384,64 @@ if (!function_exists('DB_UserState')) {
     }
 }
 
+// X-Plane SDK Data to be used by SAP Reports
+// Return array
+if (!function_exists('DB_XPlane_SDK')) {
+    function DB_XPlane_SDK($type = null)
+    {
+        // X-Plane Runway Surface Types
+        $runway_surface = [
+            '0' => 'Not Defined',
+            '1' => 'Asphalt',
+            '2' => 'Concrete',
+            '3' => 'Grass',
+            '4' => 'Dirt',
+            '5' => 'Gravel',
+            '12' => 'Dry Lakebed',
+            '13' => 'Water',
+            '14' => 'Snow/Ice',
+            '15' => 'Custom',
+        ];
+        // X-Plane Runway Markings
+        $runway_marking = [
+            '0' => 'None',
+            '1' => 'Visual Markings',
+            '2' => 'Non-precision Approach Markings',
+            '3' => 'Precision Approach Markings',
+            '4' => 'Non-precision Approach Markings II',
+            '5' => 'Precision Approach Markings II',
+        ];
+        // X-Plane Approach Light Types
+        $approach_lights = [
+            '0' => 'None',
+            '1' => 'ALSF-I',
+            '2' => 'ALSF-II',
+            '3' => 'Calvert',
+            '4' => 'Calvert II',
+            '5' => 'SSALR',
+            '6' => 'SSALF',
+            '7' => 'SALS',
+            '8' => 'MALSR',
+            '9' => 'MALSF',
+            '10' => 'MALS',
+            '11' => 'ODALS',
+            '12' => 'RAIL',
+        ];
+
+        $result = [];
+
+        if ($type === 'surface') {
+            $result = $runway_surface;
+        } elseif ($type === 'markings') {
+            $result = $runway_marking;
+        } elseif ($type === 'applights') {
+            $result = $approach_lights;
+        }
+
+        return $result;
+    }
+}
+
 // Array Unique Multi Dimensional
 // Return array
 if (!function_exists('DB_ArrayUnique_MD')) {
@@ -406,61 +475,5 @@ if (!function_exists('DB_InArray_MD')) {
         }
 
         return false;
-    }
-}
-
-if (!function_exists('DB_XPlane_SDK')) {
-    function DB_XPlane_SDK($type = null)
-    {
-        // X-Plane Runway Surface Types
-        $runway_surface = [
-            '0' => 'Not Defined',
-            '1' => 'Asphalt',
-            '2' => 'Concrete',
-            '3' => 'Grass',
-            '4' => 'Dirt',
-            '5' => 'Gravel',
-            '12' => 'Dry Lakebed',
-            '13' => 'Water',
-            '14' => 'Snow/Ice',
-            '15' => 'Custom',
-        ];
-        // X-Plane Runway Markings
-        $runway_marking = [
-            '0' => 'None',
-            '1' => 'Visual Markings',
-            '2' => 'Non-precision Approach Markings',
-            '3' => 'Precision Approach Markings',
-            '4' => 'Non-precision Approach Markings II',
-            '5' => 'Precision Approach Markings II',
-        ];
-        // X-Plane Approach Lightning Types
-        $approach_lights = [
-            '0' => 'None',
-            '1' => 'ALSF-I',
-            '2' => 'ALSF-II',
-            '3' => 'Calvert',
-            '4' => 'Calvert II',
-            '5' => 'SSALR',
-            '6' => 'SSALF',
-            '7' => 'SALS',
-            '8' => 'MALSR',
-            '9' => 'MALSF',
-            '10' => 'MALS',
-            '11' => 'ODALS',
-            '12' => 'RAIL',
-        ];
-
-        $result = [];
-
-        if ($type === 'surface') {
-            $result = $runway_surface;
-        } elseif ($type === 'markings') {
-            $result = $runway_marking;
-        } elseif ($type === 'applights') {
-            $result = $approach_lights;
-        }
-
-        return $result;
     }
 }
