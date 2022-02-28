@@ -472,6 +472,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+28.FEB.22
+
+* Refactored some module helpers
+* Updated Personal Stats Widget and blade
+
 23.FEB.22
 
 * Added more details to Stable Approach Plugin reports (touchdown speed, runway details)
