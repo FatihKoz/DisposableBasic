@@ -2,7 +2,11 @@
 
 phpVMS v7 module for Basic VA features
 
-Compatible with any latest development (dev) build of phpVMS v7 released after **10.FEB.22**.  
+Compatible with latest development (dev) builds of phpVMS v7 as described below, which are released after **10.FEB.22**.  
+
+* Module version v3.0.19 is the latest version with php7.4 and laravel8 support.
+* Module versions starting with v3.1.xx will support only php8 and laravel9 as per phpVMS v7 improvements.
+
 Module blades are designed for themes using **Bootstrap v5.x** and FontAwesome v5.x (not v6) icons.
 
 This module pack aims to cover basic needs of any Virtual Airline with some new pages, widgets and backend tools. Provides;
@@ -33,7 +37,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 
 ### Update (from v3.xx to v3.yy)
 
-Just follow the installation procedure by overwriting your old module files
+Just upload updated files by overwriting your old module files, visit /update and clean `application` cache when update process finishes.
 
 ### Update (from v2.xx series to v3.xx)
 
@@ -134,7 +138,10 @@ As an additional feature, module provides a quick database health check here. Te
 
 ## Stable Approach Plugin Support
 
-Stable Approach Plugin is a FDM (Flight Data Monitoring) tool for X-Plane, developed by [@Clamb94](https://github.com/Clamb94).
+Stable Approach Plugin is a **great** FDM (Flight Data Monitoring) tool for X-Plane, developed by [@Clamb94](https://github.com/Clamb94).
+
+Admins are able to delete unstable reports, if they see it necessary like gettin UNSTABLE after an intentional test flight by the pilot etc.
+Also it is possible for admins to "Approve" an unstable report as STABLE after checking the details, like a slight deviation or incorrectly identified approach type etc.
 
 For auto receiving FDM reports and matching them with users/pireps, below steps are required to be completed;
 
@@ -471,6 +478,12 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+01.MAR.22
+
+**WARNING: THIS IS THE LAST VERSION SUPPORTING PHP 7.4.xx AND LARAVEL 8**
+
+* Updated Stable Approach Plugin support (Approve and Delete functions added)
 
 28.FEB.22
 

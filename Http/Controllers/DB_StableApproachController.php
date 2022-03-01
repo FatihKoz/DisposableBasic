@@ -93,4 +93,24 @@ class DB_StableApproachController extends Controller
 
         return response()->json($response);
     }
+
+    public function update(Request $request)
+    {
+        $report = DB_StableApproach::where(['id' => $request->report_id, 'is_stable' => 0])->first();
+
+        if ($report && $request->operation == 'update') {
+            $report->is_stable = 1;
+            $report->save();
+            Log::debug('Stable Approach Report ' . $report->sap_analysisID . ' updated by ' . Auth::user()->name_private);
+            flash()->success('Report approved as STABLE');
+        } elseif ($report && $request->operation == 'delete') {
+            $report->delete();
+            Log::debug('Stable Approach Report ' . $report->sap_analysisID . ' deleted by ' . Auth::user()->name_private);
+            flash()->success('Report Deleted !');
+        } else {
+            flash()->warning('Report not found or not suitable for update');
+        }
+
+        return redirect(url($request->current_page));
+    }
 }

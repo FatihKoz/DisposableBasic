@@ -121,6 +121,7 @@ class DB_ServiceProvider extends ServiceProvider
             Route::match(['get', 'post'], 'dtech_store', 'DB_TechController@store')->name('tech_store');
             Route::match(['get', 'post'], 'drunway', 'DB_RunwayController@index')->name('runway');
             Route::match(['get', 'post'], 'drunway_store', 'DB_RunwayController@store')->name('runway_store');
+            Route::post('dstable/update', 'DB_StableApproachController@update')->name('stable_update');
         });
     }
 

@@ -66,6 +66,27 @@
                 </td>
               </tr>
             @endif
+            @if($sap->created_at != $sap->updated_at)
+              <tr>
+                <th>Notes</th>
+                <td>Revised By Management</td>
+              </tr>
+            @endif
+            @ability('admin', 'admin-user')
+              @if($sap->is_stable == 0)
+                <tr>
+                  <th>Admin Functions</th>
+                  <td>
+                    {{ Form::open(['route' => 'DBasic.stable_update', 'method' => 'post']) }}
+                      {{ Form::hidden('report_id', $sap->id) }}
+                      {{ Form::hidden('current_page', url()->current()) }}
+                      {{ Form::button('Approve as Stable', ['type' => 'submit', 'name' => 'operation', 'value' => 'update', 'class' => 'btn btn-success btn-sm m-0 mx-1 p-0 px-1', 'onclick' => "return confirm('Do you really want to accept this report as STABLE ?')"]) }}
+                      {{ Form::button('Delete', ['type' => 'submit', 'name' => 'operation', 'value' => 'delete', 'class' => 'btn btn-danger btn-sm m-0 mx-1 p-0 px-1', 'onclick' => "return confirm('Do you really want to DELETE this report ?')"]) }}
+                    {{ Form::close() }}
+                  </td>
+                </tr>
+              @endif
+            @endability
           </table>
         </div>
       </div>
@@ -151,7 +172,7 @@
             <th colspan="2" class="text-center">{{ $approach->checkHeight->description }}</th>
           </tr>
           <tr>
-            <th>Centerline Deviation</th>
+            <th>Localizer Deviation</th>
             <td>{{ number_format($approach->loc_dev->max, 1).' dots' }}</td>
           </tr>
           <tr>
