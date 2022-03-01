@@ -140,7 +140,7 @@ As an additional feature, module provides a quick database health check here. Te
 
 Stable Approach Plugin is a **great** FDM (Flight Data Monitoring) tool for X-Plane, developed by [@Clamb94](https://github.com/Clamb94).
 
-Admins are able to delete unstable reports, if they see it necessary like gettin UNSTABLE after an intentional test flight by the pilot etc.
+Admins are able to delete unstable reports, if they see it necessary like getting UNSTABLE result after an intentional test flight by the pilot etc.  
 Also it is possible for admins to "Approve" an unstable report as STABLE after checking the details, like a slight deviation or incorrectly identified approach type etc.
 
 For auto receiving FDM reports and matching them with users/pireps, below steps are required to be completed;
