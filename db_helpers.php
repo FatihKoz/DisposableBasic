@@ -125,17 +125,13 @@ if (!function_exists('DB_CheckPilotIdent')) {
 if (!function_exists('DB_ConvertDistance')) {
     function DB_ConvertDistance($value = 0, $target_unit = null)
     {
-        if ($value == 0) {
-            return null;
-        }
         $target_unit = isset($target_unit) ? $target_unit : setting('units.distance');
 
-        if ($target_unit === 'km') {
-            $value = $value * 1.852;
-        } elseif ($target_unit === 'mi') {
-            $value = $value * 1.15078;
+        if (!$value[$target_unit] > 0) {
+            return null;
         }
-        $value = number_format($value) . ' ' . $target_unit;
+
+        $value = number_format($value[$target_unit]) . ' ' . $target_unit;
 
         return $value;
     }
@@ -161,17 +157,15 @@ if (!function_exists('DB_ConvertMinutes')) {
 // Convert Weight from LBS to KGS
 // Return string
 if (!function_exists('DB_ConvertWeight')) {
-    function DB_ConvertWeight($value = 0, $target_unit = null)
+    function DB_ConvertWeight($value, $target_unit = null)
     {
-        if ($value == 0) {
-            return null;
-        }
         $target_unit = isset($target_unit) ? $target_unit : setting('units.weight');
 
-        if ($target_unit === 'kg') {
-            $value = $value / 2.20462262185;
+        if (!$value[$target_unit] > 0) {
+            return null;
         }
-        $value = number_format($value) . ' ' . $target_unit;
+
+        $value = number_format($value[$target_unit]) . ' ' . $target_unit;
 
         return $value;
     }

@@ -25,7 +25,7 @@ class DB_OnlineServices
                 Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' Error Occured During WhazzUp Download !');
             }
         } catch (GuzzleException $e) {
-            Log::error('Disposable Basic, WhazzUp Data Download Error | ' . $e->getMessage());
+            Log::error('Disposable Basic | WhazzUp Data Download Error: ' . $e->getMessage());
             return;
         }
 

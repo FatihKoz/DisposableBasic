@@ -75,7 +75,7 @@ class DB_NotificationServices
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         if ($response) {
-            Log::debug('Disposable Basic, Discord WebHook Msg Response: ' . $response);
+            Log::debug('Disposable Basic | Discord WebHook Msg Response: ' . $response);
         }
         curl_close($ch);
     }
