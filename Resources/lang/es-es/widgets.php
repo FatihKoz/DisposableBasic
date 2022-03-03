@@ -52,7 +52,7 @@ return [
     'best_airline' => 'Mejor aerolínea',
     'best_airport' => 'Mejor aeropuerto',
     'best_pilot'   => 'Mejor piloto',
-    'leader_board' => 'Tabla de clasifiación',
+    'leader_board' => 'Tabla de clasificación',
     'lrate_low'    => 'Menor tasa de aterrizaje',
     'lrate_hgh'    => 'Mayor tasa de aterrizaje',
     'top_airlines' => 'Top Aerolíneas',
