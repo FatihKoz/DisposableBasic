@@ -16,7 +16,7 @@
 
   {{-- Map Modal --}}
   <div class="modal" id="modal{{ $mapsource }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="{{ $mapsource.'Title' }}" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 80%;">
+    <div class="modal-dialog mx-auto" style="max-width: 80%;">
       <div class="modal-content shadow-none p-0">
         <div class="modal-header border-0 p-1">
           <h5 class="card-title m-0" id="{{ $mapsource.'Title' }}">

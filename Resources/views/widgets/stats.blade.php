@@ -7,7 +7,7 @@
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">
-      <table class="table table-sm table-borderless table-striped text-start align-middle mb-0">
+      <table class="table table-sm table-borderless table-striped text-start text-nowrap align-middle mb-0">
         @foreach($stats as $key => $value)
           <tr>
             <th>{{ $key }}</th>

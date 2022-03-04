@@ -7,7 +7,7 @@
       </h5>
     </div>
     <div class="card-body p-0 overflow-auto table-responsive">
-      <table class="table table-sm table-borderless table-striped text-start align-middle mb-0">
+      <table class="table table-sm table-borderless table-striped text-start text-nowrap align-middle mb-0">
         <tr>
           <th>{{ $col_header }}</th>
           <th class="text-end pe-1">@lang('DBasic::common.count')</th>

@@ -8,7 +8,7 @@
   @if(isset($pilots))
     <div class="card-body p-0 table-responsive">
       @if(count($pilots) > 0)
-        <table class="table table-borderless table-sm table-striped mb-0 text-center">
+        <table class="table table-borderless table-sm table-striped text-center text-nowrap mb-0">
           <tr>
             <th class="text-start">Name</th>
             <th>Callsign</th>

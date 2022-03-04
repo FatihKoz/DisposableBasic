@@ -13,7 +13,7 @@
 
   {{-- Modal --}}
   <div class="modal fade" id="FDM{{$sap->id}}" tabindex="-1" aria-labelledby="FDMLBL{{$sap->id}}" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog mx-auto">
       <div class="modal-content">
         <div class="modal-header border-0 p-1">
           <h5 class="modal-title m-0" id="FDMLBL{{$sap->id}}">

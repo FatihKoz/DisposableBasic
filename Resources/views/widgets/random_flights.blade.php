@@ -7,7 +7,7 @@
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">
-      <table class="table table-sm table-borderless table-striped text-center align-middle mb-0">
+      <table class="table table-sm table-borderless table-striped text-center text-nowrap align-middle mb-0">
         <tr>
           <th class="text-start">@lang('DBasic::common.flightno')</th>
           <th>@lang('DBasic::common.orig')</th>
