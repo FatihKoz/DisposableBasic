@@ -2,9 +2,9 @@
 @section('title', __('DBasic::common.awards'))
 
 @section('content')
-  <div class="row row-cols-4">
+  <div class="row row-cols-md-2 row-cols-lg-4">
     @foreach($awards as $award)
-      <div class="col">
+      <div class="col-md">
         <div class="card mb-2">
           <div class="card-header p-1">
             <h5 class="m-1">

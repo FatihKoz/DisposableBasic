@@ -7,4 +7,4 @@
   </div>
 </div>
 
-{{ $pireps->links('pagination.default') }}
+{{-- $pireps->links('pagination.default') --}}

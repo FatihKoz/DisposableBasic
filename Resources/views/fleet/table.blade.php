@@ -1,4 +1,4 @@
-<table class="table table-sm table-borderless table-striped align-middle text-center mb-0">
+<table class="table table-sm table-borderless table-striped align-middle text-center text-nowrap mb-0">
   <tr>
     <th class="text-start">@lang('DBasic::common.reg')</th>
     <th>@lang('DBasic::common.icao')</th>

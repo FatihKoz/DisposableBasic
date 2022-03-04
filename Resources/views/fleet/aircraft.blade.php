@@ -4,7 +4,7 @@
 @section('content')
   <div class="row">
     {{-- Left --}}
-    <div class="col-5">
+    <div class="col-lg-5">
       @include('DBasic::fleet.aircraft_details')
 
       @widget('DBasic::FuelCalculator', ['aircraft' => $aircraft->id])
@@ -24,7 +24,7 @@
       @endif
     </div>
     {{-- Right --}}
-    <div class="col-7">
+    <div class="col-lg-7">
       {{-- Specifications --}}
       @if($specs)
         @include('DBasic::specs.card')
@@ -61,9 +61,9 @@
         </div>
       @endif
 
-      <div class="row row-cols-2">
+      <div class="row row-cols-lg-2">
         {{-- Files --}}
-        <div class="col">
+        <div class="col-md">
           @if($files)
             <div class="card mb-2">
               <div class="card-header p-1">
@@ -79,7 +79,7 @@
           @endif
         </div>
         {{-- Basic Stats --}}
-        <div class="col">
+        <div class="col-md">
           @if($stats)
             <div class="card mb-2">
               <div class="card-header p-1">

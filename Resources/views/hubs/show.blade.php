@@ -4,7 +4,7 @@
 @section('content')
   <div class="row">
     {{-- Hub Data and Sub Navigation --}}
-    <div class="col-5">
+    <div class="col-lg-5">
       <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1">
@@ -13,7 +13,7 @@
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
-          <table class="table table-sm table-borderless table-striped align-middle text-start mb-0">
+          <table class="table table-sm table-borderless table-striped align-middle text-start text-nowrap mb-0">
             <tr>
               <th>@lang('DBasic::common.icao')</th>
               <td class="text-end">{{ $hub->icao }}</td>
@@ -85,7 +85,7 @@
       {{-- Sub Navigation Pills --}}
       <ul class="nav nav-pills nav-fill mb-2" id="pills-Hub" role="tablist">
         @if($is_visible['pilots'])
-          <li class="nav-item mx-1" role="presentation">
+          <li class="nav-item mx-1 mb-1" role="presentation">
             <button class="nav-link p-0 px-1" id="pilots-tab" data-bs-toggle="pill" data-bs-target="#pilots" type="button" role="tab" aria-controls="pilots" aria-selected="false">
               @lang('DBasic::common.pilots')
             </button>
@@ -126,7 +126,7 @@
         @endif
       </ul>
     </div>
-    <div class="col-7">
+    <div class="col-lg-7">
       {{-- Hub Map --}}
       <div class="card mb-2">
         {{ Widget::AirspaceMap(['width' => '100%', 'height' => '400px', 'lat' => $hub->lat, 'lon' => $hub->lon,]) }}
@@ -141,13 +141,13 @@
       </div>
       <div class="tab-pane fade" id="leaderboard" role="tabpanel" aria-labelledby="leaderboard-tab">
         <div class="row">
-          <div class="col">
+          <div class="col-lg">
             @widget('DBasic::LeaderBoard', ['hub' => $hub->id, 'source' => 'pilot', 'count' => 5, 'type' => 'flights'])
           </div>
-          <div class="col">
+          <div class="col-lg">
             @widget('DBasic::LeaderBoard', ['hub' => $hub->id, 'source' => 'pilot', 'count' => 5, 'type' => 'time'])
           </div>
-          <div class="col">
+          <div class="col-lg">
             @widget('DBasic::LeaderBoard', ['hub' => $hub->id, 'source' => 'pilot', 'count' => 5, 'type' => 'lrate'])
           </div>
         </div>
@@ -170,8 +170,8 @@
     @endif
     @if ($is_visible['downloads'])
       <div class="tab-pane fade" id="downloads" role="tabpanel" aria-labelledby="downloads-tab">
-        <div class="row row-cols-2">
-          <div class="col">
+        <div class="row row-cols-lg-2">
+          <div class="col-lg">
             <div class="card mb-2">
               <div class="card-header p-1">
                 <h5 class="m-1">

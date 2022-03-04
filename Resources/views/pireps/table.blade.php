@@ -1,4 +1,4 @@
-<table class="table table-sm table-borderless table-striped text-center align-middle mb-0">
+<table class="table table-sm table-borderless table-striped text-center text-nowrap align-middle mb-0">
   <thead>
     <tr>
       <th class="text-start">@lang('DBasic::common.flightno')</th>

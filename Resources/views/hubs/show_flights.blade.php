@@ -1,7 +1,7 @@
-<div class="row row-cols-2">
-  <div class="col">
+<div class="row row-cols-lg-2">
+  <div class="col-lg">
     @if($flights_dpt->count() > 0)
-      <div class="card">
+      <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1">
             @lang('DBasic::common.hdeps')
@@ -17,9 +17,9 @@
       </div>
     @endif
   </div>
-  <div class="col">
+  <div class="col-lg">
     @if($flights_arr->count() > 0)
-      <div class="card">
+      <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1">
             @lang('DBasic::common.harrs')

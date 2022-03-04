@@ -6,7 +6,7 @@
     </h5>
   </div>
   <div class="card-body p-0 table-responsive">
-    <table class="table table-sm table-borderless table-striped mb-0">
+    <table class="table table-sm table-borderless table-striped text-nowrap mb-0">
       <tr>
         <th style="width: 30%;" scope="row">@lang('DBasic::common.type')</th>
         <td>{{ $subfleet->type }}</td>

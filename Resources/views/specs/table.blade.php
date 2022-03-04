@@ -1,4 +1,4 @@
-<table class="table table-sm table-borderless table-striped mb-0 text-center align-middle">
+<table class="table table-sm table-borderless table-striped mb-0 text-center text-nowrap align-middle">
   @if(!isset($hide_title))
     <tr>
       <th colspan="6" class="text-start">{{ $sp->saircraft }}</th>

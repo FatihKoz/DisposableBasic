@@ -5,9 +5,9 @@
   @if(!$allnews->count())
     <div class="alert alert-info mb-1 p-1 px-2 fw-bold">No News!</div>
   @else
-    <div class="row row-cols-2">
+    <div class="row row-cols-lg-2">
       @foreach($allnews as $news)
-        <div class="col">
+        <div class="col-lg">
           <div class="card mb-2">
             <div class="card-header p-1">
               <h5 class="m-1">
