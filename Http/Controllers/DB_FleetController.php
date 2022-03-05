@@ -18,7 +18,10 @@ class DB_FleetController extends Controller
     public function index()
     {
         // User Based Fleet Display
-        $option = DB_Setting('dbasic.fleet_user_aircraft', true);
+        // Follow phpVMS Settings
+        $option = (setting('pireps.restrict_aircraft_to_rank', false) || setting('pireps.restrict_aircraft_to_typerating', false)) ? true : false;
+        // Use Module Setting
+        // $option = DB_Setting('dbasic.fleet_user_aircraft', true);
         $user = Auth::user();
         $userSvc = app(UserService::class);
         $user_based_fleet = $userSvc->getAllowableSubfleets($user)->pluck('id')->toArray();
