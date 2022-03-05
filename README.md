@@ -31,7 +31,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Manual Install : Upload contents of the package to your phpvms root `/modules` folder via ftp or your control panel's file manager
 * GitHub Clone : Clone/pull repository to your phpvms root `/modules/DisposableBasic` folder
 * PhpVms Module Installer : Go to admin -> addons/modules , click Add New , select downloaded file then click Add Module
-
+*
 * Go to admin > addons/modules enable the module
 * Go to admin > dashboard (or /update) to trigger module migrations
 * When migration is completed, go to admin > maintenance and clean `application` cache
