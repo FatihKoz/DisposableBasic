@@ -4,11 +4,11 @@ phpVMS v7 module for Basic VA features
 
 Compatible with phpVMS v7 builds as described below;
 
-* Module versions starting with v3.1.xx supports only php8.x and laravel9.x
+* Module versions starting with v3.1.xx supports only php8 and laravel9
 * Minimum required phpVMS v7 version is phpVms `7.0.0-Laravel9` for v3.1.xx
 * Module version v3.0.19 is the latest version with php7.4 and laravel8 support
-* Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220211.78fd83` (11.FEB.22) for v3.0.19
 * Latest available phpVMS v7 version is phpVms `7.0.0-dev+220228.b81dd9` (28.FEB.22) for v3.0.19
+* Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220211.78fd83` (11.FEB.22) for v3.0.19
 
 Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
 
@@ -481,6 +481,14 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+06.MAR.22
+
+* Module is now only compatible with php8 and Laravel9
+* All module blades changed to be responsive to mobile devices
+* Module helpers updated to meet new core requirements
+* Module controller and services updated to meet new core requirements
+* Some more failsafe checks added to cover admin/user errors
 
 01.MAR.22
 
