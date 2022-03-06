@@ -59,7 +59,7 @@
     <div class="card-footer p-0 text-end fw-bold small">
       @if($checks)
         <span class="mx-1 float-start" title="Detailed Checks Enabled">*</span>
-        @endif
+      @endif
       <span class="mx-1">{{ $dltime->diffForHumans() }}</span>
     </div>
   @endif
