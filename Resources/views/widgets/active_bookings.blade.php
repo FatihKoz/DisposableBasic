@@ -39,6 +39,13 @@
                 <a href="{{ route('frontend.profile.show', [$booking->user_id]) }}">{{ $booking->user->name_private }}</a>
               </td>
               <td class="text-end">
+                @ability('admin', 'admin-access')
+                  @if(!$bids) 
+                    <a href="{{ route('frontend.simbrief.briefing', [$booking->id]) }}" target="_blank">
+                      <i class="fas fa-info-circle text-secondary" title="Click to view Briefing"></i>
+                    </a>
+                  @endif
+                @endability
                 {{ $booking->created_at->addHours($expire)->diffForHumans() }}
               </td>
             </tr>
