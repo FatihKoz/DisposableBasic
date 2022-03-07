@@ -7,7 +7,7 @@ Compatible with phpVMS v7 builds as described below;
 * Module versions starting with v3.1.xx supports only php8 and laravel9
 * Minimum required phpVMS v7 version is phpVms `7.0.0-Laravel9` for v3.1.xx
 * Module version v3.0.19 is the latest version with php7.4 and laravel8 support
-* Latest available phpVMS v7 version is phpVms `7.0.0-dev+220228.b81dd9` (28.FEB.22) for v3.0.19
+* Latest available phpVMS v7 version is phpVms `7.0.0-dev+220307.00bf18` (07.MAR.22) for v3.0.19
 * Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220211.78fd83` (11.FEB.22) for v3.0.19
 
 Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
