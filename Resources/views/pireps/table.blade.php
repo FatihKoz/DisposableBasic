@@ -28,6 +28,18 @@
             <a href="{{ route('frontend.pireps.show', [$pirep->id]) }}"><i class="fas fa-info-circle me-1"></i></a>
           @endability
           {{ optional($pirep->airline)->code.' '.$pirep->flight_number }}
+          {{--}}
+          @ability('admin', 'admin-user')
+            @if($DSpecial && filled($pirep->route_code) && filled($pirep->route_leg))
+              <a href="{{ route('DSpecial.tour_remove', [$pirep->id]) }}">
+                <i class="fas fa-exclamation-circle text-danger mx-1"
+                  onclick="return confirm('Are you really sure ?\nRemoving tour details from the pirep is irreversible !!!')"
+                  title="Remove Tour details from Pirep !">
+                </i>
+              </a>
+            @endif
+          @endability
+          {{--}}
         </th>
         <td class="text-start">
           <a href="{{ route('frontend.airports.show', [$pirep->dpt_airport_id]) }}" title="{{ optional($pirep->dpt_airport)->name }}">
