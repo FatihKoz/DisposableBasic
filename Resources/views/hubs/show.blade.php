@@ -80,7 +80,9 @@
         @endif
       </div>
       @if($is_visible['flights'])
-        @widget('DBasic::Map', ['source' => $hub->id])
+        <div class="mb-2">
+          @widget('DBasic::Map', ['source' => $hub->id])
+        </div>
       @endif
       {{-- Sub Navigation Pills --}}
       <ul class="nav nav-pills nav-fill mb-2" id="pills-Hub" role="tablist">

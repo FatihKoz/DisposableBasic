@@ -1,6 +1,6 @@
 @if(isset($flights) && $flights > 0 || !isset($flights) && count($mapAirports) > 0 || !isset($flights) && count($mapHubs) > 0)
   {{-- Map Modal Button --}}
-  <div class="row mb-2">
+  <div class="row">
     <div class="col d-grid">
       <button type="button" class="btn btn-sm btn-danger p-0 px-1" data-toggle="modal" data-target="{{ '#modal'.$mapsource }}" onclick="{{ $mapsource }}ExpandMap()">
         @if($mapsource === 'user')

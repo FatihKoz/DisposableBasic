@@ -66,10 +66,12 @@
               <th>@lang('DBasic::common.iata')</th>
               <td class="text-end">{{ $airline->iata }}</td>
             </tr>
-            <tr>
-              <th>@lang('common.country')</th>
-              <td class="text-end">{{ $country->alpha2($airline->country)['name'] ?? '' }} {{ ' ('.strtoupper($airline->country).')' }}</td>
-            </tr>
+            @if(strlen($airline->country) === 2)
+              <tr>
+                <th>@lang('common.country')</th>
+                <td class="text-end">{{ $country->alpha2($airline->country)['name'] ?? '' }} {{ ' ('.strtoupper($airline->country).')' }}</td>
+              </tr>
+            @endif
           </table>
         </div>
         @if(filled($airline->logo))
@@ -79,7 +81,7 @@
         @endif
       </div>
       {{-- Two Map side by side positioning --}}
-      <div class="row">
+      <div class="row mb-2">
         <div class="col">
           @widget('DBasic::Map', ['source' => $airline->id])
         </div>
