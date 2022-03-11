@@ -3,7 +3,12 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
+use App\Models\User;
 use App\Models\UserAward;
+use App\Services\FinanceService;
+use App\Support\Money;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
@@ -17,7 +22,7 @@ class DB_AdminController extends Controller
         $settings = DB::table('disposable_settings')->where('key', 'LIKE', 'dbasic.%')->get();
         // $settings = $settings->groupBy('group'); // This may be used to have all settings in one card like phpVMS core
 
-        // Manual Awarding (Basic)
+        // Manual Awards and Bonus Payments
         $awards = DB::table('awards')->select('id', 'name')->where('active', 1)->orderBy('name')->get();
         $users = DB::table('users')->select('id', 'pilot_id', 'name')->where('state', 1)->orderBy('pilot_id')->get();
 
@@ -45,10 +50,63 @@ class DB_AdminController extends Controller
         $award_check = UserAward::where(['user_id' => $user_id, 'award_id' => $award_id])->count();
 
         if ($award_check > 0) {
-            flash()->info('User already have this award');
+            flash()->info('User already owns this award.');
         } else {
             UserAward::create(['user_id' => $user_id, 'award_id' => $award_id]);
             flash()->success('User awarded');
+        }
+
+        return back()->withInput();
+    }
+
+    // Manual Payment
+    public function manual_payment()
+    {
+        $formdata = Request::post();
+
+        $user_id = $formdata['mp_user'];
+        $amount = $formdata['mp_amount'];
+
+        if ($user_id === 'ZZZ' || $amount == 0 || $amount < 0) {
+            flash()->error('Check form entries !');
+
+            return back()->withInput();
+        }
+
+        $user = User::with('journal', 'airline.journal')->where('id', $user_id)->first();
+        $amount = Money::createFromAmount($amount);
+
+        if (filled($user) && $user->airline->journal->balance > $amount) {
+            // Payment Details
+            $financeSvc = app(FinanceService::class);
+            $group = 'Bonus Payments';
+            $today = Carbon::now()->format('Y-m-d');
+
+            // Credit User
+            $financeSvc->creditToJournal(
+                $user->journal,
+                $amount,
+                $user,
+                'Bonus Payment',
+                $group,
+                'bonus',
+                $today
+            );
+            // Debit Airline
+            $financeSvc->debitFromJournal(
+                $user->airline->journal,
+                $amount,
+                $user,
+                'Bonus Payment (' . $user->name_private . ')',
+                $group,
+                'bonus',
+                $today
+            );
+
+            flash()->success('Wire transfer completed. Amount: ' . $amount . ' > User: ' . $user->name_private);
+            Log::info('Disposable Basic | Bonus Payment of ' . $amount . ' to ' . $user->name_private . ' completed by ' . Auth::user()->name_private);
+        } else {
+            flash()->error('Airline balance is NOT enough to complete wire transfer !');
         }
 
         return back()->withInput();

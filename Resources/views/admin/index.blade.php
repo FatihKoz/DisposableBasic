@@ -55,16 +55,15 @@
           <b>Manual Awarding</b>
           <br>
           @include('DBasic::admin.manual_awards')
-          <span class="text-info">You can manually issue a defined award to a pilot here</span>
+          {{-- <span class="text-info">Award must be defined</span> --}}
         </div>
       </div>
       <div class="col-sm-4">
-        {{-- Aircraft Group --}}
         <div class="card border-blue-bottom" style="padding:5px;">
-          <b>Aircraft</b>
+          <b>Manual Payments</b>
           <br>
-          @include('DBasic::admin.settings_table', ['group' => 'Aircraft'])
-          <span class="text-info">When enabled, module will change Aircraft states (Ground, In Use, In Flight) according to Pirep events</span>
+          @include('DBasic::admin.manual_payment')
+          <span class="text-info">User's Airline must have enough funds to complete the transfer</span>
         </div>
       </div>
       <div class="col-sm-4">
@@ -103,6 +102,13 @@
         </div>
       </div>
       <div class="col-sm-5">
+        {{-- Aircraft Group --}}
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Aircraft</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'Aircraft'])
+          <span class="text-info">When enabled, module will change Aircraft states (Ground, In Use, In Flight) according to Pirep events</span>
+        </div>
         {{-- Stable Approach Plugin Settings --}}
         <div class="card border-blue-bottom" style="padding:5px;">
           <b>Stable Approach Plugin</b>

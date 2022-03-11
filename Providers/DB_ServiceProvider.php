@@ -123,6 +123,7 @@ class DB_ServiceProvider extends ServiceProvider
             Route::match(['get', 'post'], 'drunway_store', 'DB_RunwayController@store')->name('runway_store');
             Route::post('dstable/update', 'DB_StableApproachController@update')->name('stable_update');
             Route::post('dmanual_award', 'DB_AdminController@manual_award')->name('manual_award');
+            Route::post('dmanual_payment', 'DB_AdminController@manual_payment')->name('manual_payment');
         });
     }
 
