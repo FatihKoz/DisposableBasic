@@ -2,7 +2,7 @@
   {{ Form::open(['route' => 'DBasic.manual_award', 'method' => 'post']) }}
     <table class="table table-striped text-left" style="margin-bottom: 2px;">
       <tr>
-        <td>User</td>
+        <td style="width: 30%; max-width: 30%;">User</td>
         <td class="text-right">
           <select class="form-control select2" style="width: 98%;" name="ma_user">
             <option value="ZZZ">Select user...</option>
@@ -13,7 +13,7 @@
         </td>
       </tr>
       <tr>
-        <td>Award</td>
+        <td style="width: 30%; max-width: 30%;">Award</td>
         <td class="text-right">
           <select class="form-control select2" style="width: 98%" name="ma_award">
             <option value="ZZZ">Select award to assign...</option>
