@@ -482,7 +482,7 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
-10.MAR.22
+11.MAR.22
 
 * Module is now only compatible with php8 and Laravel9
 * All module blades changed to provide better support mobile devices
