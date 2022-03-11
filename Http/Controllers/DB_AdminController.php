@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
+use App\Models\UserAward;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
@@ -16,11 +17,44 @@ class DB_AdminController extends Controller
         $settings = DB::table('disposable_settings')->where('key', 'LIKE', 'dbasic.%')->get();
         // $settings = $settings->groupBy('group'); // This may be used to have all settings in one card like phpVMS core
 
+        // Manual Awarding (Basic)
+        $awards = DB::table('awards')->select('id', 'name')->where('active', 1)->orderBy('name')->get();
+        $users = DB::table('users')->select('id', 'pilot_id', 'name')->where('state', 1)->orderBy('pilot_id')->get();
+
         return view('DBasic::admin.index', [
+            'awards'   => $awards,
             'settings' => $settings,
+            'users'    => $users,
         ]);
     }
 
+    // Manual Awarding
+    public function manual_award()
+    {
+        $formdata = Request::post();
+
+        $user_id = $formdata['ma_user'];
+        $award_id = $formdata['ma_award'];
+
+        if ($user_id === 'ZZZ' || $award_id === 'ZZZ') {
+            flash()->error('Check form entries !');
+
+            return back()->withInput();
+        }
+
+        $award_check = UserAward::where(['user_id' => $user_id, 'award_id' => $award_id])->count();
+
+        if ($award_check > 0) {
+            flash()->info('User already have this award');
+        } else {
+            UserAward::create(['user_id' => $user_id, 'award_id' => $award_id]);
+            flash()->success('User awarded');
+        }
+
+        return back()->withInput();
+    }
+
+    // Module Settings
     public function settings_update()
     {
         $formdata = Request::post();
@@ -46,6 +80,7 @@ class DB_AdminController extends Controller
         return redirect(route('DBasic.admin'));
     }
 
+    // Park Stuck Aircraft
     public function park_aircraft()
     {
         $formdata = Request::post();
