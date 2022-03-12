@@ -2,7 +2,7 @@
 @if($display_card === true)
   <div class="card text-center mb-2">
     <div class="card-body p-2">
-      <a href="#" data-bs-toggle="modal" data-bs-target="#JournalModal">{{ $cur_balance }}</a>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#JournalModal{{ $journal_id }}">{{ $cur_balance }}</a>
     </div>
     <div class="card-footer p-0 small fw-bold">
       Current Balance
@@ -13,11 +13,11 @@
 @endif
 
 {{-- Transaction Modal --}}
-<div class="modal fade" id="JournalModal" tabindex="-1" aria-labelledby="JournalModalLabel" aria-hidden="true">
+<div class="modal fade" id="JournalModal{{ $journal_id }}" tabindex="-1" aria-labelledby="JournalModalLabel{{ $journal_id }}" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
     <div class="modal-content">
       <div class="modal-header p-1">
-        <h5 class="modal-title" id="JournalModalLabel">Journal Transactions & Summary</h5>
+        <h5 class="modal-title" id="JournalModalLabel{{ $journal_id }}">Journal Transactions & Summary</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-0">
@@ -34,12 +34,12 @@
                 <td class="text-start">{{ $record->memo }}</td>
                 <td>
                   @if(filled($record->credit))
-                    {{ money($record->credit, $units['currency']) }}
+                    {{ money($record->credit, $curr_unit) }}
                   @endif
                 </td>
                 <td>
                   @if(filled($record->debit))
-                    {{ money($record->debit, $units['currency']) }}
+                    {{ money($record->debit, $curr_unit) }}
                   @endif
                 </td>
                 <td class="text-end">{{ $record->created_at->format('d.m.Y H:i') }}</td>

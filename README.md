@@ -193,6 +193,7 @@ When needed, you can use below widgets to enhance the data provided by your page
 @widget('DBasic::FlightBoard')
 @widget('DBasic::FlightTimeMultiplier')
 @widget('DBasic::FuelCalculator')
+@widget('DBasic::JournalDetails')
 @widget('DBasic::JumpSeat')
 @widget('DBasic::LeaderBoard')
 @widget('DBasic::Map')
@@ -310,6 +311,20 @@ Widget uses either that aircraft's pirep average consumption or if not flown bef
 Also it is possible to define an ICAO type based manufacturer consumption value (via module admin interface), then it will be used as primary source.
 
 Considering the basic calculation, provided results should not be used for airline ops. Can be used for general aviation or for short range trips etc.
+
+### Journal Details
+
+Provides latest transaction details and overall summary of a user's journal.
+
+```php
+@widget('DBasic::JournalDetails', ['user' => $user->id, 'limit' => 25])
+```
+
+* `'user'` should be a user's id, when left blank widget will use current authenticated user.
+* `'limit'` can be any number to get the latest details, logically last 15 or 20 is more than enough to provide some details
+* `'card'` can be either `true` or `false` which will display a card or just plain text. Modal will be always available by clicking the balance
+
+Above example can be used at Profile > index.blade, or anywhere you have the `$user` collection ready.
 
 ### Jumpseat Travel
 
@@ -489,6 +504,7 @@ If you have duplicated blades and encounter problems after updating the module o
 * Module helpers updated to meet new core requirements
 * Module controller and services updated to meet new core requirements
 * Some more failsafe checks added to cover admin/user errors
+* Added Journal Details widget
 
 01.MAR.22
 
