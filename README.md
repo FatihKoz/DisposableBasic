@@ -140,7 +140,7 @@ For runways, simply check `Support Files` folder. There is a world runways datab
 
 As an additional feature, module provides a quick database health check here. Technically it is a helper for you to solve problems, like finding out missing airports or broken relationships 'caused by either import problems or hard deleting records from your database. Provided results are mostly for usage in your sql queries to fix things manually when needed.
 
-Module also provides "Manual Awarding" feature, you can either define a blank award (with provided award class, keep it de-active) as you wish and then assign it your pilots manually. Or when needed you can assign a real award too, imagine a pilot finishes a tour some hours late and automatic awarding does not work anymore etc.
+Module also provides "Manual Awarding" feature, you can either define a blank award (with provided award class, keep it inactive) as you wish and then assign it your pilots manually. Or when needed you can assign a real award too, imagine a pilot finishes a tour some hours late and automatic awarding does not work anymore etc.
 
 For "Manual Payment" selected user's airline must have enough funds for the transfer, creating money out of thin air is not possible.
 
