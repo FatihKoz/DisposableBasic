@@ -24,6 +24,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Configurable JumpSeat Travel and Aircraft Transfer possibilities for pilots at frontend
 * Daily random flight assignments/offerings
 * Fleet/Flights/Pireps Maps (based on leaflet, mostly customizable)
+* Manual Awarding and Manual Payment features
 * Some widgets to enhance any page/layout as per virtual airline needs
 
 ## Installation and Updates
@@ -135,9 +136,13 @@ These definitions can be per aircraft, per subfleet or per icao type and used bo
 
 If you are not developing your own pirep checks and/or not using Disposable Special/Extended module solutions you can simply skip using Maintenance periods etc. They are here just for backward compatibility and some va's already based their custom code on them.
 
-For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old but still usefull for most airports. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
+For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old (from the end of 2020, Airac 2020/14) but still usefull for most airports. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
 
 As an additional feature, module provides a quick database health check here. Technically it is a helper for you to solve problems, like finding out missing airports or broken relationships 'caused by either import problems or hard deleting records from your database. Provided results are mostly for usage in your sql queries to fix things manually when needed.
+
+Module also provides "Manual Awarding" feature, you can either define a blank award (with provided award class, keep it de-active) as you wish and then assign it your pilots manually. Or when needed you can assign a real award too, imagine a pilot finishes a tour some hours late and automatic awarding does not work anymore etc.
+
+For "Manual Payment" selected user's airline must have enough funds for the transfer, creating money out of thin air is not possible.
 
 ## Stable Approach Plugin Support
 
@@ -505,6 +510,7 @@ If you have duplicated blades and encounter problems after updating the module o
 * Module controller and services updated to meet new core requirements
 * Some more failsafe checks added to cover admin/user errors
 * Added Journal Details widget
+* Added Manual Awarding and Manual Payment features
 
 01.MAR.22
 
