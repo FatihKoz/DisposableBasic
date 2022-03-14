@@ -9,7 +9,7 @@
     </h5>
   </div>
   <div class="card-body p-0 table-responsive">
-    <table class="table table-sm table-borderless table-striped mb-0">
+    <table class="table table-sm table-borderless table-striped text-nowrap mb-0">
       <tr>
         <th style="width: 30%;">ICAO / IATA @lang('DBasic::common.type')</th>
         <td>{{ $aircraft->icao }} / {{ $aircraft->iata }}</td>
@@ -72,9 +72,9 @@
       @endif
     </table>
   </div>
-  @if($aircraft->fuel_onboard > 0 || $aircraft->landing_time)
+  @if($aircraft->fuel_onboard->local() > 0 || $aircraft->landing_time)
     <div class="card-footer p-0 px-1 small fw-bold">
-      @if($aircraft->fuel_onboard > 0)
+      @if($aircraft->fuel_onboard->local() > 0)
         <span class="float-end">
           @lang('DBasic::common.fuelob'): {{ DB_ConvertWeight($aircraft->fuel_onboard, $units['fuel']) }}
         </span>

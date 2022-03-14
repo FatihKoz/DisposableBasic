@@ -7,7 +7,7 @@
       </h5>
     </div>
     <div class="card-body p-0 overflow-auto table-responsive">
-      <table class="table table-borderless table-sm table-striped text-end align-middle mb-0">
+      <table class="table table-borderless table-sm table-striped text-end text-nowrap align-middle mb-0">
         @foreach($members->sortBy('username') as $member)
           <tr>
             <td class="text-start">

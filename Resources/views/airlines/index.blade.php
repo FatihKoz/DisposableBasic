@@ -2,9 +2,9 @@
 @section('title', __('DBasic::common.airlines'))
 
 @section('content')
-  <div class="row row-cols-4">
+  <div class="row row-cols-md-2 row-cols-lg-4">
     @foreach($airlines as $airline)
-      <div class="col">
+      <div class="col-md">
         <div class="card mb-2">
           <div class="card-header p-1">
             <h5 class="m-1">
@@ -13,8 +13,8 @@
               {{-- <span class="float-end flag-icon flag-icon-{{ strtolower($airline->country) }}" style="font-size: 1.1rem;"></span> --}}
             </h5>
           </div>
-          <div class="card-body p-0">
-            <table class="table table-sm table-borderless table-striped text-start align-middle mb-0">
+          <div class="card-body table-responsive p-0">
+            <table class="table table-sm table-borderless table-striped text-start text-nowrap align-middle mb-0">
               <tr>
                 <th>@lang('DBasic::common.icao')</th>
                 <td class="text-end">{{ $airline->icao }}</td>

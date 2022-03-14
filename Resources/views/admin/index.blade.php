@@ -50,23 +50,23 @@
 
   <div class="row text-center" style="margin-left:5px; margin-right:5px;">
     <div class="col-sm-12">
-      <div class="col-sm-7">
-        {{-- Aircraft Group --}}
+      <div class="col-sm-4">
         <div class="card border-blue-bottom" style="padding:5px;">
-          <b>Aircraft</b>
+          <b>Manual Awarding</b>
           <br>
-          @include('DBasic::admin.settings_table', ['group' => 'Aircraft'])
-          <span class="text-info">When enabled, module will change Aircraft states (Ground, In Use, In Flight) according to Pirep events</span>
-        </div>
-        {{-- Discord Notification Group --}}
-        <div class="card border-blue-bottom" style="padding:5px;">
-          <b>Discord</b>
-          <br>
-          @include('DBasic::admin.settings_table', ['group' => 'Discord'])
-          <span class="text-info">Create your webhook before enabling it here, also check laravel logs if the messages does not appear at your Discord Server</span>
+          @include('DBasic::admin.manual_awards')
+          {{-- <span class="text-info">Award must be defined</span> --}}
         </div>
       </div>
-      <div class="col-sm-5">
+      <div class="col-sm-4">
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Manual Payments</b>
+          <br>
+          @include('DBasic::admin.manual_payment')
+          <span class="text-info">User's Airline must have enough funds to complete the transfer</span>
+        </div>
+      </div>
+      <div class="col-sm-4">
         {{-- Manual Aircraft State Fix --}}
         <div class="card border-blue-bottom" style="padding:5px;">
           <b>Fix Aircraft State</b>
@@ -86,25 +86,36 @@
           </div>
           <span class="text-danger"><b>If the aircraft has an active (in-progress) PIREP, it gets CANCELLED too !!!</b></span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row text-center" style="margin-left:5px; margin-right:5px;">
+    <div class="col-sm-12">
+      <div class="col-sm-7">
+        {{-- Discord Notification Group --}}
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Discord</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'Discord'])
+          <span class="text-info">Create your webhook before enabling it here, also check laravel logs if the messages does not appear at your Discord Server</span>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        {{-- Aircraft Group --}}
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Aircraft</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'Aircraft'])
+          <span class="text-info">When enabled, module will change Aircraft states (Ground, In Use, In Flight) according to Pirep events</span>
+        </div>
+        {{-- Stable Approach Plugin Settings --}}
         <div class="card border-blue-bottom" style="padding:5px;">
           <b>Stable Approach Plugin</b>
           <br>
           @include('DBasic::admin.settings_table', ['group' => 'Stable Approach'])
           <span class="text-info">When enabled, module will be able to receive reports sent by Stable Approach plugin</span>
         </div>
-        {{-- IVAO and VATSIM Related Settings --}}
-        {{--}}
-          <div class="card border-blue-bottom" style="padding:5px;">
-            <b>IVAO</b>
-            <br>
-            @include('DBasic::admin.settings_table', ['group' => 'IVAO'])
-          </div>
-          <div class="card border-blue-bottom" style="padding:5px;">
-            <b>VATSIM</b>
-            <br>
-            @include('DBasic::admin.settings_table', ['group' => 'VATSIM'])
-          </div>
-        {{--}}
       </div>
     </div>
   </div>

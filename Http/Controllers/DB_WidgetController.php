@@ -43,7 +43,7 @@ class DB_WidgetController extends Controller
             $aircraft->airport_id = $user_location;
             $aircraft->save();
             flash()->success(__('DBasic::widgets.ta_ok_free', ['registration' => $aircraft->registration]));
-            Log::info('Disposable Basic, Aircraft Transfer | ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
+            Log::info('Disposable Basic | Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
 
             return redirect(url($current_page));
         }
@@ -136,7 +136,7 @@ class DB_WidgetController extends Controller
         // Move Asset (complete)
         $aircraft->airport_id = $user_location;
         $aircraft->save();
-        Log::info('Disposable Basic, Aircraft Transfer | ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
+        Log::info('Disposable Basic | Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
 
         return redirect(url($current_page));
     }

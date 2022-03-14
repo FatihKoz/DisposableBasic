@@ -1,4 +1,4 @@
-<table class="table table-sm table-borderless table-striped text-center align-middle mb-0">
+<table class="table table-sm table-borderless table-striped text-center text-nowrap align-middle mb-0">
   <thead>
     <tr>
       <th class="text-start">@lang('DBasic::common.flightno')</th>
@@ -12,12 +12,12 @@
       @ability('admin', 'admin-access')
         <th>@lang('DBasic::common.score')</th>
         <th>@lang('DBasic::common.lrate')</th>
+        @if(Theme::getSetting('gen_stable_approach'))
+          <th>FDM Result</th>
+        @endif
       @endability
       <th>@lang('DBasic::common.pilot')</th>
       <th class="text-end">@lang('DBasic::common.submitted')</th>
-      @ability('admin', 'admin-access')
-        <th class="text-end">FDM Result</th>
-      @endability
     </tr>
   </thead>
   <tbody>
@@ -28,6 +28,18 @@
             <a href="{{ route('frontend.pireps.show', [$pirep->id]) }}"><i class="fas fa-info-circle me-1"></i></a>
           @endability
           {{ optional($pirep->airline)->code.' '.$pirep->flight_number }}
+          {{--}}
+          @ability('admin', 'admin-user')
+            @if($DSpecial && filled($pirep->route_code) && filled($pirep->route_leg))
+              <a href="{{ route('DSpecial.tour_remove', [$pirep->id]) }}">
+                <i class="fas fa-exclamation-circle text-danger mx-1"
+                  onclick="return confirm('Are you really sure ?\nRemoving tour details from the pirep is irreversible !!!')"
+                  title="Remove Tour details from Pirep !">
+                </i>
+              </a>
+            @endif
+          @endability
+          {{--}}
         </th>
         <td class="text-start">
           <a href="{{ route('frontend.airports.show', [$pirep->dpt_airport_id]) }}" title="{{ optional($pirep->dpt_airport)->name }}">
@@ -55,6 +67,9 @@
         @ability('admin', 'admin-access')
           <td>{{ $pirep->score }}</td>
           <td>@if($pirep->landing_rate) {{ $pirep->landing_rate.' ft/min' }} @endif</td>
+          @if(Theme::getSetting('gen_stable_approach'))
+            <td>@widget('DBasic::StableApproach', ['pirep' => $pirep])</td>
+          @endif
         @endability
         <td>
           <a href="{{ route('frontend.users.show.public', [$pirep->user_id]) }}">{{ optional($pirep->user)->name_private }}</a>
@@ -62,9 +77,6 @@
         <td class="text-end">
           {{ $pirep->submitted_at->diffForHumans().' | '.$pirep->submitted_at->format('d.M') }}
         </td>
-        @ability('admin', 'admin-access')
-          <td class="text-end">@widget('DBasic::StableApproach', ['pirep' => $pirep])</td>
-        @endability
       </tr>
     @endforeach
   </tbody>

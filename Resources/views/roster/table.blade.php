@@ -1,4 +1,4 @@
-<table class="table table-sm table-borderless table-striped text-start mb-0 align-middle">
+<table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0 align-middle">
   <tr>
     <th>@lang('common.name')</th>
     <th>@lang('DBasic::common.rank')</th>

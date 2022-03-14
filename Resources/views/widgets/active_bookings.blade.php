@@ -7,7 +7,7 @@
       </h5>
     </div>
     <div class="card-body p-0 overflow-auto table-responsive">
-      <table class="table table-borderless table-sm table-striped text-start align-middle mb-0">
+      <table class="table table-borderless table-sm table-striped text-start text-nowrap align-middle mb-0">
         <tr>
           @if(!$bids)
             <th>@lang('DBasic::common.aircraft')</th>
@@ -19,28 +19,37 @@
           <th class="text-end">@lang('DBasic::common.expire')</th>
         </tr>
         @foreach($active_bookings as $booking)
-          <tr>
-            @if(!$bids)
+          @if($booking->flight)
+            <tr>
+              @if(!$bids)
+                <td>
+                  <a href="{{ route('DBasic.aircraft', [$booking->aircraft->registration]) }}" title="{{ optional($booking->aircraft)->name }}">{{ optional($booking->aircraft)->ident }}</a>
+                </td>
+              @endif
               <td>
-                <a href="{{ route('DBasic.aircraft', [$booking->aircraft->registration]) }}" title="{{ $booking->aircraft->name }}">{{ $booking->aircraft->ident }}</a>
+                <a href="{{ route('frontend.flights.show', [$booking->flight_id]) }}" title="{{ $booking->flight->ident }}">{{ optional($booking->flight->airline)->code.' '.$booking->flight->flight_number }}</a>
               </td>
-            @endif
-            <td>
-              <a href="{{ route('frontend.flights.show', [$booking->flight_id]) }}" title="{{ $booking->flight->ident }}">{{ optional($booking->flight->airline)->code.' '.$booking->flight->flight_number }}</a>
-            </td>
-            <td>
-              <a href="{{ route('frontend.airports.show', [$booking->flight->dpt_airport_id]) }}" title="{{ optional($booking->flight->dpt_airport)->name }}">{{ $booking->flight->dpt_airport_id }}</a>
-            </td>
-            <td>
-              <a href="{{ route('frontend.airports.show', [$booking->flight->arr_airport_id]) }}" title="{{ optional($booking->flight->arr_airport)->name }}">{{ $booking->flight->arr_airport_id }}</a>
-            </td>
-            <td>
-              <a href="{{ route('frontend.profile.show', [$booking->user_id]) }}">{{ $booking->user->name_private }}</a>
-            </td>
-            <td class="text-end">
-              {{ $booking->created_at->addHours($expire)->diffForHumans() }}
-            </td>
-          </tr>
+              <td>
+                <a href="{{ route('frontend.airports.show', [$booking->flight->dpt_airport_id]) }}" title="{{ optional($booking->flight->dpt_airport)->name }}">{{ $booking->flight->dpt_airport_id }}</a>
+              </td>
+              <td>
+                <a href="{{ route('frontend.airports.show', [$booking->flight->arr_airport_id]) }}" title="{{ optional($booking->flight->arr_airport)->name }}">{{ $booking->flight->arr_airport_id }}</a>
+              </td>
+              <td>
+                <a href="{{ route('frontend.profile.show', [$booking->user_id]) }}">{{ $booking->user->name_private }}</a>
+              </td>
+              <td class="text-end">
+                @ability('admin', 'admin-access')
+                  @if(!$bids) 
+                    <a href="{{ route('frontend.simbrief.briefing', [$booking->id]) }}" target="_blank">
+                      <i class="fas fa-info-circle text-secondary" title="Click to view Briefing"></i>
+                    </a>
+                  @endif
+                @endability
+                {{ $booking->created_at->addHours($expire)->diffForHumans() }}
+              </td>
+            </tr>
+          @endif
         @endforeach
       </table>
     </div>

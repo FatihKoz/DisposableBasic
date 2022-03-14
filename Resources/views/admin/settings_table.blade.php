@@ -15,6 +15,7 @@
                   @foreach($values as $value)
                     <option value="{{ $value }}" @if($st->value === $value || !filled($st->value) && $st->default === $value) selected @endif>{{ $value }}</option>
                   @endforeach
+                </select>
               @else
                 <input
                   class="form-control"

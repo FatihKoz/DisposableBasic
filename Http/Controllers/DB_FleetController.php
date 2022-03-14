@@ -6,6 +6,8 @@ use App\Contracts\Controller;
 use App\Models\Aircraft;
 use App\Models\Pirep;
 use App\Models\Subfleet;
+use App\Services\UserService;
+use Illuminate\Support\Facades\Auth;
 use Modules\DisposableBasic\Services\DB_FleetServices;
 use Modules\DisposableBasic\Services\DB_StatServices;
 use Modules\DisposableSpecial\Models\DS_Maintenance;
@@ -15,10 +17,21 @@ class DB_FleetController extends Controller
     // Fleet
     public function index()
     {
+        // User Based Fleet Display
+        // Follow phpVMS Settings
+        $option = (setting('pireps.restrict_aircraft_to_rank', false) || setting('pireps.restrict_aircraft_to_typerating', false)) ? true : false;
+        // Use Module Setting
+        // $option = DB_Setting('dbasic.fleet_user_aircraft', true);
+        $user = Auth::user();
+        $userSvc = app(UserService::class);
+        $user_based_fleet = $userSvc->getAllowableSubfleets($user)->pluck('id')->toArray();
+
         $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
         $with = ['airline', 'subfleet'];
 
-        $aircraft = Aircraft::withCount($withCount)->with($with)->orderby('icao')->orderby('registration')->paginate(50);
+        $aircraft = Aircraft::withCount($withCount)->with($with)->when($option, function ($query) use ($user_based_fleet) {
+            return $query->whereIn('subfleet_id', $user_based_fleet);
+        })->orderby('icao')->orderby('registration')->paginate(50);
 
         return view('DBasic::fleet.index', [
             'aircraft' => $aircraft,

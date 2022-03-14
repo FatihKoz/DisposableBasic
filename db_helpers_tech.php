@@ -1,10 +1,8 @@
 <?php
 
-use App\Models\Pirep;
 use Illuminate\Support\Facades\DB;
 use Modules\DisposableBasic\Models\DB_Runway;
 use Modules\DisposableBasic\Models\DB_Spec;
-use Modules\DisposableBasic\Models\DB_Tech;
 
 // Get Average Taxi Time for given airport
 // Return numeric string
@@ -87,110 +85,3 @@ if (!function_exists('DB_GetSpecs_ICAO')) {
         return filled($specs) ? $specs : null;
     }
 }
-
-/*
-if (!function_exists('Dispo_GetICAOTech')) {
-  // Get Technical Details of an ICAO Type
-  function Dispo_GetICAOTech($icao = null) {
-    $tech = Disposable_Tech::where(['icao' => $icao, 'active' => true])->first();
-    return $tech;
-  }
-}
-
-if (!function_exists('Dispo_CheckWeights')) {
-  // Check Weights of a Pirep According to Specs
-  // Return formatted string (with html tags)
-  function Dispo_CheckWeights($pirepid, $slug) {
-    if (stripos($slug, '-weight') !== false)
-    {
-      if ($slug === 'ramp-weight') { $specselect = 'mrw';}
-      elseif ($slug === 'takeoff-weight') { $specselect = 'mtow';}
-      elseif ($slug === 'landing-weight') { $specselect = 'mlw';}
-
-      if ($pirepid && $slug) {
-        $pirepwgt = DB::table('pirep_field_values')->select('id', 'value')->where(['pirep_id' => $pirepid, 'slug' => $slug])->first();
-        $pirepac = DB::table('pirep_field_values')->select('id', 'value')->where(['pirep_id' => $pirepid, 'slug' => 'aircraft'])->first();
-      }
-
-      if (isset($pirepac) && isset($specselect)) {
-        $spec_pirep = Pirep::with('aircraft')->select('id', 'aircraft_id')->where('id', $pirepid)->first();
-        $specs = Dispo_GetAcSpecs($spec_pirep->aircraft);
-        foreach ($specs as $spec) {
-          if (filled($spec->stitle) && stripos($pirepac->value, $spec->stitle) !== false) { $specwgt = $spec->$specselect; }
-        }
-      }
-
-      if (isset($pirepwgt) && setting('units.weight') === 'kg') {
-        $pirepwgt->value = round(floatval($pirepwgt->value) / 2.20462262185, 2) ;
-      }
-
-      if (isset($pirepwgt) && isset($specwgt) && floatval($pirepwgt->value) > $specwgt) {
-        return '<span class="badge badge-danger ml-1 mr-1" title="Max: '.number_format($specwgt).' '.setting('units.weight').'">OVERWEIGHT !</span>';
-      }
-    }
-  }
-}
-
-if (!function_exists('Dispo_Flaps')) {
-  // Check Flap and Gear Speeds
-  // Return formatted string (with html tags)
-  function Dispo_Flaps($aircraft_icao, $log_value) {
-    // Check if this is a flap or gear related log entry
-    $result = $log_value;
-    $check_type = null;
-    if (stripos($log_value, 'Gear Up') !== false || stripos($log_value, 'Gear Down') !== false) {
-      $check_type = 'GEAR';
-    } elseif (stripos($log_value, 'Flaps set to') !== false) {
-      $check_type = 'FLAP';
-    } elseif (stripos($log_value, 'Landing Speed') !== false) {
-      $check_type = 'TIRE';
-    }
-
-    if (isset($check_type)) {
-      $first_seperator = strpos($log_value, ',');
-      $last_seperator = strrpos($log_value, ',');
-      $search_array = array('kts', ',');
-      $ops_info = substr($log_value, $first_seperator);
-      $ops_speed = trim(str_replace($search_array,'',substr($log_value, $last_seperator)));
-    }
-
-    // Gear Checks
-    // Example: Gear Down, 3974ft, 198 kts
-    if ($check_type === 'GEAR') {
-      $ops_name = substr($log_value, 0, $first_seperator);
-      // Check the operation type and get gear speed from DB
-      if ($ops_name === 'Gear Up') { $ops_type = 'gear_retract'; } else { $ops_type = 'gear_extend'; }
-      $gear = Disposable_Tech::where(['icao' => $aircraft_icao, 'active' => 1])->select($ops_type.' as speed')->first();
-      // Build new result and add overspeed warning if necessary
-      if (isset($gear) && $ops_speed > 0 && $gear->speed > 0 && $ops_speed > $gear->speed) {
-        $warning_badge = "<span class='badge badge-danger ml-1 mr-1' title='Max: ".$gear->speed." kts'>GEAR OVERSPEED !</span>";
-        $result = $log_value.' '.$warning_badge;
-      }
-    }
-
-    // Flap Checks
-    // Example: Flaps set to CONF 1+F, 3994ft, 234 kts
-    if ($check_type === 'FLAP') {
-      $flap_detent = str_replace('Flaps set to ','',substr($log_value, 0, $first_seperator));
-      // Get Flap Speed Limit From DB
-      $flaps = Disposable_Tech::where(['icao' => $aircraft_icao, 'active' => 1])->first();
-      if (isset($flaps)) { $maxspeed = $flaps->flapspeeds()->get($flap_detent); }
-      // Build new result and add overspeed warning if necessary
-      $result = 'Flaps '.$flap_detent.$ops_info;
-      if (isset($maxspeed) && $maxspeed > 0 && $ops_speed > 0 && $ops_speed > $maxspeed) {
-        $warning_badge = "<span class='badge badge-danger ml-1 mr-1' title='Max: ".$maxspeed." kts'>FLAP OVERSPEED !</span>";
-        $result = $result.' '.$warning_badge;
-      }
-    }
-    return $result;
-  }
-}
-
-if (!function_exists('Dispo_Flap')) {
-  // Get Flap Setting name from DB for Pirep Details
-  function Dispo_Flap($aircraft_icao, $field_value) {
-    $result = $field_value;
-    return $result;
-  }
-}
-*/

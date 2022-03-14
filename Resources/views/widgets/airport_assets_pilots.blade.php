@@ -1,4 +1,4 @@
-<table class="table table-sm table-striped table-borderless text-center align-middle mb-0">
+<table class="table table-sm table-striped table-borderless text-center text-nowrap align-middle mb-0">
   <tr>
     <th class="text-start">@lang('DBasic::common.name')</th>
     <th>@lang('DBasic::common.airline')</th>

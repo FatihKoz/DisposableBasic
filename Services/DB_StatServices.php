@@ -6,7 +6,7 @@ use App\Models\Pirep;
 use App\Models\Enums\PirepSource;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\UserState;
-use App\Support\Money;
+use App\Support\Units\Distance;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -220,7 +220,7 @@ class DB_StatServices
                 $user_where['home_airport_id'] = $hub;
             }
 
-            $user_states = array(UserState::ACTIVE, UserState::ON_LEAVE);
+            $user_states = [UserState::ACTIVE, UserState::ON_LEAVE];
             $whereIn_array = DB::table('users')->where($user_where)->whereIn('state', $user_states)->pluck('id')->toArray();
         }
 
@@ -313,7 +313,7 @@ class DB_StatServices
             } elseif ($type === 'lrate' || $type === 'lrate_low' || $type === 'lrate_high') {
                 $item->totals = number_format($item->totals) . ' ft/min';
             } elseif ($type === 'distance') {
-                $item->totals = DB_ConvertDistance($item->totals);
+                $item->totals = DB_ConvertDistance(new Distance($item->totals, 'nmi'));
             } else {
                 $item->totals = number_format($item->totals);
             }

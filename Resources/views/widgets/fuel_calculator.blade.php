@@ -23,16 +23,16 @@
         </div>
         <div class="modal-body border-1 p-1">
           <form class="form-group" id="fuelcalculator">
-            <div class="row row-cols-3 mb-1">
-                <div class="col">
+            <div class="row mb-1">
+                <div class="col-lg">
                   <label for="source">Source</label>
                   <input id="source" class="form-control form-control-sm" type="text" value="{{ $fuel_data['source'] }}" disabled/>
                 </div>
-                <div class="col">
+                <div class="col-lg">
                   <label for="flight_time">Flight Time (minutes)</label>
                   <input id="flight_time" type="number" class="form-control form-control-sm" maxlength="4"/>
                 </div>
-                <div class="col">
+                <div class="col-lg">
                   <label for="avg_fuel">Avg. Consumption (per minute)</label>
                   <div class="input-group">
                     <input id="avg_fuel" type="text" class="form-control form-control-sm" value="{{ $fuel_data['avg_pounds'] }} lbs" disabled/>
@@ -42,33 +42,29 @@
                   </div>
                 </div>
             </div>
-            <div class="row row-cols-3 mb-1">
-              <div class="col">
+            <div class="row mb-1">
+              <div class="col-lg">
                 <label for="fuel_burn">Fuel Burn</label>
                 <input id="fuel_burn" type="text" class="form-control form-control-sm" disabled/>
+                @if($is_metric)
+                  <input id="fuel_burn_kg" type="text" class="form-control form-control-sm" disabled/>
+                @endif
               </div>
-              <div class="col">
+              <div class="col-lg">
                 <label for="fuel_reserve">Reserve (30 mins)</label>
                 <input id="fuel_reserve" type="text" class="form-control form-control-sm" disabled/>
+                @if($is_metric)
+                  <input id="fuel_reserve_kg" type="text" class="form-control form-control-sm" disabled/>
+                @endif
               </div>
-              <div class="col">
+              <div class="col-lg">
                 <label for="fuel_total">Total Required</label>
                 <input id="fuel_total" type="text" class="form-control form-control-sm" disabled/>
+                @if($is_metric)
+                  <input id="fuel_total_kg" type="text" class="form-control form-control-sm" disabled/>
+                @endif
               </div>
             </div>
-            @if ($is_metric)
-              <div class="row row-cols-3 mb-0">
-                <div class="col">
-                  <input id="fuel_burn_kg" type="text" class="form-control form-control-sm" disabled/>
-                </div>
-                <div class="col">
-                  <input id="fuel_reserve_kg" type="text" class="form-control form-control-sm" disabled/>
-                </div>
-                <div class="col">
-                  <input id="fuel_total_kg" type="text" class="form-control form-control-sm" disabled/>
-                </div>
-              </div>
-            @endif
           </form>
         </div>
         <div class="modal-footer p-1 text-right">

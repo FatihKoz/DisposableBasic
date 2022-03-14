@@ -2,9 +2,9 @@
 @section('title', __('DBasic::common.stats'))
 
 @section('content')
-  <div class="row row-cols-3">
+  <div class="row row-cols-lg-3">
     {{-- LEFT --}}
-    <div class="col">
+    <div class="col-lg">
       <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1">
@@ -26,7 +26,7 @@
       {{-- Leaderboard Navigation --}}
       @if($stats_pirep)
         <ul class="nav nav-pills nav-fill nav-justify mb-2" id="leaderboard-pills" role="tablist">
-          <li class="nav-item px-1" role="presentation">
+          <li class="nav-item px-1 mb-1" role="presentation">
             <button class="nav-link active p-1" id="overall-tab" data-bs-toggle="pill" data-bs-target="#overall" type="button" role="tab" aria-controls="overall" aria-selected="true">@lang('DBasic::widgets.lb_overall')</button>
           </li>
           <li class="nav-item px-1" role="presentation">
@@ -47,12 +47,18 @@
       @endif
     </div>
     {{-- MIDDLE --}}
-    <div class="col">
-      @widget('DBasic::LeaderBoard', ['source' => 'dep', 'count' => 3])
-      @widget('DBasic::LeaderBoard', ['source' => 'arr', 'count' => 3])
+    <div class="col-lg">
+      <div class="row row-cols-md-2 row-cols-lg-1">
+        <div class="col-md">
+          @widget('DBasic::LeaderBoard', ['source' => 'dep', 'count' => 3])
+        </div>
+        <div class="col-md">
+          @widget('DBasic::LeaderBoard', ['source' => 'arr', 'count' => 3])
+        </div>
+      </div>
     </div>
     {{-- RIGHT --}}
-    <div class="col">
+    <div class="col-lg">
       @if($stats_pirep)
         <div class="card mb-2">
           <div class="card-header p-1">

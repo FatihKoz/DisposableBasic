@@ -15,7 +15,7 @@ class Pirep_Cancelled
             $aircraft = $event->pirep->aircraft;
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
-            Log::debug('Disposable Basic, Pirep:' . $event->pirep->id . ' CANCELLED, Changed STATE of ' . $aircraft->registration . ' to PARKED');
+            Log::debug('Disposable Basic | Pirep:' . $event->pirep->id . ' CANCELLED, Changed STATE of ' . $aircraft->registration . ' to PARKED');
         }
     }
 }

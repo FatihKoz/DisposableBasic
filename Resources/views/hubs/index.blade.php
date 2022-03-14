@@ -5,9 +5,9 @@
   @if(!$hubs->count())
     <div class="alert alert-info mb-1 p-1 px-2 fw-bold">No Hubs!</div>
   @else
-    <div class="row row-cols-3">
+    <div class="row row-cols-md-2 row-cols-lg-3 row-cols-xxl-4">
       @foreach($hubs as $hub)
-        <div class="col">
+        <div class="col-md">
           <div class="card mb-2">
             <div class="card-header p-1">
               <h5 class="m-1">
@@ -17,7 +17,7 @@
               </h5>
             </div>
             <div class="card-body p-0 table-responsive">
-              <table class="table table-sm table-borderless table-striped text-start align-middle mb-0">
+              <table class="table table-sm table-borderless table-striped text-start text-nowrap align-middle mb-0">
                 <tr>
                   <th>@lang('DBasic::common.icao')</th>
                   <td class="text-end">{{ $hub->icao }}</td>

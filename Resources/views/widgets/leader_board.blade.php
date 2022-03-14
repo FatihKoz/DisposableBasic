@@ -7,7 +7,7 @@
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">
-      <table class="table table-sm table-striped table-borderless text-start align-middle mb-0">
+      <table class="table table-sm table-striped table-borderless text-start text-nowrap align-middle mb-0">
         @if($count > 1)
           <tr>
             <th>@lang('DBasic::common.name')</th>

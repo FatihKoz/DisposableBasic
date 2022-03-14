@@ -2,12 +2,15 @@
 
 phpVMS v7 module for Basic VA features
 
-Compatible with latest development (dev) builds of phpVMS v7 as described below, which are released after **10.FEB.22**.  
+Compatible with phpVMS v7 builds as described below;
 
-* Module version v3.0.19 is the latest version with php7.4 and laravel8 support.
-* Module versions starting with v3.1.xx will support only php8 and laravel9 as per phpVMS v7 improvements.
+* Module versions starting with v3.1.xx supports only php8 and laravel9
+* Minimum required phpVMS v7 version is phpVms `7.0.0-Laravel9` for v3.1.xx
+* Module version v3.0.19 is the latest version with php7.4 and laravel8 support
+* Latest available phpVMS v7 version is phpVms `7.0.0-dev+220307.00bf18` (07.MAR.22) for v3.0.19
+* Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220211.78fd83` (11.FEB.22) for v3.0.19
 
-Module blades are designed for themes using **Bootstrap v5.x** and FontAwesome v5.x (not v6) icons.
+Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
 
 This module pack aims to cover basic needs of any Virtual Airline with some new pages, widgets and backend tools. Provides;
 
@@ -21,6 +24,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Configurable JumpSeat Travel and Aircraft Transfer possibilities for pilots at frontend
 * Daily random flight assignments/offerings
 * Fleet/Flights/Pireps Maps (based on leaflet, mostly customizable)
+* Manual Awarding and Manual Payment features
 * Some widgets to enhance any page/layout as per virtual airline needs
 
 ## Installation and Updates
@@ -28,7 +32,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Manual Install : Upload contents of the package to your phpvms root `/modules` folder via ftp or your control panel's file manager
 * GitHub Clone : Clone/pull repository to your phpvms root `/modules/DisposableBasic` folder
 * PhpVms Module Installer : Go to admin -> addons/modules , click Add New , select downloaded file then click Add Module
-
+*
 * Go to admin > addons/modules enable the module
 * Go to admin > dashboard (or /update) to trigger module migrations
 * When migration is completed, go to admin > maintenance and clean `application` cache
@@ -132,9 +136,13 @@ These definitions can be per aircraft, per subfleet or per icao type and used bo
 
 If you are not developing your own pirep checks and/or not using Disposable Special/Extended module solutions you can simply skip using Maintenance periods etc. They are here just for backward compatibility and some va's already based their custom code on them.
 
-For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old but still usefull for most airports. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
+For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old (from the end of 2020, Airac 2020/14) but still usefull for most airports. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
 
 As an additional feature, module provides a quick database health check here. Technically it is a helper for you to solve problems, like finding out missing airports or broken relationships 'caused by either import problems or hard deleting records from your database. Provided results are mostly for usage in your sql queries to fix things manually when needed.
+
+Module also provides "Manual Awarding" feature, you can either define a blank award (with provided award class, keep it inactive) as you wish and then assign it your pilots manually. Or when needed you can assign a real award too, imagine a pilot finishes a tour some hours late and automatic awarding does not work anymore etc.
+
+For "Manual Payment" selected user's airline must have enough funds for the transfer, creating money out of thin air is not possible.
 
 ## Stable Approach Plugin Support
 
@@ -190,6 +198,7 @@ When needed, you can use below widgets to enhance the data provided by your page
 @widget('DBasic::FlightBoard')
 @widget('DBasic::FlightTimeMultiplier')
 @widget('DBasic::FuelCalculator')
+@widget('DBasic::JournalDetails')
 @widget('DBasic::JumpSeat')
 @widget('DBasic::LeaderBoard')
 @widget('DBasic::Map')
@@ -307,6 +316,20 @@ Widget uses either that aircraft's pirep average consumption or if not flown bef
 Also it is possible to define an ICAO type based manufacturer consumption value (via module admin interface), then it will be used as primary source.
 
 Considering the basic calculation, provided results should not be used for airline ops. Can be used for general aviation or for short range trips etc.
+
+### Journal Details
+
+Provides latest transaction details and overall summary of a user's journal.
+
+```php
+@widget('DBasic::JournalDetails', ['user' => $user->id, 'limit' => 25])
+```
+
+* `'user'` should be a user's id, when left blank widget will use current authenticated user.
+* `'limit'` can be any number to get the latest details, logically last 15 or 20 is more than enough to provide some details
+* `'card'` can be either `true` or `false` which will display a card or just plain text. Modal will be always available by clicking the balance
+
+Above example can be used at Profile > index.blade, or anywhere you have the `$user` collection ready.
 
 ### Jumpseat Travel
 
@@ -478,6 +501,16 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+11.MAR.22
+
+* Module is now only compatible with php8 and Laravel9
+* All module blades changed to provide better support mobile devices
+* Module helpers updated to meet new core requirements
+* Module controller and services updated to meet new core requirements
+* Some more failsafe checks added to cover admin/user errors
+* Added Journal Details widget
+* Added Manual Awarding and Manual Payment features
 
 01.MAR.22
 

@@ -11,7 +11,7 @@
       </h5>
     </div>
     <div class="card-body p-0 table-responsive">
-      <table class="table table-sm table-borderless table-striped text-center align-middle mb-0">
+      <table class="table table-sm table-borderless table-striped text-center text-nowrap align-middle mb-0">
         <tr>
           <th class="text-start">@lang('DBasic::common.rank_title')</th>
           <th>@lang('DBasic::common.minhour')</th>
@@ -49,11 +49,11 @@
   </div>
 
   {{-- Rank Boxes --}}
-  <div class="row row-cols-3">
+  <div class="row row-cols-lg-3">
     @foreach($ranks as $rank)
       <div id="sfr_{{ $rank->id }}" class="collapse">
         @if($rank->subfleets->count() > 0)
-          <div class="col">
+          <div class="col-lg">
             <div class="card mb-2">
               <div class="card-header p-1">
                 <h5 class="m-1">

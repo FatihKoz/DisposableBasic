@@ -15,8 +15,9 @@ class DB_PirepController extends Controller
         $pireps = Pirep::with($eager_load)->where('state', '!=', PirepState::IN_PROGRESS)->orderby('submitted_at', 'desc')->paginate(50);
 
         return view('DBasic::pireps.index', [
-            'pireps' => $pireps,
-            'units'  => DB_GetUnits(),
+            'DSpecial' => DB_CheckModule('DisposableSpecial'),
+            'pireps'   => $pireps,
+            'units'    => DB_GetUnits(),
         ]);
     }
 }

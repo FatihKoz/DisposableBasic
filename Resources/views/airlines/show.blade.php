@@ -4,7 +4,7 @@
 @section('content')
   <div class="row">
     {{-- LEFT --}}
-    <div class="col-9">
+    <div class="col-lg-9">
       {{-- Navigation --}}
       <div class="nav nav-pills nav-justified mb-3" id="airline-nav" role="tablist">
         @if($subfleets->count() > 0)
@@ -43,7 +43,7 @@
       </div>
     </div>
     {{-- RIGHT --}}
-    <div class="col-3">
+    <div class="col-lg-3">
       {{-- Airline Details --}}
       <div class="card mb-2">
         <div class="card-header p-1">
@@ -53,7 +53,7 @@
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
-          <table class="table table-sm table-borderless table-striped text-start mb-0">
+          <table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0">
             <tr>
               <th style="width:30%;">@lang('common.name')</th>
               <td class="text-end">{{ $airline->name }}</td>
@@ -66,10 +66,12 @@
               <th>@lang('DBasic::common.iata')</th>
               <td class="text-end">{{ $airline->iata }}</td>
             </tr>
-            <tr>
-              <th>@lang('common.country')</th>
-              <td class="text-end">{{ $country->alpha2($airline->country)['name'] ?? '' }} {{ ' ('.strtoupper($airline->country).')' }}</td>
-            </tr>
+            @if(strlen($airline->country) === 2)
+              <tr>
+                <th>@lang('common.country')</th>
+                <td class="text-end">{{ $country->alpha2($airline->country)['name'] ?? '' }} {{ ' ('.strtoupper($airline->country).')' }}</td>
+              </tr>
+            @endif
           </table>
         </div>
         @if(filled($airline->logo))
@@ -79,7 +81,7 @@
         @endif
       </div>
       {{-- Two Map side by side positioning --}}
-      <div class="row">
+      <div class="row mb-2">
         <div class="col">
           @widget('DBasic::Map', ['source' => $airline->id])
         </div>
@@ -96,7 +98,7 @@
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
-          <table class="table table-sm table-borderless table-striped text-start mb-0">
+          <table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0">
             @foreach($finance as $key => $value)
               <tr>
                 <th>{{ $key }}</th>
@@ -115,7 +117,7 @@
           </h5>
         </div>
         <div class="card-body p-0 table-responsive">
-          <table class="table table-sm table-borderless table-striped text-start mb-0">
+          <table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0">
             @foreach($stats_b as $key => $value)
               <tr>
                 <th>{{ $key }}</th>
