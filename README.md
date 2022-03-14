@@ -5,7 +5,7 @@ phpVMS v7 module for Basic VA features
 Compatible with phpVMS v7 builds as described below;
 
 * Module versions starting with v3.1.xx supports only php8 and laravel9
-* Minimum required phpVMS v7 version is phpVms `7.0.0-Laravel9` for v3.1.xx
+* Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220314.128480` for v3.1.xx
 * Module version v3.0.19 is the latest version with php7.4 and laravel8 support
 * Latest available phpVMS v7 version is phpVms `7.0.0-dev+220307.00bf18` (07.MAR.22) for v3.0.19
 * Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220211.78fd83` (11.FEB.22) for v3.0.19
@@ -502,7 +502,7 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
-11.MAR.22
+14.MAR.22
 
 * Module is now only compatible with php8 and Laravel9
 * All module blades changed to provide better support mobile devices
@@ -511,6 +511,7 @@ If you have duplicated blades and encounter problems after updating the module o
 * Some more failsafe checks added to cover admin/user errors
 * Added Journal Details widget
 * Added Manual Awarding and Manual Payment features
+* Spaning (Spain) translation, thanks to @arv187
 
 01.MAR.22
 
