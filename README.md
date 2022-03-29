@@ -341,12 +341,12 @@ Above example can be used at Profile > index.blade, or anywhere you have the `$u
 Adds frontend pilot self transfer capability to phpVMS v7.
 
 ```php
-@widget('DBasic::JumpSeat', ['base' => 0.25, 'price' => 'auto'])
+@widget('DBasic::JumpSeat', ['base' => 0.25, 'price' => 'auto', 'hubs' => true])
 ```
 
 * `'base'` forces the auto price system to use any given numeric value (like `0.25` cents per nautical mile)  
 * `'price'` can be `'free'` , `'auto'` or a fixed numeric value like `250`. Currency is based on your phpvms v7 setttings  
-* `'list'` can be `'hubs'` only and limits the destinations to hubs only  
+* `'hubs'` can be `true` or `false` only and limits the destinations to hubs.
 * `'dest'` can be a fixed airport ICAO code (like `'LTFG'` or `$flight->dpt_airport_id`) and removes the selection dropdown. Provides direct travel to that destination
 
 ### Leader Board
