@@ -509,7 +509,7 @@ If you have duplicated blades and encounter problems after updating the module o
 
 06.APR.22
 
-* Added ability support for module admin features
+* Added role/ability support for module backend features
 * Improved admin pages to show units as placeholders
 
 14.MAR.22
