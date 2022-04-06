@@ -48,6 +48,7 @@ class DB_SpecController extends Controller
             'aircraft'  => $aircraft,
             'allspecs'  => $all_specs,
             'spec'      => isset($spec) ? $spec : null,
+            'units'     => DB_GetUnits('full'),
         ]);
     }
 

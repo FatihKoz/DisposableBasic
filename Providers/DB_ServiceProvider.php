@@ -107,7 +107,7 @@ class DB_ServiceProvider extends ServiceProvider
         // Admin
         Route::group([
             'as'         => 'DBasic.',
-            'middleware' => ['web', 'auth', 'role:admin'],
+            'middleware' => ['web', 'auth', 'ability:admin, modules'],
             'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
             'prefix'     => 'admin',
         ], function () {

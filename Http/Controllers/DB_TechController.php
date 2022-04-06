@@ -42,6 +42,7 @@ class DB_TechController extends Controller
             'icao_types'   => $icao_types,
             'tech'         => isset($tech) ? $tech : null,
             'tech_details' => $tech_details,
+            'units'        => DB_GetUnits(),
         ]);
     }
 

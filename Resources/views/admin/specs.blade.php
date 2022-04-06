@@ -106,61 +106,61 @@
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="paxwgt">Passenger Weight</label>
-            <input name="paxwgt" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="500" value="{{ $spec->paxwgt ?? '' }}">
+            <input name="paxwgt" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="500" value="{{ $spec->paxwgt ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="bagwgt">Baggage Weight</label>
-            <input name="bagwgt" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="300" value="{{ $spec->bagwgt ?? '' }}">
+            <input name="bagwgt" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="300" value="{{ $spec->bagwgt ?? '' }}">
           </div>
         </div>
         {{-- Operational Weights --}}
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="bew">Basic Empty Weight</label>
-            <input name="bew" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="999999" value="{{ $spec->bew ?? '' }}">
+            <input name="bew" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="999999" value="{{ $spec->bew ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="dow">Dry Operating Weight (1)</label>
-            <input name="dow" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="999999" value="{{ $spec->dow ?? '' }}">
+            <input name="dow" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="999999" value="{{ $spec->dow ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mzfw">Max Zero Fuel Weight (1)</label>
-            <input name="mzfw" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="999999" value="{{ $spec->mzfw ?? '' }}">
+            <input name="mzfw" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="999999" value="{{ $spec->mzfw ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mrw">Max Ramp/Taxi Weight</label>
-            <input name="mrw" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="999999" value="{{ $spec->mrw ?? '' }}">
+            <input name="mrw" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="999999" value="{{ $spec->mrw ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mtow">Max Take Off Weight (1)</label>
-            <input name="mtow" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="999999" value="{{ $spec->mtow ?? '' }}">
+            <input name="mtow" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="999999" value="{{ $spec->mtow ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mlw">Max Landing Weight (1)</label>
-            <input name="mlw" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="999999" value="{{ $spec->mlw ?? '' }}">
+            <input name="mlw" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="999999" value="{{ $spec->mlw ?? '' }}">
           </div>
         </div>
         {{-- Design Specs --}}
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mfuel">Max Fuel Capacity (1)</label>
-            <input name="mfuel" type="number" class="form-control" placeholder="{{ setting('units.weight') }}" min="0" max="999999" value="{{ $spec->mfuel ?? '' }}">
+            <input name="mfuel" type="number" class="form-control" placeholder="{{ $units['weight'] }}" min="0" max="999999" value="{{ $spec->mfuel ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mrange">Max Range</label>
-            <input name="mrange" type="number" class="form-control" placeholder="{{ setting('units.distance') }}" min="0" max="99999" value="{{ $spec->mrange ?? '' }}">
+            <input name="mrange" type="number" class="form-control" placeholder="{{ $units['distance'] }}" min="0" max="99999" value="{{ $spec->mrange ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mceiling">Max Ceiling</label>
-            <input name="mceiling" type="number" class="form-control" placeholder="{{ setting('units.altitude') }}" min="0" max="99999" value="{{ $spec->mceiling ?? '' }}">
+            <input name="mceiling" type="number" class="form-control" placeholder="{{ $units['altitude'] }}" min="0" max="99999" value="{{ $spec->mceiling ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mspeed">Max Speed</label>
-            <input name="mspeed" type="number" class="form-control" placeholder="mach or {{ setting('units.speed') }}" min="0" step="0.01" max="9999" value="{{ $spec->mspeed ?? '' }}">
+            <input name="mspeed" type="number" class="form-control" placeholder="mach or {{ $units['speed'] }}" min="0" step="0.01" max="9999" value="{{ $spec->mspeed ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="cspeed">Optimum Speed</label>
-            <input name="cspeed" type="number" class="form-control" placeholder="mach or {{ setting('units.speed') }}" min="0" step="0.01" max="9999" value="{{ $spec->cspeed ?? '' }}">
+            <input name="cspeed" type="number" class="form-control" placeholder="mach or {{ $units['speed'] }}" min="0" step="0.01" max="9999" value="{{ $spec->cspeed ?? '' }}">
           </div>
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="mpax">Max Seat Capacity</label>

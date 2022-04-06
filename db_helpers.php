@@ -244,8 +244,9 @@ if (!function_exists('DB_GetUnits')) {
         $units['weight'] = setting('units.weight');
 
         if ($type === 'full') {
-            $units['volume'] = settings('units.volume');
-            $units['altitude'] = settings('units.altitude');
+            $units['volume'] = setting('units.volume');
+            $units['altitude'] = setting('units.altitude');
+            $units['speed'] = setting('units.speed');
         }
 
         return $units;
