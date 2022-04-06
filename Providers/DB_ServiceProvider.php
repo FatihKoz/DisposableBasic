@@ -107,23 +107,23 @@ class DB_ServiceProvider extends ServiceProvider
         // Admin
         Route::group([
             'as'         => 'DBasic.',
-            'middleware' => ['web', 'auth', 'ability:admin, modules'],
+            'middleware' => ['web', 'auth', 'ability:admin,admin-access'],
             'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
             'prefix'     => 'admin',
         ], function () {
-            Route::get('dbasic', 'DB_AdminController@index')->name('admin');
-            Route::get('dcheck', 'DB_AdminController@health_check')->name('health_check');
-            Route::match(['get', 'post'], 'dsettings_update', 'DB_AdminController@settings_update')->name('settings_update');
-            Route::match(['get', 'post'], 'dpark_aircraft', 'DB_AdminController@park_aircraft')->name('park_aircraft');
-            Route::match(['get', 'post'], 'dspecs', 'DB_SpecController@index')->name('specs');
-            Route::match(['get', 'post'], 'dspecs_store', 'DB_SpecController@store')->name('specs_store');
-            Route::match(['get', 'post'], 'dtech', 'DB_TechController@index')->name('tech');
-            Route::match(['get', 'post'], 'dtech_store', 'DB_TechController@store')->name('tech_store');
-            Route::match(['get', 'post'], 'drunway', 'DB_RunwayController@index')->name('runway');
-            Route::match(['get', 'post'], 'drunway_store', 'DB_RunwayController@store')->name('runway_store');
-            Route::post('dstable/update', 'DB_StableApproachController@update')->name('stable_update');
-            Route::post('dmanual_award', 'DB_AdminController@manual_award')->name('manual_award');
-            Route::post('dmanual_payment', 'DB_AdminController@manual_payment')->name('manual_payment');
+            Route::get('dbasic', 'DB_AdminController@index')->name('admin')->middleware('ability:admin,addons,modules');
+            Route::get('dcheck', 'DB_AdminController@health_check')->name('health_check')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'dsettings_update', 'DB_AdminController@settings_update')->name('settings_update')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'dpark_aircraft', 'DB_AdminController@park_aircraft')->name('park_aircraft')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'dspecs', 'DB_SpecController@index')->name('specs')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'dspecs_store', 'DB_SpecController@store')->name('specs_store')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'dtech', 'DB_TechController@index')->name('tech')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'dtech_store', 'DB_TechController@store')->name('tech_store')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'drunway', 'DB_RunwayController@index')->name('runway')->middleware('ability:admin,addons,modules');
+            Route::match(['get', 'post'], 'drunway_store', 'DB_RunwayController@store')->name('runway_store')->middleware('ability:admin,addons,modules');
+            Route::post('dstable/update', 'DB_StableApproachController@update')->name('stable_update')->middleware('ability:admin,addons,modules');
+            Route::post('dmanual_award', 'DB_AdminController@manual_award')->name('manual_award')->middleware('ability:admin,addons,modules');
+            Route::post('dmanual_payment', 'DB_AdminController@manual_payment')->name('manual_payment')->middleware('ability:admin,addons,modules');
         });
     }
 
