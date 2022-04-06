@@ -507,6 +507,14 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+06.APR.22
+
+* Added ability support for module admin features
+* Improved Tour Reports
+* Improved Tour Maps
+* Improved Italian translation (Thanks to @Fabietto996)
+* Improved Cron Database Cleanup Feature
+
 14.MAR.22
 
 * Module is now only compatible with php8 and Laravel9
