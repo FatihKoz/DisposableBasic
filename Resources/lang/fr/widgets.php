@@ -62,7 +62,7 @@ return [
     'lb_month_a'   => 'Compagnie (Mensuel)',
     'lb_month_p'   => 'Pilote (Mensuel)',
     'lb_year_a'    => 'Compagnie (Annuel)',
-    'lb_year_p'    => 'Pilot (Annuel)',
+    'lb_year_p'    => 'Pilote (Annuel)',
     // Random Flights
     'random_flights' => 'Vols Aléatoires',
     // SunriseSunset
@@ -78,13 +78,13 @@ return [
     'pireps_ack' => 'Pireps (Acceptés)',
     'pireps_rej' => 'Pireps (Rejetés)',
     'atime'      => 'Temps moyen porte à porte',
-    'ttime'      => 'Temms total porte à porte',
+    'ttime'      => 'Temps total porte à porte',
     'afuel'      => 'Consommation Moyenne',
     'hfuel'      => 'Consommation Moyenne/Heure',
     'tfuel'      => 'Consommation Totale',
     'adist'      => 'Distance Moyenne',
     'hdist'      => 'Distance Moyenne/Heure',
-    'tdist'      => 'Distance Total',
+    'tdist'      => 'Distance Totale',
     'alrate'     => 'Taux de Touché Moyen',
     'ascore'     => 'Score Moyen',
     // TransferAircraft
