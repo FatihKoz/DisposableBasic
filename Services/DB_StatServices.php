@@ -60,7 +60,7 @@ class DB_StatServices
         } elseif ($period === 'currentm' || $period === 'lastm' || $period === 'prevm') { // Months
             $s_date = $b_date->startOfMonth();
             $e_date = $b_date->copy()->endOfMonth();
-            $personal['period_text'] = $b_date->format('F');
+            $personal['period_text'] = __('DBasic::dates.'.$b_date->format('m'));
         } elseif (is_numeric($period)) { // Days
             $s_date = $b_date->copy()->startOfDay()->subdays($period);
             $e_date = $now->endOfDay();
