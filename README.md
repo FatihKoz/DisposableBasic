@@ -509,7 +509,7 @@ If you have duplicated blades and encounter problems after updating the module o
 
 25.APR.22
 
-* Fixed French translation (thanks to @loko06320)
+* Fixed French translation, thanks to @loko06320
 * Added month name translations and simple localization capability for dates
   *Only used in Personal Stats Widget at the moment*
 
