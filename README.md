@@ -507,6 +507,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+11.JUN.22
+
+* Fixed a conversion error in Theme Helpers (fuel price conversion from lbs to kgs)
+
 25.APR.22
 
 * Fixed French translation, thanks to @loko06320

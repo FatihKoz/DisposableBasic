@@ -200,7 +200,7 @@ if (!function_exists('DB_FuelCost')) {
         $currency = isset($currency) ? $currency : setting('units.currency');
 
         if ($unit === 'kg') {
-            $cost = $cost / 2.20462262185;
+            $cost = $cost / 0.45359237;
         }
         $cost = number_format($cost, 3) . ' ' . ucfirst($currency) . '/' . ucfirst($unit);
 
