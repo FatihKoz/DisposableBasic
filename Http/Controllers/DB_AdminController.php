@@ -76,6 +76,10 @@ class DB_AdminController extends Controller
         $user = User::with('journal', 'airline.journal')->where('id', $user_id)->first();
         $amount = Money::createFromAmount($amount);
 
+        // Debug values
+        // Log::debug('Disposable Basic | Bonus Payment Amount: ' . $amount);
+        // Log::debug('Disposable Basic | Bonus Payment Airline Balance: ' . $user->airline->journal->balance);
+
         if (filled($user) && $user->airline->journal->balance > $amount) {
             // Payment Details
             $financeSvc = app(FinanceService::class);
@@ -107,6 +111,7 @@ class DB_AdminController extends Controller
             Log::info('Disposable Basic | Bonus Payment of ' . $amount . ' to ' . $user->name_private . ' completed by ' . Auth::user()->name_private);
         } else {
             flash()->error('Airline balance is NOT enough to complete wire transfer !');
+            Log::info('Disposable Basic | Bonus Payment Result: Rejected, Not Enough Funds');
         }
 
         return back()->withInput();
