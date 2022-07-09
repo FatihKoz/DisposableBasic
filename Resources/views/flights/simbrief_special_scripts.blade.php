@@ -1,8 +1,9 @@
 <script type="text/javascript">
   // Read selection value (json string) and send the results to proper form fields
   // Also re-arrange acdata json string for SimBrief
-  const paxwgt = Math.round({{ $pax_weight }} + {{ $bag_weight }});
-  const paxfig = Number({{ $tpaxfig ?? 0 }})
+  const paxwgt = Math.round({{ $pax_weight }});
+  const bagwgt = Math.round({{ $bag_weight }});
+  const paxfig = Number({{ $tpaxfig ?? 0 }});
   const unitwgt = String("{{ $units['weight'] }}");
   const kgstolbs = Number(2.20462262185);
   const rvr = String("{{ $sb_rvr ?? '500' }}");
@@ -11,7 +12,7 @@
 
   // Convert weights according to SimBrief requirements
   // All Weights must be in thousand pounds with 3 digits precision like 19.362
-  // Only PAX Weight must be an integer like 189
+  // Only PAX/BAG Weight must be an integer like 189
   function ConvertWeight(weight_value = null, type = null, base_weight = unitwgt) {
     if (type === 'pax' && base_weight === 'kg') {
       weight_value = (weight_value * kgstolbs).toFixed(0);
@@ -40,7 +41,7 @@
       document.getElementById('maxfuel').value = '--';
       document.getElementById('fuelfactor').value = '';
       document.getElementById('type').value = actype;
-      document.getElementById('acdata').value = '{"extrarmk":"RVR\/' + rvr +' RMK\/TCAS ' + rmktext + '","paxwgt":' + paxwgt + '}';
+      document.getElementById('acdata').value = '{"extrarmk":"RVR\/' + rvr +' RMK\/TCAS ' + rmktext + '","paxwgt":' + paxwgt + ',"bagwgt":' + bagwgt + '}';
       document.getElementById('tdPayload').title = 'Calculation Not Possible !';
     } else {
       // A specification is selected, proceed working on it
@@ -97,13 +98,21 @@
       if (typeof AcDataJson.paxwgt != 'undefined') {
         if (paxfig > 0) {
           document.getElementById('tdPaxLoad').title = 'Spec Pax Load: ' + Number(AcDataJson.paxw * paxfig) + ' ' + unitwgt;
-          document.getElementById('tdBagLoad').title = 'Spec Bag Load: ' + Number(AcDataJson.bagw * paxfig) + ' ' + unitwgt;
         }
         AcDataJson.paxwgt = ConvertWeight(AcDataJson.paxwgt, 'pax');
         delete AcDataJson.paxw;
-        delete AcDataJson.bagw;
       } else {
         AcDataJson.paxwgt = paxwgt;
+      }
+      // Use Specs BAGWGT or PhpVms BAGWGT
+      if (typeof AcDataJson.bagwgt != 'undefined') {
+        if (paxfig > 0) {
+          document.getElementById('tdBagLoad').title = 'Spec Bag Load: ' + Number(AcDataJson.bagw * paxfig) + ' ' + unitwgt;
+        }
+        AcDataJson.bagwgt = ConvertWeight(AcDataJson.bagwgt, 'pax');
+        delete AcDataJson.bagw;
+      } else {
+        AcDataJson.bagwgt = bagwgt;
       }
 
       // Add Extra Remarks

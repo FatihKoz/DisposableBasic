@@ -507,6 +507,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+09.JUL.22
+
+* Specs: Added baggage weights to SimBrief form (acdata) to follow up changes/improvements done to the API.
+
 11.JUN.22
 
 * Fixed a conversion error in Theme Helpers (fuel price conversion from lbs to kgs)

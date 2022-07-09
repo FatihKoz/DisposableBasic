@@ -130,10 +130,13 @@ class DB_Spec extends Model
         if (filled($this->cruiselevel)) {
             $sb->put('cruiseoffset', $this->cruiselevel);
         }
-        if (filled($this->paxwgt) && filled($this->bagwgt)) {
+        if (filled($this->paxwgt)) {
             $sb->put('paxw', $this->paxwgt);
+            $sb->put('paxwgt', $this->paxwgt);
+        }
+        if (filled($this->bagwgt)) {
             $sb->put('bagw', $this->bagwgt);
-            $sb->put('paxwgt', $this->paxwgt + $this->bagwgt);
+            $sb->put('bagwgt', $this->bagwgt);
         }
 
         return json_encode($sb);
