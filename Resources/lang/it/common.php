@@ -36,6 +36,7 @@ return [
     'members'   => 'Membri',
     'name'      => 'Nome',
     'news'      => 'News',
+    'notes'     => 'Appunti',
     'nothing'   => 'Niente da Visualizzare!',
     'paginate'  => 'Mostrando :first a :last del totale :total dei record',
     'pilot'     => 'Pilota',

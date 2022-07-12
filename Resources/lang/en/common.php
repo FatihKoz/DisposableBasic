@@ -36,6 +36,7 @@ return [
     'members'   => 'Members',
     'name'      => 'Name',
     'news'      => 'News',
+    'notes'     => 'Notes',
     'nothing'   => 'Nothing To Display!',
     'paginate'  => 'Showing :first to :last of total :total records',
     'pilot'     => 'Pilot',

@@ -507,6 +507,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+12.JUL.22
+
+* Added notes to Hub Details page (needs latest phpvms latest dev build and uses core Airport Notes)
+
 09.JUL.22
 
 * Specs: Added baggage weights to SimBrief form (acdata) to follow up changes/improvements done to the API.
