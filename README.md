@@ -509,7 +509,7 @@ If you have duplicated blades and encounter problems after updating the module o
 
 12.JUL.22
 
-* Added notes to Hub Details page (needs latest phpvms latest dev build and uses core Airport Notes)
+* Added Notes to Hub Details page (needs latest phpvms latest dev build and uses core Airport Notes)
 
 09.JUL.22
 
