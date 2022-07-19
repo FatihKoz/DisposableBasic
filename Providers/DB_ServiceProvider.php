@@ -87,6 +87,7 @@ class DB_ServiceProvider extends ServiceProvider
             'prefix'     => '',
         ], function () {
             // Plain Pages
+            Route::get('dp_map', 'DB_WebController@map')->name('dp_map');
             Route::get('dp_roster', 'DB_WebController@roster')->name('dp_roster');
             Route::get('dp_stats', 'DB_WebController@stats')->name('dp_stats');
             Route::get('dp_page', 'DB_WebController@page')->name('dp_page');

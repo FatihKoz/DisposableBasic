@@ -85,4 +85,13 @@ class DB_WebController extends Controller
             'DSpecial' => DB_CheckModule('DisposableSpecial'),
         ]);
     }
+
+    // Blank Page for Maps etc
+    public function map()
+    {
+        return view('DBasic::web.map', [
+            'DBasic'   => true,
+            'DSpecial' => DB_CheckModule('DisposableSpecial'),
+        ]);
+    }
 }
