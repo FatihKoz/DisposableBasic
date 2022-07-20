@@ -57,6 +57,21 @@
         document.getElementById('fuelfactor').value = AcDataJson.fuelfactor;
         delete AcDataJson.fuelfactor;
       }
+      // Get SELCAL from specs
+      if (typeof AcDataJson.selcal != 'undefined') {
+        document.getElementById('selcal').value = AcDataJson.selcal;
+        delete AcDataJson.selcal;
+      }
+      // Get RVR from specs
+      if (typeof AcDataJson.rvr != 'undefined') {
+        rvr = AcDataJson.rvr;
+        delete AcDataJson.rvr;
+      }
+      // Get RMK from specs
+      if (typeof AcDataJson.rmk != 'undefined') {
+        rmktext = rmktext.concat(' ').concat(AcDataJson.rmk).toUpperCase();
+        delete AcDataJson.rmk;
+      }
       // Populate visible fields with avilable data
       if (typeof AcDataJson.oew != 'undefined') {
         document.getElementById('dow').value = AcDataJson.oew;

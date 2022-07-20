@@ -41,6 +41,10 @@ class DB_Spec extends Model
         'cruiselevel',
         'paxwgt',
         'bagwgt',
+        'selcal',
+        'hexcode',
+        'rmk',
+        'rvr',
         'active',
     ];
 
@@ -78,6 +82,10 @@ class DB_Spec extends Model
         'cruiselevel' => 'nullable|max:5',
         'paxwgt'      => 'nullable|numeric',
         'bagwgt'      => 'nullable|numeric',
+        'selcal'      => 'nullable',
+        'hexcode'     => 'nullable',
+        'rmk'         => 'nullable',
+        'rvr'         => 'nullable',
         'active'      => 'nullable',
     ];
 
@@ -137,6 +145,18 @@ class DB_Spec extends Model
         if (filled($this->bagwgt)) {
             $sb->put('bagw', $this->bagwgt);
             $sb->put('bagwgt', $this->bagwgt);
+        }
+        if (filled($this->selcal)) {
+            $sb->put('selcal', $this->selcal);
+        }
+        if (filled($this->hexcode)) {
+            $sb->put('hexcode', $this->hexcode);
+        }
+        if (filled($this->rmk)) {
+            $sb->put('rmk', $this->rmk);
+        }
+        if (filled($this->rvr)) {
+            $sb->put('rvr', $this->rvr);
         }
 
         return json_encode($sb);

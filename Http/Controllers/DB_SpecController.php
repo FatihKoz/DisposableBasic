@@ -102,6 +102,10 @@ class DB_SpecController extends Controller
                 'cruiselevel' => $request->cruiselevel,
                 'paxwgt'      => $request->paxwgt,
                 'bagwgt'      => $request->bagwgt,
+                'selcal'      => $request->selcal,
+                'hexcode'     => $request->hexcode,
+                'rmk'         => $request->rmk,
+                'rvr'         => $request->rvr,
                 'active'      => $request->active,
             ]
         );
