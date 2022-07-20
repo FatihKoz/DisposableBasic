@@ -171,10 +171,10 @@
         <hr>
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-2">
-            <label class="pl-1 mb-1" for="cat">ATC Wake Turb. Category (2)</label>
+            <label class="pl-1 mb-1" for="cat">ATC Category (2)</label>
             <input name="cat" type="text" class="form-control" placeholder="M" maxlength="1" value="{{ $spec->cat ?? '' }}">
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <label class="pl-1 mb-1" for="equip">ATC Equipment (2)</label>
             <input name="equip" type="text" class="form-control" placeholder="SDE1FGHIJ2J3J5RWY" maxlength="30" value="{{ $spec->equip ?? '' }}">
           </div>
@@ -182,16 +182,20 @@
             <label class="pl-1 mb-1" for="transponder">ATC Transponder (2)</label>
             <input name="transponder" type="text" class="form-control" placeholder="SB1" maxlength="30" value="{{ $spec->transponder ?? '' }}">
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <label class="pl-1 mb-1" for="pbn">ATC PBN</label>
             <input name="pbn" type="text" class="form-control" placeholder="A1B1D1O1S1" maxlength="30" value="{{ $spec->pbn ?? '' }}">
           </div>
           <div class="col-sm-2">
-            <label class="pl-1 mb-1" for="crew">Operating Crew</label>
-            <input name="crew" type="number" class="form-control" placeholder="6" min="0" max="20" value="{{ $spec->crew ?? '' }}">
+            <label class="pl-1 mb-1" for="selcal">SELCAL</label>
+            <input name="selcal" type="text" class="form-control" placeholder="BKFS" maxlength="4" value="{{ $spec->selcal ?? '' }}">
+          </div>
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="hexcode">HEXCODE</label>
+            <input name="hexcode" type="text" class="form-control" placeholder="2A7FK8" maxlength="6" value="{{ $spec->hexcode ?? '' }}">
           </div>
         </div>
-        {{-- SimBrief Performance Related Items --}}
+        {{-- SimBrief Performance and Misc Items --}}
         <hr>
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-2">
@@ -202,9 +206,21 @@
             <label class="pl-1 mb-1" for="cruiselevel">Cruise Level Offset</label>
             <input name="cruiselevel" type="text" class="form-control" placeholder="P1000" maxlength="5" value="{{ $spec->cruiselevel ?? '' }}">
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <label class="pl-1 mb-1" for="airframe_id">SimBrief Airframe ID</label>
             <input name="airframe_id" type="text" class="form-control" placeholder="1234_197815072021" maxlength="50" value="{{ $spec->airframe_id ?? '' }}">
+          </div>
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="rvr">RVR</label>
+            <input name="rvr" type="number" class="form-control" placeholder="550" min="0" max="800" value="{{ $spec->rvr ?? '' }}">
+          </div>
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="rmk">Add. Remark</label>
+            <input name="rmk" type="text" class="form-control" placeholder="WX RADAR INOP" maxlength="25" value="{{ $spec->rmk ?? '' }}">
+          </div>
+          <div class="col-sm-2">
+            <label class="pl-1 mb-1" for="crew">Operating Crew</label>
+            <input name="crew" type="number" class="form-control" placeholder="6" min="0" max="20" value="{{ $spec->crew ?? '' }}">
           </div>
         </div>
         {{-- Form Actions --}}

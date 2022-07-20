@@ -6,9 +6,9 @@
   const paxfig = Number({{ $tpaxfig ?? 0 }});
   const unitwgt = String("{{ $units['weight'] }}");
   const kgstolbs = Number(2.20462262185);
-  const rvr = String("{{ $sb_rvr ?? '500' }}");
   const actype = String("{{ $aircraft->subfleet->simbrief_type ?? $aircraft->icao }}");
-  const rmktext = String("{{ $sb_rmk ?? config('app.name') }}").toUpperCase();
+  var rvr = String("{{ $sb_rvr ?? '500' }}");
+  var rmktext = String("{{ $sb_rmk ?? config('app.name') }}").toUpperCase();
 
   // Convert weights according to SimBrief requirements
   // All Weights must be in thousand pounds with 3 digits precision like 19.362
@@ -34,6 +34,8 @@
     let str = document.getElementById('addon').value;
     if (str === '0') {
       // Nothing selected remove Spec Fields and use PhpVms data for basics
+      rvr = String("{{ $sb_rvr ?? '500' }}");
+      rmktext = String("{{ $sb_rmk ?? config('app.name') }}").toUpperCase();
       document.getElementById('dow').value = '--';
       document.getElementById('mzfw').value = '--';
       document.getElementById('mtow').value = '--';
