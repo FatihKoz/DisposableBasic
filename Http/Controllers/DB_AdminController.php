@@ -188,6 +188,8 @@ class DB_AdminController extends Controller
         $users_comp = DB::table('users')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
         $users_field = DB::table('user_field_values')->whereNotIn('user_id', $current_users)->pluck('id')->toArray();
         // Missing Airports
+        $airports_pilot_home = DB::table('users')->whereNotIn('home_airport_id', $current_airports)->groupBy('home_airport_id')->pluck('home_airport_id')->toArray();
+        $airports_pilot_curr = DB::table('users')->whereNotIn('curr_airport_id', $current_airports)->groupBy('curr_airport_id')->pluck('curr_airport_id')->toArray();
         $airports_pirep_dep = DB::table('pireps')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
         $airports_pirep_arr = DB::table('pireps')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
         $airports_flight_dep = DB::table('flights')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
@@ -197,7 +199,7 @@ class DB_AdminController extends Controller
             $query->where('slug', 'arrival-heading-deviation')->orWhere('slug', 'landing-heading-deviation');
         })->whereBetween('value', [160, 200])->orderBy('created_at', 'desc')->pluck('pirep_id')->toArray();
 
-        $missing_airports = array_merge($airports_pirep_dep, $airports_pirep_arr, $airports_flight_dep, $airports_flight_arr);
+        $missing_airports = array_merge($airports_pilot_home, $airports_pilot_curr, $airports_pirep_dep, $airports_pirep_arr, $airports_flight_dep, $airports_flight_arr);
         $missing_airports = array_unique($missing_airports, SORT_STRING);
 
         return view('DBasic::admin.health_check', [
