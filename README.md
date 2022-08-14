@@ -507,9 +507,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
-12.JUL.22
+14.AUG.22
 
-* Added Notes to Hub Details page (needs latest phpvms latest dev build and uses core Airport Notes)
+* Added Notes to Hub Details page (needs phpvms core update about Airport Notes)
+* Added more fields to Specs (SELCAL, HEX, Custom Remarks, can be used while defining specs per each aircraft)
+* Added user based Missing Airport checks
 
 09.JUL.22
 
