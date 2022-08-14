@@ -25,7 +25,7 @@
             <tr>
               <th>@lang('DBasic::common.location')</th>
               <td class="text-end">
-                {{ $hub->location }} 
+                {{ $hub->location }}
                 @if (strlen($hub->country) == 2)
                   {{ ' | '.$country->alpha2($hub->country)['name'].' ('.$hub->country.')' }}
                 @else
@@ -86,6 +86,13 @@
       @endif
       {{-- Sub Navigation Pills --}}
       <ul class="nav nav-pills nav-fill mb-2" id="pills-Hub" role="tablist">
+        @if(filled($hub->notes))
+          <li class="nav-item mx-1 mb-1" role="presentation">
+            <button class="nav-link p-0 px-1" id="notes-tab" data-bs-toggle="pill" data-bs-target="#notes" type="button" role="tab" aria-controls="notes" aria-selected="true">
+              @lang('DBasic::common.notes')
+            </button>
+          </li>
+        @endif
         @if($is_visible['pilots'])
           <li class="nav-item mx-1 mb-1" role="presentation">
             <button class="nav-link p-0 px-1" id="pilots-tab" data-bs-toggle="pill" data-bs-target="#pilots" type="button" role="tab" aria-controls="pilots" aria-selected="false">
@@ -137,6 +144,25 @@
   </div>
 
   <div class="tab-content" id="pills-HubContent">
+    @if (filled($hub->notes))
+      <div class="tab-pane fade show active" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+        <div class="row row-cols-lg-2">
+          <div class="col-lg">
+            <div class="card mb-2">
+              <div class="card-header p-1">
+                <h5 class="m-1">
+                  @lang('DBasic::common.notes')
+                  <i class="fas fa-info-circle float-end"></i>
+                </h5>
+              </div>
+              <div class="card-body p-1 table-responsive">
+                {!! $hub->notes !!}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    @endif
     @if ($is_visible['pilots'])
       <div class="tab-pane fade" id="pilots" role="tabpanel" aria-labelledby="pilots-tab">
         @include('DBasic::hubs.show_pilots')

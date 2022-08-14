@@ -142,7 +142,7 @@
       <div class="card border-blue-bottom" style="padding:10px;">
         {{ count($missing_apt) }}
         <br>
-        <span class="text-danger" title="Which are used/referenced by flights or pireps"><b>Missing Airports</b></span>
+        <span class="text-danger" title="Which are used/referenced by users, flights or pireps"><b>Missing Airports</b></span>
         @if(count($missing_apt) > 0)
           <hr>
           @foreach($missing_apt as $list){{ $list }}@if(!$loop->last){{ ', ' }}@endif @endforeach
