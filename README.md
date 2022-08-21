@@ -136,8 +136,7 @@ When enabled module can listen pirep events and change Aircraft states (PARKED, 
 
 Also module can send customized Discord notifications when a pirep gets filed, it is a separate feature compared to phpvms core system. It only sends one message per pirep.
 
-As additional features, you can define addon based specifications for your fleet members. Like defining two profiles for a Boeing B737-800 like one for `Zibo` and another for `PMDG`.
-These definitions can be per aircraft, per subfleet or per icao type and used both for visual display at respective pages (aircraft/subfleet) and be used with SimBrief API for proper flight planning.
+As additional features, you can define addon based specifications for your fleet members. Like defining two profiles for a Boeing B737-800 like one for `Zibo` and another for `PMDG`. These definitions can be per aircraft, per subfleet or per icao type and used both for visual display at respective pages (aircraft/subfleet) and be used with SimBrief API for proper flight planning.
 
 If you are not developing your own pirep checks and/or not using Disposable Special/Extended module solutions you can simply skip using Maintenance periods etc. They are here just for backward compatibility and some va's already based their custom code on them.
 
@@ -148,6 +147,8 @@ As an additional feature, module provides a quick database health check here. Te
 Module also provides "Manual Awarding" feature, you can either define a blank award (with provided award class, keep it inactive) as you wish and then assign it your pilots manually. Or when needed you can assign a real award too, imagine a pilot finishes a tour some hours late and automatic awarding does not work anymore etc.
 
 For "Manual Payment" selected user's airline must have enough funds for the transfer, creating money out of thin air is not possible.
+
+If you want to display subfleet or aircraft images, just put images under public/image/aircraft or public/image/subfleet folders. Files should be in all lowercase including the extension (like tc-grd.jpg). Aircraft images use registration, subfleet images use subfleet type code. (Disposable Theme offers some examples)
 
 ## Stable Approach Plugin Support
 
@@ -506,6 +507,11 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+21.AUG.22
+
+* Added radio telephony "Callsign" to airline details page
+* Slightly updated Fuel Calculator widget (moved script to scripts)
 
 14.AUG.22
 

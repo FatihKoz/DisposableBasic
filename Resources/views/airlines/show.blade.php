@@ -62,10 +62,18 @@
               <th>@lang('DBasic::common.icao')</th>
               <td class="text-end">{{ $airline->icao }}</td>
             </tr>
-            <tr>
-              <th>@lang('DBasic::common.iata')</th>
-              <td class="text-end">{{ $airline->iata }}</td>
-            </tr>
+            @if(filled($airline->iata))
+              <tr>
+                <th>@lang('DBasic::common.iata')</th>
+                <td class="text-end">{{ $airline->iata }}</td>
+              </tr>
+            @endif
+            @if(filled($airline->callsign))
+              <tr>
+                <th>@lang('DBasic::common.callsign')</th>
+                <td class="text-end">{{ $airline->callsign }}</td>
+              </tr>
+            @endif
             @if(strlen($airline->country) === 2)
               <tr>
                 <th>@lang('common.country')</th>

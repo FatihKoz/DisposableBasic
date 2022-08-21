@@ -77,36 +77,34 @@
     </div>
   </div>
 
-  {{-- Fuel Calculator Script --}}
-  @php
-    $avg_pounds = $fuel_data['avg_pounds'];
-    $avg_metric = $fuel_data['avg_metric'];
-  @endphp
-  <script type="text/javascript">
+  @section('scripts')
+    @parent
+    <script type="text/javascript">
       function FuelCalculator() {
-      var fuel = Number({{ $avg_pounds }});
-      var flight_time = Number(document.getElementById('flight_time').value);
-      metric = {{ $is_metric }};
-      // Calculate
-      if (flight_time > 0) {
-        var fuel_burn = Math.round(fuel * flight_time);
-        var fuel_reserve = Math.round(fuel * 30);
-        var fuel_total = Math.round(fuel_burn + fuel_reserve);
-        // Display Results (Imperial)
-        document.getElementById('fuel_burn').value = String(fuel_burn) + ' lbs';
-        document.getElementById('fuel_reserve').value = String(fuel_reserve) + ' lbs';
-        document.getElementById('fuel_total').value = String(fuel_total) + ' lbs';
+        var fuel = Number({{ $avg_pounds }});
+        var flight_time = Number(document.getElementById('flight_time').value);
+        metric = {{ $is_metric }};
+        // Calculate
+        if (flight_time > 0) {
+          var fuel_burn = Math.round(fuel * flight_time);
+          var fuel_reserve = Math.round(fuel * 30);
+          var fuel_total = Math.round(fuel_burn + fuel_reserve);
+          // Display Results (Imperial)
+          document.getElementById('fuel_burn').value = String(fuel_burn) + ' lbs';
+          document.getElementById('fuel_reserve').value = String(fuel_reserve) + ' lbs';
+          document.getElementById('fuel_total').value = String(fuel_total) + ' lbs';
+        }
+        if (metric === 1 && flight_time > 0) {
+          fuel_kg = Number({{ $avg_metric }});
+          var fuel_burn_kg = Math.round(fuel_kg * flight_time);
+          var fuel_reserve_kg = Math.round(fuel_kg * 30);
+          var fuel_total_kg = Math.round(fuel_burn_kg + fuel_reserve_kg);
+          // Display Result (Metric)
+          document.getElementById('fuel_burn_kg').value = String(fuel_burn_kg) + ' kgs';
+          document.getElementById('fuel_reserve_kg').value = String(fuel_reserve_kg) + ' kgs';
+          document.getElementById('fuel_total_kg').value = String(fuel_total_kg) + ' kgs';
+        }
       }
-      if (metric === 1 && flight_time > 0) {
-        fuel_kg = Number({{ $avg_metric }});
-        var fuel_burn_kg = Math.round(fuel_kg * flight_time);
-        var fuel_reserve_kg = Math.round(fuel_kg * 30);
-        var fuel_total_kg = Math.round(fuel_burn_kg + fuel_reserve_kg);
-        // Display Result (Metric)
-        document.getElementById('fuel_burn_kg').value = String(fuel_burn_kg) + ' kgs';
-        document.getElementById('fuel_reserve_kg').value = String(fuel_reserve_kg) + ' kgs';
-        document.getElementById('fuel_total_kg').value = String(fuel_total_kg) + ' kgs';
-      }
-    }
-  </script>
+    </script>
+  @endsection
 @endif

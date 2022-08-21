@@ -18,8 +18,10 @@ class FuelCalculator extends Widget
         $fuel_data = $FleetSvc->AverageFuelBurn($aircraft_id);
 
         return view('DBasic::widgets.fuel_calculator', [
-            'fuel_data' => $fuel_data,
-            'is_metric' => $is_metric,
+            'avg_metric' => isset($fuel_data['avg_metric']) ? $fuel_data['avg_metric'] : null,
+            'avg_pounds' => isset($fuel_data['avg_pounds']) ? $fuel_data['avg_pounds'] : null,
+            'fuel_data'  => $fuel_data,
+            'is_metric'  => $is_metric,
         ]);
     }
 }
