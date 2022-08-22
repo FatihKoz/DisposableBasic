@@ -508,6 +508,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+22.AUG.22
+
+* Fixed a javascript issue in Fuel Calculator widget (thx to @ARV187)
+* Added radio telephony "Callsign" to SimBrief form (will be automatically used if defined)
+
 21.AUG.22
 
 * Added radio telephony "Callsign" to airline details page
