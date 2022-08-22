@@ -83,7 +83,7 @@
       function FuelCalculator() {
         var fuel = Number({{ $avg_pounds }});
         var flight_time = Number(document.getElementById('flight_time').value);
-        metric = {{ $is_metric }};
+        var metric = Boolean({{ $is_metric }});
         // Calculate
         if (flight_time > 0) {
           var fuel_burn = Math.round(fuel * flight_time);
@@ -94,8 +94,8 @@
           document.getElementById('fuel_reserve').value = String(fuel_reserve) + ' lbs';
           document.getElementById('fuel_total').value = String(fuel_total) + ' lbs';
         }
-        if (metric === 1 && flight_time > 0) {
-          fuel_kg = Number({{ $avg_metric }});
+        if (metric == true && flight_time > 0) {
+          var fuel_kg = Number({{ $avg_metric }});
           var fuel_burn_kg = Math.round(fuel_kg * flight_time);
           var fuel_reserve_kg = Math.round(fuel_kg * 30);
           var fuel_total_kg = Math.round(fuel_burn_kg + fuel_reserve_kg);
