@@ -16,6 +16,9 @@
           <th>@lang('DBasic::common.orig_abr')</th>
           <th>@lang('DBasic::common.dest_abr')</th>
           <th>@lang('DBasic::common.pilot')</th>
+          @if(!$bids)
+            <th>ETD</th>
+          @endif
           <th class="text-end">@lang('DBasic::common.expire')</th>
         </tr>
         @foreach($active_bookings as $booking)
@@ -38,6 +41,9 @@
               <td>
                 <a href="{{ route('frontend.profile.show', [$booking->user_id]) }}">{{ $booking->user->name_private }}</a>
               </td>
+              @if(!$bids)
+                <td><b>{{ date('H:i', $booking->xml->times->est_out->__toString()) }}</b></td>
+              @endif
               <td class="text-end">
                 @ability('admin', 'admin-access')
                   @if(!$bids) 
