@@ -31,7 +31,7 @@ class DB_FlightServices
             $userSvc = app(UserService::class);
             $restricted_to = $userSvc->getAllowableSubfleets($user);
             $allowed_subfleets = $restricted_to->pluck('id')->toArray();
-            $allowed_flights = DB::table('flight_subfleet')->whereIn('subfleet_id', $allowed_subfleets)->pluck('flight_id')->toArray();
+            $allowed_flights = DB::table('flight_subfleet')->whereIn('subfleet_id', $allowed_subfleets)->groupBy('flight_id')->pluck('flight_id')->toArray();
         }
 
         $flights = DB::table('flights')->select('id')->where($where)
