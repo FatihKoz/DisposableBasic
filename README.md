@@ -511,8 +511,7 @@ If you have duplicated blades and encounter problems after updating the module o
 04.SEP.22
 
 * Updated Random Flights widget code (reducing possibility of reaching limits of MySQL with 65k flights)
-* Added Network Presence checks (when enabled and configured, pireps will have online flight percentage within fields)
-  _(Supports only IVAO and VATSIM)_
+* Added IVAO/VATSIM Network Presence checks (pireps will have online flight percentage in fields)
 
 22.AUG.22
 
