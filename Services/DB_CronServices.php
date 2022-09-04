@@ -6,7 +6,9 @@ use App\Models\Aircraft;
 use App\Models\Pirep;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\PirepState;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Modules\DisposableBasic\Models\DB_WhazzUpCheck;
 
 class DB_CronServices
 {
@@ -20,6 +22,18 @@ class DB_CronServices
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
             Log::info('Disposable Basic | ' . $aircraft->registration . ' state changed to PARKED (On Ground)');
+        }
+    }
+
+    // Cleanup Network Presence Data
+    public function CleanUpWhazzUpChecks()
+    {
+        if (DB_Setting('dbasic.networkcheck_cleanup', '48') > 0) {
+            $cleanup_margin = DB_Setting('dbasic.networkcheck_cleanup', '48');
+            $cleanup_time = Carbon::now()->subHours($cleanup_margin);
+
+            DB_WhazzUpCheck::where('created_at', '<', $cleanup_time)->delete();
+            Log::info('Disposable Basic | Network Presence check data cleanup completed');
         }
     }
 }

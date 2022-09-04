@@ -100,6 +100,13 @@
           @include('DBasic::admin.settings_table', ['group' => 'Discord'])
           <span class="text-info">Create your webhook before enabling it here, also check laravel logs if the messages does not appear at your Discord Server</span>
         </div>
+        {{-- Network Presence Check Group --}}
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Network Presence Checks</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'Network Checks'])
+          <span class="text-info">"User Field Name" MUST MATCH your custom user field holding network id numbers</span>
+        </div>
       </div>
       <div class="col-sm-5">
         {{-- Aircraft Group --}}

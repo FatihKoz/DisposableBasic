@@ -9,7 +9,8 @@ use Modules\DisposableBasic\Models\DB_WhazzUp;
 
 class DB_OnlineServices
 {
-    public function __construct(GuzzleClient $httpClient) {
+    public function __construct(GuzzleClient $httpClient)
+    {
         $this->httpClient = $httpClient;
     }
 
