@@ -43,7 +43,7 @@ class DB_WidgetController extends Controller
             $aircraft->airport_id = $user_location;
             $aircraft->save();
             flash()->success(__('DBasic::widgets.ta_ok_free', ['registration' => $aircraft->registration]));
-            Log::info('Disposable Basic | Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
+            Log::info('Disposable Basic | Free Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
 
             return redirect(url($current_page));
         }
@@ -89,11 +89,15 @@ class DB_WidgetController extends Controller
 
             // Transfer Cost
             $transfer_cost = Money::createFromAmount(round($gh_cost + $fuel_cost, 2));
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Cost: ' . $fuel_cost);
+            Log::debug('Disposable Basic | Aircraft Transfer > Transfer Distance: ' . $transfer_distance);
+            Log::debug('Disposable Basic | Aircraft Transfer > Calculated Cost: ' . $transfer_cost);
         }
 
         // Transfer price is fixed (Define cost, continue)
         if (is_numeric($price)) {
             $transfer_cost = Money::createFromAmount($price);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fixed Cost: ' . $transfer_cost);
         }
 
         // Check User Balance (abort or continue)
@@ -136,7 +140,7 @@ class DB_WidgetController extends Controller
         // Move Asset (complete)
         $aircraft->airport_id = $user_location;
         $aircraft->save();
-        Log::info('Disposable Basic | Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
+        Log::info('Disposable Basic | Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private . '. Price: ' . $transfer_cost);
 
         return redirect(url($current_page));
     }
