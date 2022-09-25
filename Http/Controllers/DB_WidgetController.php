@@ -89,8 +89,12 @@ class DB_WidgetController extends Controller
 
             // Transfer Cost
             $transfer_cost = Money::createFromAmount(round($gh_cost + $fuel_cost, 2));
-            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Cost: ' . $fuel_cost);
             Log::debug('Disposable Basic | Aircraft Transfer > Transfer Distance: ' . $transfer_distance);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Price: ' . $fuel_price);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Burn: ' . $avrg_fuelburn);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Used: ' . $aprx_fuelburn);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Cost: ' . $fuel_cost);
+            Log::debug('Disposable Basic | Aircraft Transfer > GH Cost: ' . $gh_cost);
             Log::debug('Disposable Basic | Aircraft Transfer > Calculated Cost: ' . $transfer_cost);
         }
 
