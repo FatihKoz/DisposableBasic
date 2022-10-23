@@ -107,7 +107,7 @@ class DB_WidgetController extends Controller
         }
 
         if ($interim_price === true) {
-            flash()->info('Aprx. Transfer Cost: ' . $transfer_cost);
+            flash()->info('Aprx. Transfer Cost: ' . $transfer_cost . ' | ' . $aircraft->registration);
 
             return redirect(url($current_page));
         }
@@ -199,7 +199,7 @@ class DB_WidgetController extends Controller
         }
 
         if ($interim_price === true) {
-            flash()->info('Aprx. Ticket Price: '. $transfer_cost);
+            flash()->info('Aprx. Ticket Price: '. $transfer_cost . ' | ' . $new_location);
 
             return redirect(url($current_page));
         }
