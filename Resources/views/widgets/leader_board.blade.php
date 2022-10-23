@@ -17,7 +17,12 @@
         @foreach($leader_board as $board)
           <tr>
             <td>
-              <a href="{{ route($board['route'], $board['id']) }}">{{ $board['name_private'] }}</a>
+              <a href="{{ route($board['route'], $board['id']) }}">
+                @if(Theme::getSetting('roster_ident'))
+                  {{ $board['pilot_ident'] }}
+                @endif
+                {{ $board['name_private'] }}
+              </a>
             </td>
             <td class="text-end">{{ $board['totals'] }}</td>
           </tr>

@@ -48,6 +48,7 @@ return [
     'js_ok_free'     => 'JumpSeat travel completed, you are at :location now.',
     'js_travel'      => 'JumpSeat Travel',
     'js_selectap'    => 'Please select your destination...',
+    'js_check'       => 'Check Price',
     // LeaderBoard
     'best_airline' => 'Best Airline',
     'best_airport' => 'Best Airport',
@@ -55,9 +56,9 @@ return [
     'leader_board' => 'Leader Board',
     'lrate_low'    => 'Lowest Landing Rate',
     'lrate_hgh'    => 'Highest Landing Rate',
-    'top_airlines' => 'Top Airlines',
-    'top_airports' => 'Top Airports',
-    'top_pilots'   => 'Top Pilots',
+    'top_airlines' => 'Leader Board (Airline)',
+    'top_airports' => 'Leader Board (Airport)',
+    'top_pilots'   => 'Leader Board (Pilot)',
     'lb_overall'   => 'All Time',
     'lb_month_a'   => 'Airline (Month)',
     'lb_month_p'   => 'Pilot (Month)',
@@ -100,6 +101,7 @@ return [
     'ta_ok_free'     => 'Aircraft transfer completed, :registration is at your location now.',
     'ta_err_ac'      => 'Aircraft transfer not possible without a valid aircraft selection!',
     'ta_err_funds'   => 'Aircraft transfer not possible, not enough funds! You need at least :price',
+    'ta_check'       => 'Check Price',
     // Personal Stats Widget
     'avgdistance' => 'Avg. Distance',
     'avgfuel'     => 'Avg. Fuel Burn',

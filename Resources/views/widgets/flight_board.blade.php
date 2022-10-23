@@ -57,7 +57,12 @@
             <td>{{ optional($flight->position)->gs.' kts' }}</td>
             <td>{{ PirepStatus::label($flight->status) }}</td>
             <td class="text-end">
-              <a href="{{ route('frontend.profile.show', [$flight->user_id]) }}">{{ $flight->user->name_private }}</a>
+              <a href="{{ route('frontend.profile.show', [$flight->user_id]) }}">
+                @if(Theme::getSetting('roster_ident'))
+                  {{ $flight->user->ident.' - ' }}
+                @endif
+                {{ $flight->user->name_private }}
+              </a>
             </td>
           </tr>
         @endforeach

@@ -48,6 +48,7 @@ return [
     'js_ok_free'     => 'Viaje en JumpSeat completado, tu estás ahora en :location.',
     'js_travel'      => 'Viaje en JumpSeat',
     'js_selectap'    => 'Por favor, seleccione su destino...',
+    'js_check'       => 'Consultar precio',
     // LeaderBoard
     'best_airline' => 'Mejor aerolínea',
     'best_airport' => 'Mejor aeropuerto',
@@ -100,6 +101,7 @@ return [
     'ta_ok_free'     => 'Transferencia de la aeronave completada, :registration está en tu ubicación ahora.',
     'ta_err_ac'      => '¡No es posible la transferencia de la aeronave sin elegir una aeronave válida!',
     'ta_err_funds'   => '¡No es posible la transferencia de la aeronave, fondos insuficientes! Necesitas al menos :price',
+    'ta_check'       => 'Consultar precio',
     // Personal Stats Widget
     'avgdistance' => 'Distancia media',
     'avgfuel'     => 'Consumo medio de combustible',

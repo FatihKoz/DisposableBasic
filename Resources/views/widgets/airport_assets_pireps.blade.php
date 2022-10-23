@@ -36,7 +36,12 @@
         {{ DB_ConvertMinutes($pirep->flight_time) }}
       </td>
       <td class="text-end">
-        <a href="{{ route('frontend.profile.show', [$pirep->user_id]) }}">{{ optional($pirep->user)->name_private }}</a>
+        <a href="{{ route('frontend.profile.show', [$pirep->user_id]) }}">
+          @if(Theme::getSetting('roster_ident'))
+            {{ optional($pirep->user)->ident.' - ' }}
+          @endif
+          {{ optional($pirep->user)->name_private }}
+        </a>
       </td>
       <td class="text-end">
         {{ $pirep->submitted_at->diffForHumans() }}

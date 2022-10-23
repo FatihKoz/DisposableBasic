@@ -508,6 +508,12 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+23.OCT.22
+
+* Added price checking ability to JumpSeat Travel and Aircraft Transfer Widgets (can be improved later)
+* Updated some widget and page blades to follow theme configuration (for displaying pilot idents/callsigns)
+* Added some debug log entries to backend processes to track down some edge cases (zero aircraft transfer cost sometimes)
+
 04.SEP.22
 
 * Updated Random Flights widget code (reducing possibility of reaching limits of MySQL with 65k flights)

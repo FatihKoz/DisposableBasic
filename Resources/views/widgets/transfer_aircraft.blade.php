@@ -22,6 +22,9 @@
         </div>
         <div class="card-footer p-1 text-end">
           <i class="fas fa-money-bill-wave text-{{ $icon_color }} float-start m-1" title="{{ $icon_title }}"></i>
+          @if($price === 'auto')
+            <button class="btn btn-sm bg-info p-0 px-1" type="submit" name="interim_price" value="1">@lang('DBasic::widgets.ta_check')</button>
+          @endif
           <button class="btn btn-sm bg-success p-0 px-1" type="submit">@lang('DBasic::widgets.ta_button')</button>
         </div>
       </div>

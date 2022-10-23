@@ -28,6 +28,7 @@ class DB_WidgetController extends Controller
         $current_page = $request->croute;
         $price = $request->price;
         $selected_ac = $request->ac_selection;
+        $interim_price = ($request->interim_price == '1') ? true : false;
 
         // Aircraft NOT selected (abort)
         if (!$selected_ac) {
@@ -40,6 +41,7 @@ class DB_WidgetController extends Controller
 
         // Transfer is free (Move asset, complete)
         if ($price === 'free') {
+            $transfer_cost = 'FREE';
             $aircraft->airport_id = $user_location;
             $aircraft->save();
             flash()->success(__('DBasic::widgets.ta_ok_free', ['registration' => $aircraft->registration]));
@@ -104,6 +106,12 @@ class DB_WidgetController extends Controller
             Log::debug('Disposable Basic | Aircraft Transfer > Fixed Cost: ' . $transfer_cost);
         }
 
+        if ($interim_price === true) {
+            flash()->info('Aprx. Transfer Cost: ' . $transfer_cost);
+
+            return redirect(url($current_page));
+        }
+
         // Check User Balance (abort or continue)
         if ($transfer_cost > $user->journal->balance) {
             flash()->error(__('DBasic::widgets.ta_err_funds', ['price' => $transfer_cost]));
@@ -159,6 +167,7 @@ class DB_WidgetController extends Controller
         $base_price = $request->basep;
         $current_page = $request->croute;
         $new_location = $request->newloc;
+        $interim_price = ($request->interim_price == '1') ? true : false;
 
         // Destination Check (abort)
         if (!$new_location || $new_location == $user_location) {
@@ -169,6 +178,7 @@ class DB_WidgetController extends Controller
 
         // Transfer is free (Move asset, complete)
         if ($price === 'free') {
+            $transfer_cost = 'FREE';
             $user->curr_airport_id = $new_location;
             $user->save();
             flash()->success(__('DBasic::widgets.js_ok_free', ['location' => $new_location]));
@@ -186,6 +196,12 @@ class DB_WidgetController extends Controller
         // Transfer price is fixed (Define Cost, continue)
         if (is_numeric($price)) {
             $transfer_cost = Money::createFromAmount($price);
+        }
+
+        if ($interim_price === true) {
+            flash()->info('Aprx. Ticket Price: '. $transfer_cost);
+
+            return redirect(url($current_page));
         }
 
         // Check User Balance (abort or continue)

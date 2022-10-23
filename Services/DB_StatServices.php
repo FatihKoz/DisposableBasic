@@ -323,6 +323,7 @@ class DB_StatServices
                 'icao'         => ($source === 'pilot') ? null : $item->$eager_load->icao,
                 'name'         => ($source === 'pilot') ? $item->user->name : $item->$eager_load->name,
                 'name_private' => ($source === 'pilot') ? $item->user->name_private : $item->$eager_load->name,
+                'pilot_ident'  => ($source === 'pilot') ? $item->user->ident.' - ' : null,
                 'route'        => $route,
                 'totals'       => $item->totals,
             ];

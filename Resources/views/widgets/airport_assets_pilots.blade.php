@@ -9,7 +9,12 @@
   @foreach($assets as $pilot)
     <tr @if($pilot->state === 3) class="table-danger" title="@lang('DBasic::widgets.useronleave')" @endif>
       <td class="text-start">
-        <a href="{{ route('frontend.profile.show', [$pilot->id]) }}">{{ $pilot->name_private }}</a>
+        <a href="{{ route('frontend.profile.show', [$pilot->id]) }}">
+          @if(Theme::getSetting('roster_ident'))
+            {{ $pilot->ident.' - ' }}
+          @endif
+          {{ $pilot->name_private }}
+        </a>
       </td>
       <td>
         <a href="{{ route('DBasic.airline', [optional($pilot->airline)->icao ?? '']) }}">{{ optional($pilot->airline)->name }}</a>

@@ -48,6 +48,7 @@ return [
     'js_ok_free'     => 'Vous avez pris le JumpSeat, vous êtes maintenant à :location.',
     'js_travel'      => 'Voyage en JumpSeat',
     'js_selectap'    => 'Merci de choisir une destination...',
+    'js_check'       => 'Vérifiez le prix',
     // LeaderBoard
     'best_airline' => 'Meilleure Compagnie',
     'best_airport' => 'Meilleur Aéroport',
@@ -100,6 +101,7 @@ return [
     'ta_ok_free'     => 'Transfert d\'avion terminé, :registration est aintenant à votre emplacement.',
     'ta_err_ac'      => 'Transfert d\'avion impossible sans un avion valide!',
     'ta_err_funds'   => 'Transfert d\'avion impossible, vous n\'avez pas assez d\'argent! Il vous faut au moins :price',
+    'ta_check'       => 'Vérifiez le prix',
     // Personal Stats Widget
     'avgdistance' => 'Distance Moyenne',
     'avgfuel'     => 'Consommation Moyenne',
