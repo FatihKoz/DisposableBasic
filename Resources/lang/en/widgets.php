@@ -120,6 +120,8 @@ return [
     'flights_map'  => 'Flights Map',
     'personal_map' => 'My Flights / PIREPs Map',
     'fleet_map'    => 'Fleet Map',
+    'airline_map'  => 'Airline Flights Map',
+    'assignm_map'  => 'Monthly Assignments Map',
     'citypairs'    => 'CityPairs',
     'airports'     => 'Airports',
     'hubs'         => 'Hubs',

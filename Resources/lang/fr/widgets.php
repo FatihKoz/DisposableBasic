@@ -120,6 +120,8 @@ return [
     'flights_map'  => 'Carte des Vols',
     'personal_map' => 'Carte de mes Vols/PIREPs',
     'fleet_map'    => 'Carte de la flotte',
+    'airline_map'  => 'Les Liaisons Aériennes',
+    'assignm_map'  => 'Carte des affectations mensuelles',
     'citypairs'    => 'CityPairs',
     'airports'     => 'Aéroports',
     'hubs'         => 'Hubs',

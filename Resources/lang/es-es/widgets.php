@@ -120,6 +120,8 @@ return [
     'flights_map'  => 'Mapa de vuelos',
     'personal_map' => 'Mi mapa de vuelos/PIREPs',
     'fleet_map'    => 'Mapa de flota',
+    'airline_map'  => 'Rutas de la aerolínea',
+    'assignm_map'  => 'Mapa de asignaciones mensuales',
     'citypairs'    => 'CityPairs',
     'airports'     => 'Aeropuertos',
     'hubs'         => 'Hubs',

@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -61,13 +62,15 @@ class Map extends Widget
             $type = 'user';
         } elseif ($this->config['source'] === 'fleet') {
             $type = 'fleet';
+        } elseif ($this->config['source'] === 'assignment') {
+            $type = 'assignment';
         } else {
             $airport_id = $this->config['source'];
             $type = 'airport';
         }
 
         // Build User's Flown CityPairs for Flight Maps Only
-        if (isset($user) && $type != 'fleet') {
+        if (isset($user) && $type != 'fleet' && $type != 'assignment') {
             $user_pireps = DB::table('pireps')->select('arr_airport_id', 'dpt_airport_id')->where(['user_id' => $user->id, 'state' => 2])->get();
             $user_citypairs = collect();
             foreach ($user_pireps as $up) {
@@ -122,6 +125,30 @@ class Map extends Widget
             $mapflights = Flight::with($eager_load)
                 ->select('id', 'dpt_airport_id', 'arr_airport_id', 'airline_id', 'flight_number')
                 ->where($where)
+                ->orderby('flight_number')
+                ->when(is_numeric($take_limit), function ($query) use ($take_limit) {
+                    return $query->take($take_limit);
+                })->get();
+        }
+
+        // Monthly Assignment Flights Map
+        elseif ($type === 'assignment') {
+            $latest_assignments = null;
+            // Get Current User's latest assignments and build the flights array
+            // Needs Disposable Special Module
+            if (DB_CheckModule('DisposableSpecial')) {
+                $now = Carbon::now();
+                $asg_where = [];
+                $asg_where['assignment_year'] = $now->year;
+                $asg_where['assignment_month'] = $now->month;
+                $asg_where['user_id'] = $user->id;
+                $latest_assignments = \Modules\DisposableSpecial\Models\DS_Assignment::where($asg_where)->pluck('flight_id')->toArray();
+            }
+
+            $mapflights = Flight::with($eager_load)
+                ->select('id', 'dpt_airport_id', 'arr_airport_id', 'airline_id', 'flight_number')
+                ->where($where)
+                ->whereIn('id', $latest_assignments)
                 ->orderby('flight_number')
                 ->when(is_numeric($take_limit), function ($query) use ($take_limit) {
                     return $query->take($take_limit);
@@ -299,9 +326,9 @@ class Map extends Widget
                     }
                 }
 
-                if ($user_citypairs->contains($citypair['name'])) {
+                if (isset($user_citypairs) && $user_citypairs->contains($citypair['name'])) {
                     $cp_color = 'darkgreen';
-                } elseif ($user_citypairs->contains(substr($citypair['name'], 4, 4) . substr($citypair['name'], 0, 4))) {
+                } elseif (isset($user_citypairs) && $user_citypairs->contains(substr($citypair['name'], 4, 4) . substr($citypair['name'], 0, 4))) {
                     $cp_color = 'lightgreen';
                 } else {
                     $cp_color = 'crimson';

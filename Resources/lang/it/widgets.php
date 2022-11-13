@@ -118,6 +118,8 @@ return [
     'flights_map'  => 'Mappa Voli',
     'personal_map' => 'Miei Voli / Mappa PIREP',
     'fleet_map'    => 'Mappa Flotta',
+    'airline_map'  => 'Mappa dei voli delle Compagnie',
+    'assignm_map'  => 'Mappa degli incarichi mensili',
     'citypairs'    => 'Città(coppie)',
     'airports'     => 'Aeroporti',
     'hubs'         => 'Hubs',
