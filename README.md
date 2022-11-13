@@ -376,9 +376,10 @@ Generates a leaflet map according to config options defined.
 @widget('DBasic::Map', ['source' => 'fleet', 'airline' => $airline->id])
 @widget('DBasic::Map', ['source' => $hub->id, 'limit' => 1000])
 @widget('DBasic::Map', ['location' => true])
+@widget('DBasic::Map', ['source' => 'assignment'])
 ```
 
-* `'source'` can be an airport_id (like `$airport->id` or `'EHAM'`), an airline_id (like `$airline->id` or `3`), `'user'`, `'fleet'`
+* `'source'` can be an airport_id (like `$airport->id` or `'EHAM'`), an airline_id (like `$airline->id` or `3`), `'user'`, `'fleet'`, `'assignment'`
 * `'visible'` can be either `true` or `false` (to show or skip visible flights as per phpvms settings)
 * `'limit'` can be a numeric value like `500` (to limit the drawn flights/pireps on the map due to performance reasons)
 
@@ -391,6 +392,8 @@ Below settings can be used to improve map performance WHEN admin settings are se
 Additionally;
 
 * When `'source' => 'fleet'` is used then you can define a specific airline with `'airline' => $airline->id` (or `'airline' => 3`) to show results for that airline
+
+*For "Assignment" source type, Disposable Special/Extended module needs to be installed and active*  
 
 ### Personal Stats
 
@@ -507,6 +510,11 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+13.NOV.22
+
+* License Updated (more non-authorized virtual airlines added !)
+* Map Widget Updated (added auto zoom and support for Disposable Special : Monthly Flight Assignments)
 
 23.OCT.22
 
