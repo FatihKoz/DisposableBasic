@@ -511,6 +511,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+15.NOV.22
+
+* PT-BR Translation (Thanks to @Joaolzc)
+* PT-PT Translation (Thanks to @PVPVA , specially JCB)
+
 13.NOV.22
 
 * License Updated (more non-authorized virtual airlines added !)
