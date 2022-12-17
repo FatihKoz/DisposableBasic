@@ -483,6 +483,17 @@ Adds frontend pilot self aircraft transfer capability to phpVms v7.
 Above example will calculate automatic transfer price according to great circle distance between airports and will allow only transfer of aircraft which are landed at least 6 hours from that time.
 There is no `base` price definition for this widget. It uses airport fuel prices, that aircraft's average fuel consumption and ground handling costs.
 
+### User Pireps
+
+Displays a users latest pireps with reverse order. Designed mainly for user profile pages or somewhere similar.
+
+```php
+@widget('DBasic::UserPireps', ['user' => $user->id, 'limit' => 50])
+```
+
+* `'user'` should be the user id, either a variable as in the example `$user->id` or an integer like `3`
+* `'limit'` should be an integer value like `50`, by default widget displays 25 entries
+
 ### WhazzUp
 
 Provides live server data for IVAO and VATSIM networks.
@@ -510,6 +521,11 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+17.DEC.22
+
+* Added public pireps route (for IVAO/VATSIM compatibility)
+* Added UserPireps widget to display a pilots pireps only (can be used at profile pages for IVAO/VATSIM purposes)
 
 15.NOV.22
 
