@@ -86,6 +86,8 @@ class DB_ServiceProvider extends ServiceProvider
             'namespace'  => 'Modules\DisposableBasic\Http\Controllers',
             'prefix'     => '',
         ], function () {
+            // Full Pages (for IVAO/VATSIM Audits)
+            Route::get('dreports', 'DB_PirepController@index')->name('reports');
             // Plain Pages
             Route::get('dp_roster', 'DB_WebController@roster')->name('dp_roster');
             Route::get('dp_stats', 'DB_WebController@stats')->name('dp_stats');
