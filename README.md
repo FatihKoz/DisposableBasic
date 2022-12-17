@@ -4,7 +4,7 @@ phpVMS v7 module for Basic VA features
 
 Compatible with phpVMS v7 builds as described below;
 
-* Module versions starting with v3.1.xx supports only php8 and laravel9
+* Module versions starting with v3.1.xx and up supports only php8 and laravel9
 * Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220314.128480` for v3.1.xx
 * Module version v3.0.19 is the latest version with php7.4 and laravel8 support
 * Latest available phpVMS v7 version is phpVms `7.0.0-dev+220307.00bf18` (07.MAR.22) for v3.0.19
