@@ -123,6 +123,13 @@
           @include('DBasic::admin.settings_table', ['group' => 'Stable Approach'])
           <span class="text-info">When enabled, module will be able to receive reports sent by Stable Approach plugin</span>
         </div>
+        {{-- Auto Reject Group --}}
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Auto Reject Settings</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'Auto Reject'])
+          <span class="text-info">Set margin to 0 if you do not want to use score, landing rate, flight time options</span>
+        </div>        
       </div>
     </div>
   </div>

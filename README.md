@@ -142,13 +142,33 @@ If you are not developing your own pirep checks and/or not using Disposable Spec
 
 For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old (from the end of 2020, Airac 2020/14) but still usefull for most airports. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
 
+If you want to display subfleet or aircraft images, just put images under public/image/aircraft or public/image/subfleet folders. Files should be in all lowercase including the extension (like tc-grd.jpg). Aircraft images use registration, subfleet images use subfleet type code. (Disposable Theme offers some examples)
+
+## Auto Rejection of Pireps
+
+It is possible to auto reject pireps with Network Presence and Network Callsign checks, also module provides rejection by score, landing rate and flight time options. For the system work properly set your acars pireps to be auto approved, let phpvms handle acceptance and module to reject only when needed.
+
+Auto Rejected pireps can be always accepted by admins/staff via phpvms admin section.
+
+## Database Health Checks
+
 As an additional feature, module provides a quick database health check here. Technically it is a helper for you to solve problems, like finding out missing airports or broken relationships 'caused by either import problems or hard deleting records from your database. Provided results are mostly for usage in your sql queries to fix things manually when needed.
 
-Module also provides "Manual Awarding" feature, you can either define a blank award (with provided award class, keep it inactive) as you wish and then assign it your pilots manually. Or when needed you can assign a real award too, imagine a pilot finishes a tour some hours late and automatic awarding does not work anymore etc.
+## Manual Awarding & Manual Payment
+
+You can either define a blank award (with provided award class, keep it inactive) as you wish and then assign it your pilots manually. Or when needed you can assign a real award too, imagine a pilot finishes a tour some hours late and automatic awarding does not work anymore etc.
 
 For "Manual Payment" selected user's airline must have enough funds for the transfer, creating money out of thin air is not possible.
 
-If you want to display subfleet or aircraft images, just put images under public/image/aircraft or public/image/subfleet folders. Files should be in all lowercase including the extension (like tc-grd.jpg). Aircraft images use registration, subfleet images use subfleet type code. (Disposable Theme offers some examples)
+## Network Presence & Callsign Checks
+
+Module is able to check online network flights (IVAO/VATSIM) and record presence ratio of the pilot as an additional pirep field value. Also a callsign check can be done, which then also controls the airline identification part of the connection callsign (first 3 letters) against the airlines in your v7 setup. So in a multi airline setup your pilots will be able to operate one airline's flight but can connect to IVAO/VATSIM with another airline you provide service for.
+
+Imagine like you have THY, DLH and RYR in your setup. In this scenario, a pilot flying with a callsign THY1978 but operating a DLH flight will be counted as valid. Pilot online callsigns can be limited with core v7 SimBrief settings, you can force pilots to use their ident as callsign always. Deep checks with flight numbers is not considered due to network errors like refusal of connections with same callsigns etc.
+
+I suggest setting a ratio of 80-85 for presence as there may be connection issues and also a pilot can start boarding but do not connect to IVAO/VATSIM during that time for understanable reasons, this choice may reduce pilot's presence ratio 'cause checks do start with boarding and done on each update afterwards.
+
+Check frequency depends on your vmsAcars settings, the more frequent you request data, the more checks will be done.
 
 ## Stable Approach Plugin Support
 
@@ -521,6 +541,11 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+25.DEC.22
+
+* Added Callsign to Network Presence checks
+* Added Auto Reject feature
 
 17.DEC.22
 

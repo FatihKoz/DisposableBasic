@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Listeners;
 
 use App\Events\PirepFiled;
+use App\Models\Airline;
 use App\Models\PirepFieldValue;
 use App\Models\Enums\AircraftState;
 use Illuminate\Support\Facades\Log;
@@ -44,11 +45,42 @@ class Pirep_Filed
             Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $check_count . ' P:' . $check_online . ' Calculated Presence %:' . $check_result);
             PirepFieldValue::create([
                 'pirep_id' => $pirep->id,
-                'name'     => 'Network Presence',
+                'name'     => 'Network Presence Check',
                 'slug'     => 'network-presence',
                 'value'    => $check_result,
-                'source'   => 0,
+                'source'   => 1,
             ]);
+
+            if (DB_Setting('dbasic.networkcheck_callsign', false)) {
+                // Pirep is Filed, read recorded callsigns and write the result
+                // Skipping null records to eliminate possible problems when boarding starts but connection is delayed
+                $callsigns = DB_WhazzUpCheck::select('callsign')->where('pirep_id', $pirep->id)->whereNotNull('callsign')->get();
+                $callsigns_count = $callsigns->count();
+                if ($callsigns_count > 0) {
+                    // Get Core Airlines and check each callsign against them
+                    $airline_codes = Airline::where('active', 1)->pluck('icao')->toArray();
+                    $i = 0;
+                    foreach ($callsigns as $cs) {
+                        if (in_array(substr($cs->callsign, 0, 3), $airline_codes)) {
+                            $i++;
+                        }
+                    }
+                    $callsign_check = $i;
+                    $callsign_result = round((100 * $callsign_check) / $callsigns_count);
+                } else {
+                    $callsign_check = 0;
+                    $callsign_result = 0;
+                }
+
+                Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $callsigns_count . ' P:' . $callsign_check . ' Calculated Callsign Match %:' . $callsign_result);
+                PirepFieldValue::create([
+                    'pirep_id' => $pirep->id,
+                    'name'     => 'Network Callsign Check',
+                    'slug'     => 'network-callsign',
+                    'value'    => $callsign_result,
+                    'source'   => 1,
+                ]);
+            }
         }
     }
 }

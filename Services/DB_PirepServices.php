@@ -56,8 +56,10 @@ class DB_PirepServices
             $online_pilots = $online_pilots->where($network_field, $user_networkid->value);
 
             if ($online_pilots && count($online_pilots) > 0) {
+                $model_data['callsign'] = $online_pilots->first()->callsign;
                 $model_data['is_online'] = 1;
             } else {
+                $model_data['callsign'] = null;
                 $model_data['is_online'] = 0;
             }
 
