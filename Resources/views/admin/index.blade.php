@@ -128,7 +128,7 @@
           <b>Auto Reject Settings</b>
           <br>
           @include('DBasic::admin.settings_table', ['group' => 'Auto Reject'])
-          <span class="text-info">Set margin to 0 if you do not want to use score, landing rate, flight time options</span>
+          <span class="text-info">Set margin to 0 if you do not want to use definable items (score, landing rate etc)</span>
         </div>        
       </div>
     </div>

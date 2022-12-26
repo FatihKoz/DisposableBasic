@@ -5,6 +5,7 @@ namespace Modules\DisposableBasic\Listeners;
 use App\Events\PirepFiled;
 use App\Models\Enums\PirepState;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class Gen_AutoReject
@@ -16,6 +17,7 @@ class Gen_AutoReject
         $margin_score = DB_Setting('dbasic.ar_marginscore', 0);
         $margin_lrate = DB_Setting('dbasic.ar_marginlrate', 0);
         $margin_ftime = DB_Setting('dbasic.ar_marginftime', 0);
+        $margin_fburn = DB_Setting('dbasic.ar_marginfburn', 0);
         $margin_thrdist = DB_Setting('dbasic.ar_marginthrdist', 0);
         $margin_gforce = DB_Setting('dbasic.ar_margingforce', 0);
         $margin_presence = DB_Setting('dbasic.networkcheck_margin', 75);
@@ -58,21 +60,45 @@ class Gen_AutoReject
             $g_force = optional($pirep->fields->where('slug', 'landing-g-force')->first())->value;
         }
 
-        // Reject By Flight Time
-        if ($margin_ftime > 0 && $pirep->flight_time < $margin_ftime) {
-            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flight Time Below VA Approval Criteria']);
+        // Reject By Aircraft (A pirep with No Aircraft is rare but may happen, should be rejected)
+        if (!$aircraft) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: No Aircraft Registration Provided']);
             $pirep_state = PirepState::REJECTED;
         }
 
         // Reject By Score
-        if ($margin_score > 0 && $pirep->score < $margin_score) {
+        if ($margin_score != 0 && $pirep->score < $margin_score) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Pirep Score Below VA Approval Criteria']);
             $pirep_state = PirepState::REJECTED;
         }
 
         // Reject By Landing Rate
-        if ($margin_lrate != 0 && $pirep->landing_rate > $margin_lrate) {
+        if ($margin_lrate != 0 && $pirep->landing_rate < $margin_lrate) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Landing Rate Above VA Approval Criteria']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Flight Time
+        if ($margin_ftime != 0 && $pirep->flight_time < $margin_ftime) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flight Time Below VA Approval Criteria']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Fuel Burn
+        if ($pirep->fuel_used->internal() < $margin_fburn) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Non Reliable or Missing Fuel Information']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Arrival Threshold Distance
+        if ($margin_thrdist != 0 && $thr_dist && round($thr_dist) > $margin_thrdist) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Arrival Threshold Distance Above VA Approval Criteria']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Landing G-Force
+        if ($margin_gforce != 0 && $g_force && (float)$g_force > (float)$margin_gforce) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Landing G-Force Above VA Approval Criteria']);
             $pirep_state = PirepState::REJECTED;
         }
 
@@ -88,24 +114,6 @@ class Gen_AutoReject
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flights must be operated online with proper callsigns!']);
             $pirep_state = PirepState::REJECTED;
             Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Callsign. Check Result:' . $network_callsign . '% Requirement:' . $margin_presence . '%');
-        }
-
-        // Reject By Aircraft (A pirep with No Aircraft is rare but may happen, should be rejected)
-        if (!$aircraft) {
-            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: No Aircraft Registration Provided']);
-            $pirep_state = PirepState::REJECTED;
-        }
-
-        // Reject By Arrival Threshold Distance
-        if ($margin_thrdist != 0 && $thr_dist && round($thr_dist) > $margin_thrdist) {
-            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Arrival Threshold Distance Above VA Approval Criteria']);
-            $pirep_state = PirepState::REJECTED;
-        }
-
-        // Reject By Landing G-Force
-        if ($margin_gforce != 0 && $g_force && (float)$g_force > (float)$margin_gforce) {
-            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Landing G-Force Above VA Approval Criteria']);
-            $pirep_state = PirepState::REJECTED;
         }
 
         // Write Comments
