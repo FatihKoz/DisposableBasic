@@ -45,14 +45,6 @@ class UpdateDisposableWhazzupChecksTable extends Migration
                 ['key' => 'dbasic.ar_marginftime'],
                 ['group' => 'Auto Reject', 'name' => 'Flight Time', 'field_type' => 'numeric', 'default' => '0', 'order' => '8906']
             );
-            DB::table('disposable_settings')->updateOrInsert(
-                ['key' => 'dbasic.ar_marginthrdist'],
-                ['group' => 'Auto Reject', 'name' => 'Threshold Distance', 'field_type' => 'numeric', 'default' => '0', 'order' => '8907']
-            );
-            DB::table('disposable_settings')->updateOrInsert(
-                ['key' => 'dbasic.ar_margingforce'],
-                ['group' => 'Auto Reject', 'name' => 'G-Force', 'field_type' => 'numeric', 'default' => '0', 'order' => '8908']
-            );
         }
     }
 }
