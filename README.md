@@ -542,6 +542,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+26.DEC.22
+
+* Added new checks to Auto Reject (Thanks to @arthurpar06)
+* Fixed landing rate check of Auto Reject
+
 25.DEC.22
 
 * Added Callsign to Network Presence checks
