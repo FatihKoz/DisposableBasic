@@ -16,6 +16,8 @@ class Gen_AutoReject
         $margin_score = DB_Setting('dbasic.ar_marginscore', 0);
         $margin_lrate = DB_Setting('dbasic.ar_marginlrate', 0);
         $margin_ftime = DB_Setting('dbasic.ar_marginftime', 0);
+        $margin_thrdist = DB_Setting('dbasic.ar_marginthrdist', 0);
+        $margin_gforce = DB_Setting('dbasic.ar_margingforce', 0);
         $margin_presence = DB_Setting('dbasic.networkcheck_margin', 75);
         $reject_presence = DB_Setting('dbasic.ar_presence', false);
         $reject_callsign = DB_Setting('dbasic.ar_callsign', false);
@@ -47,9 +49,13 @@ class Gen_AutoReject
         if ($use_direct_db === true) {
             $network_presence = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-presence'])->value('value');
             $network_callsign = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-callsign'])->value('value');
+            $thr_dist = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'arrival-threshold-distance'])->value('value');
+            $g_force = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'landing-g-force'])->value('value');
         } else {
             $network_presence = optional($pirep->fields->where('slug', 'network-presence')->first())->value;
             $network_callsign = optional($pirep->fields->where('slug', 'network-callsign')->first())->value;
+            $thr_dist = optional($pirep->fields->where('slug', 'arrival-threshold-distance')->first())->value;
+            $g_force = optional($pirep->fields->where('slug', 'landing-g-force')->first())->value;
         }
 
         // Reject By Flight Time
@@ -87,6 +93,18 @@ class Gen_AutoReject
         // Reject By Aircraft (A pirep with No Aircraft is rare but may happen, should be rejected)
         if (!$aircraft) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: No Aircraft Registration Provided']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Arrival Threshold Distance
+        if ($margin_thrdist != 0 && $thr_dist && round($thr_dist) > $margin_thrdist) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Arrival Threshold Distance Above VA Approval Criteria']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Landing G-Force
+        if ($margin_gforce != 0 && $g_force && (float)$g_force > (float)$margin_gforce) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Landing G-Force Above VA Approval Criteria']);
             $pirep_state = PirepState::REJECTED;
         }
 
