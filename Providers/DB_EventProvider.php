@@ -17,11 +17,24 @@ use Modules\DisposableBasic\Listeners\Pirep_Updated;
 class DB_EventProvider extends ServiceProvider
 {
     // Listen Below Events
-    protected $listen = [
-        PirepCancelled::class => [Pirep_Cancelled::class],
-        PirepFiled::class     => [Pirep_Filed::class, Gen_AutoReject::class],
-        PirepPrefiled::class  => [Pirep_Prefiled::class],
-        PirepUpdated::class   => [Pirep_Updated::class],
+    protected $listen =
+    [
+        PirepCancelled::class => [
+            Pirep_Cancelled::class,
+        ],
+
+        PirepFiled::class => [
+            Pirep_Filed::class,
+            Gen_AutoReject::class,
+        ],
+
+        PirepPrefiled::class => [
+            Pirep_Prefiled::class,
+        ],
+
+        PirepUpdated::class => [
+            Pirep_Updated::class,
+        ],
     ];
 
     // Subscribe multiple events
