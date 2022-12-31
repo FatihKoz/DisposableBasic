@@ -73,7 +73,7 @@ class Gen_AutoReject
         }
 
         // Reject By Landing Rate
-        if ($margin_lrate != 0 && $pirep->landing_rate < $margin_lrate) {
+        if ($margin_lrate != 0 && $pirep->landing_rate && $pirep->landing_rate < $margin_lrate) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Landing Rate Above VA Approval Criteria']);
             $pirep_state = PirepState::REJECTED;
         }
