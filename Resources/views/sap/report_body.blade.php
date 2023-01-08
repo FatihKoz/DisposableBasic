@@ -110,7 +110,7 @@
             <td class="text-center" colspan="2">{{ $airport->icao.' | '.$airport->name }}</td>
           </tr>
           <tr>
-            <th>Ident</th> 
+            <th>Ident</th>
             <td>{{ 'Rwy '.$runway->begin->name.'/'.$runway->end->name }}</td>
           </tr>
           <tr>
@@ -118,15 +118,15 @@
             <td>{{ $runway_surface[$runway->surface] ?? '-' }}</td>
           </tr>
           <tr>
-            <th>Width</th> 
+            <th>Width</th>
             <td>{{ number_format(floor($runway->width)).'m' }}</td>
           </tr>
           <tr>
-            <th>Usable Length</th> 
+            <th>Usable Length</th>
             <td>{{ number_format($runway->length->useable).'m' }}</td>
           </tr>
           <tr>
-            <th>Touchdown Zone (TDZ)</th> 
+            <th>Touchdown Zone (TDZ)</th>
             <td>{{ number_format($runway->length->tdz).'m' }}</td>
           </tr>
           @if(isset($runway->begin->disp) && $runway->begin->disp > 0)
@@ -169,16 +169,31 @@
       <div class="accordion-body p-0">
         <table class="table table-sm table-borderless table-striped mb-0 align-middle">
           <tr>
-            <th colspan="2" class="text-center">{{ $approach->checkHeight->description }}</th>
+            <th colspan="2" class="text-center">
+            @php
+              // Quickfix For Stable Approach Plugin BETA version
+              // which provides long descriptions
+              $approach_text = $approach->checkHeight->description;
+              $division_pos = strpos($approach_text, ':');
+              if (is_numeric($division_pos) && $division_pos > 0) {
+                $approach_text = substr($approach_text, 0, $division_pos);
+              }
+            @endphp
+              {{ $approach_text }}
+            </th>
           </tr>
-          <tr>
-            <th>Localizer Deviation</th>
-            <td>{{ number_format($approach->loc_dev->max, 1).' dots' }}</td>
-          </tr>
-          <tr>
-            <th>Glide Path Deviation</th>
-            <td>{{ number_format($approach->gs_dev->max, 1).' dots' }}</td>
-          </tr>
+          @if($approach->loc_dev->max < 9)
+            <tr>
+              <th>Localizer Deviation</th>
+              <td>{{ number_format($approach->loc_dev->max, 1).' dots' }}</td>
+            </tr>
+          @endif
+          @if($approach->gs_dev->max < 9)
+            <tr>
+              <th>Glide Path Deviation</th>
+              <td>{{ number_format($approach->gs_dev->max, 1).' dots' }}</td>
+            </tr>
+          @endif
           <tr>
             <th>Sink Rate (Min/Max)</th>
             <td>{{ number_format($approach->sinkrate->min, 2).' fpm | '.number_format($approach->sinkrate->max, 2).' fpm' }}</td>
