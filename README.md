@@ -542,6 +542,12 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+12.JAN.23
+
+* DE Translation ([Cyber Air](http://www.cyber-air.org/))
+* Failsafe for null landing rate (Auto Reject)
+* Stable Approach Report visual fix (following SA 1.4.x beta changes)
+
 26.DEC.22
 
 * Added new checks to Auto Reject (Thanks to @arthurpar06)
