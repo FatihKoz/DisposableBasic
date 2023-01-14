@@ -548,7 +548,9 @@ If you have duplicated blades and encounter problems after updating the module o
 
 14.JAN.23
 
-* Update Network Presence Checks (Now allows both networks to be checked at the same time)
+* Updated Network Presence Checks (Now allows both networks to be checked at the same time)
+* Updated pirep listing blades to show Network Presence checks (for IVAO/VATSIM audits)
+* Updated helpers (to provide button/badge for Network checks)
 
 12.JAN.23
 
