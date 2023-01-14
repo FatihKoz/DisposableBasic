@@ -20,6 +20,9 @@
               <th>@lang('DBasic::common.score')</th>
               <th>@lang('DBasic::common.lrate')</th>
             @endability
+            @if(DB_Setting('dbasic.networkcheck', false))
+              <th>Network</th>
+            @endif
             <th class="text-end">@lang('DBasic::common.submitted')</th>
           </tr>
         </thead>
@@ -47,6 +50,9 @@
                 <td>{{ $pirep->score }}</td>
                 <td>@if($pirep->landing_rate) {{ $pirep->landing_rate.' ft/min' }} @endif</td>
               @endability
+              @if(DB_Setting('dbasic.networkcheck', false))
+                <td>{!! DB_NetworkPresence($pirep, 'badge') !!}</td>
+              @endif              
               <td class="text-end">
                 {{ $pirep->submitted_at->diffForHumans().' | '.$pirep->submitted_at->format('d.M') }}
               </td>

@@ -16,6 +16,9 @@
           <th>FDM Result</th>
         @endif
       @endability
+      @if(DB_Setting('dbasic.networkcheck', false))
+        <th>Network</th>
+      @endif
       <th class="text-end">@lang('DBasic::common.pilot')</th>
       <th class="text-end">@lang('DBasic::common.submitted')</th>
     </tr>
@@ -71,6 +74,9 @@
             <td>@widget('DBasic::StableApproach', ['pirep' => $pirep])</td>
           @endif
         @endability
+        @if(DB_Setting('dbasic.networkcheck', false))
+          <td>{!! DB_NetworkPresence($pirep, 'badge') !!}</td>
+        @endif
         <td class="text-end">
           <a href="{{ route('frontend.users.show.public', [$pirep->user_id]) }}">
             @if(Theme::getSetting('roster_ident'))
