@@ -170,6 +170,10 @@ I suggest setting a ratio of 80-85 for presence as there may be connection issue
 
 Check frequency depends on your vmsAcars settings, the more frequent you request data, the more checks will be done.
 
+Presence checks has an AUTO option (default), this enables checking both networks initially and continues on the one which the pilot is online. If you are operating only on one network, selecting it from settings is still the best choice (to reduce server load and unnecessary traffic) but if you allow both then leave the setting at AUTO and provide two custom profile fields for your pilots to fill in their network ID's. System is designed to check ID's existence too to reduce traffic and server load.
+
+System will save individual checks in a separate table which is cleaned up periodically and saves the results as new pirep field values. `network-online` (identified/selected network), `network-presence` (ratio of presence), `network-callsign` (ratio of callsign usage) are the slugs used for those pirep fields.
+
 ## Stable Approach Plugin Support
 
 Stable Approach Plugin is a **great** FDM (Flight Data Monitoring) tool for X-Plane, developed by [@Clamb94](https://github.com/Clamb94).
@@ -541,6 +545,10 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+14.JAN.23
+
+* Update Network Presence Checks (Now allows both networks to be checked at the same time)
 
 12.JAN.23
 

@@ -43,13 +43,10 @@ class Pirep_Filed
             }
 
             Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $check_count . ' P:' . $check_online . ' Calculated Presence %:' . $check_result);
-            PirepFieldValue::create([
-                'pirep_id' => $pirep->id,
-                'name'     => 'Network Presence Check',
-                'slug'     => 'network-presence',
-                'value'    => $check_result,
-                'source'   => 1,
-            ]);
+            PirepFieldValue::updateOrCreate(
+                ['pirep_id' => $pirep->id, 'name' => 'Network Presence Check', 'slug' => 'network-presence'],
+                ['value' => $check_result, 'source' => 1]
+            );
 
             if (DB_Setting('dbasic.networkcheck_callsign', false)) {
                 // Pirep is Filed, read recorded callsigns and write the result
@@ -73,13 +70,10 @@ class Pirep_Filed
                 }
 
                 Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $callsigns_count . ' P:' . $callsign_check . ' Calculated Callsign Match %:' . $callsign_result);
-                PirepFieldValue::create([
-                    'pirep_id' => $pirep->id,
-                    'name'     => 'Network Callsign Check',
-                    'slug'     => 'network-callsign',
-                    'value'    => $callsign_result,
-                    'source'   => 1,
-                ]);
+                PirepFieldValue::updateOrCreate(
+                    ['pirep_id' => $pirep->id, 'name' => 'Network Callsign Check', 'slug' => 'network-callsign'],
+                    ['value' => $callsign_result, 'source' => 1]
+                );
             }
         }
     }
