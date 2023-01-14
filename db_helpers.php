@@ -253,39 +253,49 @@ if (!function_exists('DB_GetUnits')) {
     }
 }
 
-  // Network Presence Display with Calculated Result
-  // Return html formatted string
-  if (!function_exists('DB_NetworkPresence')) {
+// Network Presence Display with Calculated Result
+// Return html formatted string
+if (!function_exists('DB_NetworkPresence')) {
     function DB_NetworkPresence($pirep, $type = 'button')
     {
-      $network_name = optional($pirep->fields->firstWhere('slug', 'network-online'))->value;
-      $network_presence = optional($pirep->fields->firstWhere('slug', 'network-presence-check'))->value;
-      // Title
-      if (isset($network_presence)) {
-        $button_title = 'Network Presence '.$network_presence.'%';
-      } else {
-        $button_title = 'Network Presence Not Calculated';
-      }
-      // Color
-      if ($pirep->state == 2) {
-        $button_color = 'bg-success';
-      } elseif ($pirep->state == 6) {
-        $button_color = 'bg-warning';
-      } else {
-        $button_color = 'bg-info';
-      }
+        $network_online = optional($pirep->fields->firstWhere('slug', 'network-online'))->value;
+        $network_presence = optional($pirep->fields->firstWhere('slug', 'network-presence-check'))->value;
 
-      if (filled($network_name) && $network_name != 'NONE' && $type == 'badge') {
-        $result = '<span class="badge badge-sm '.$button_color.' mx-1 px-1 text-black" title="'.$button_title.'">'.$network_name.'</span>';
-      } elseif (filled($network_name) && $network_name != 'NONE' && $type == 'button') {
-        $result = '<span class="btn btn-sm '.$button_color.' m-0 mx-1 p-0 px-1 text-black" title="'.$button_title.'">'.$network_name.'</span>';
-      } else {
-        $result = null;
-      }
+        // Network Name
+        $network_name = $network_online;
 
-      return $result;
+        // Title
+        if (isset($network_presence) && $network_presence == 0) {
+            $button_title = 'No Network Presence';
+            $network_name = 'OFFLINE';
+        } elseif (isset($network_presence) && $network_presence > 0) {
+            $button_title = 'Network Presence ' . $network_presence . '%';
+        } else {
+            $button_title = 'Network Presence Not Calculated';
+        }
+
+        // Color by Network
+        if ($network_name == 'OFFLINE') {
+            $button_color = 'bg-secondary';
+        } elseif ($network_name == 'VATSIM') {
+            $button_color = 'bg-success';
+        } elseif ($network_name == 'IVAO') {
+            $button_color = 'bg-primary';
+        } else {
+            $button_color = 'bg-info';
+        }
+
+        if (filled($network_online) && $network_name != 'NONE' && $type == 'badge') {
+            $result = '<span class="badge badge-sm ' . $button_color . ' mx-1 px-1 text-black" title="' . $button_title . '">' . $network_name . '</span>';
+        } elseif (filled($network_online) && $network_name != 'NONE' && $type == 'button') {
+            $result = '<span class="btn btn-sm ' . $button_color . ' m-0 mx-1 p-0 px-1 text-black" title="' . $button_title . '">' . $network_name . '</span>';
+        } else {
+            $result = null;
+        }
+
+        return $result;
     }
-  }
+}
 
 // Pirep State
 // Return mixed
