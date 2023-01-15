@@ -5,6 +5,7 @@ namespace Modules\DisposableBasic\Providers;
 use App\Events\PirepCancelled;
 use App\Events\PirepFiled;
 use App\Events\PirepPrefiled;
+use App\Events\PirepStatusChange;
 use App\Events\PirepUpdated;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Modules\DisposableBasic\Listeners\Gen_Cron;
@@ -12,6 +13,7 @@ use Modules\DisposableBasic\Listeners\Gen_AutoReject;
 use Modules\DisposableBasic\Listeners\Pirep_Cancelled;
 use Modules\DisposableBasic\Listeners\Pirep_Filed;
 use Modules\DisposableBasic\Listeners\Pirep_Prefiled;
+use Modules\DisposableBasic\Listeners\Pirep_StatusChange;
 use Modules\DisposableBasic\Listeners\Pirep_Updated;
 
 class DB_EventProvider extends ServiceProvider
@@ -30,6 +32,10 @@ class DB_EventProvider extends ServiceProvider
 
         PirepPrefiled::class => [
             Pirep_Prefiled::class,
+        ],
+
+        PirepStatusChange::class => [
+            Pirep_StatusChange::class,
         ],
 
         PirepUpdated::class => [

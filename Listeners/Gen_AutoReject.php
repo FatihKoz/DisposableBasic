@@ -106,14 +106,14 @@ class Gen_AutoReject
         if ($reject_presence && isset($network_presence) && $network_presence < $margin_presence) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flights must be operated online! Network Presence below required minimums']);
             $pirep_state = PirepState::REJECTED;
-            Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Presence. Check Result:' . $network_presence . '% Requirement:' . $margin_presence . '%');
+            Log::info('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Presence. Check Result:' . $network_presence . '% Requirement:' . $margin_presence . '%');
         }
 
         // Reject By Network Callsign Check (IVAO/VATSIM only)
         if ($reject_callsign && isset($network_callsign) && $network_callsign < $margin_presence) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flights must be operated online with proper callsigns!']);
             $pirep_state = PirepState::REJECTED;
-            Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Callsign. Check Result:' . $network_callsign . '% Requirement:' . $margin_presence . '%');
+            Log::info('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Callsign. Check Result:' . $network_callsign . '% Requirement:' . $margin_presence . '%');
         }
 
         // Write Comments

@@ -27,7 +27,7 @@ class Pirep_Filed
             $aircraft = $pirep->aircraft;
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
-            Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, Change STATE of ' . $aircraft->registration . ' to PARKED');
+            Log::info('Disposable Basic | Pirep:' . $pirep->id . ' FILED, Change STATE of ' . $aircraft->registration . ' to PARKED');
         }
 
         if (DB_Setting('dbasic.networkcheck', false)) {

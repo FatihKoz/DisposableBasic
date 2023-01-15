@@ -16,7 +16,7 @@ class Pirep_Prefiled
             $aircraft = $event->pirep->aircraft;
             $aircraft->state = AircraftState::IN_USE;
             $aircraft->save();
-            Log::debug('Disposable Basic | Pirep:' . $event->pirep->id . ' PRE-FILED, Changed STATE of ' . $aircraft->registration . ' to IN USE');
+            Log::info('Disposable Basic | Pirep:' . $event->pirep->id . ' PRE-FILED, Changed STATE of ' . $aircraft->registration . ' to IN USE');
         }
     }
 }

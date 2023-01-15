@@ -99,39 +99,42 @@ class DB_PirepServices
             $network_field = $network_field_vatsim;
             $network_server = $network_server_vatsim;
             $user_networkid = $user_vatsim_id;
+            $network_download = true;
         } elseif ($network_name === 'IVAO') {
             $network_field = $network_field_ivao;
             $network_server = $network_server_ivao;
             $user_networkid = $user_ivao_id;
+            $network_download = true;
         } else {
-            // User OFFLINE, no need to proceed further
-            return;
+            $network_download = false;
         }
 
-        // Get WhazzUp Data and Update if necessary (it may be already downloaded by cron or by WhazzUp Widget)
-        $whazzup = $this->GetWhazzUpData($network_name, $network_server, $network_refresh);
+        // Create main Model data
+        $model_data = [];
+        $model_data['user_id'] = $pirep->user_id;
+        $model_data['pirep_id'] = $pirep->id;
+        $model_data['network'] = $network_name;
+        $model_data['callsign'] = null;
+        $model_data['is_online'] = 0;
 
-        // Get all pilots and reduce the collection to a specific user
-        if ($whazzup && $user_networkid) {
+        // Proceed on checks for online networks
+        if ($network_download) {
+            // Get WhazzUp data
+            $whazzup = $this->GetWhazzUpData($network_name, $network_server, $network_refresh);
+            // Check the user and update model data array if necesary
+            if ($whazzup && $user_networkid) {
 
-            $model_data = [];
-            $model_data['user_id'] = $pirep->user_id;
-            $model_data['pirep_id'] = $pirep->id;
-            $model_data['network'] = $network_name;
+                $online_pilots = $this->CheckPilotPresence($whazzup, $network_field, $user_networkid);
 
-            $online_pilots = $this->CheckPilotPresence($whazzup, $network_field, $user_networkid);
-
-            if ($online_pilots && count($online_pilots) > 0) {
-                $model_data['callsign'] = $online_pilots->first()->callsign;
-                $model_data['is_online'] = 1;
-            } else {
-                $model_data['callsign'] = null;
-                $model_data['is_online'] = 0;
+                if ($online_pilots && count($online_pilots) > 0) {
+                    $model_data['callsign'] = $online_pilots->first()->callsign;
+                    $model_data['is_online'] = 1;
+                }
             }
-
-            DB_WhazzUpCheck::create($model_data);
-            return;
         }
+
+        // Save check result
+        DB_WhazzUpCheck::create($model_data);
     }
 
     // Record Selected Network to Pirep Field Values
