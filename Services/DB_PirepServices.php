@@ -118,7 +118,7 @@ class DB_PirepServices
         $model_data['is_online'] = 0;
 
         // Proceed on checks for online networks
-        if ($network_download) {
+        if ($network_download === true) {
             // Get WhazzUp data
             $whazzup = $this->GetWhazzUpData($network_name, $network_server, $network_refresh);
             // Check the user and update model data array if necesary

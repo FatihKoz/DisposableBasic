@@ -29,19 +29,23 @@ class Gen_Cron extends Listener
     public function cron_05min()
     {
         // $this->DB_WriteToLog('05 mins test');
-        if (DB_Setting('dbasic.networkcheck', false)) {
-            // If Network Presence Check is enabled, download WhazzUp Data with cron
-            // This will speed up check time, on the other hand will increase server traffic
-            $server_name = DB_Setting('dbasic.networkcheck_server', 'IVAO');
+        if (DB_Setting('dbasic.networkcheck_cron', false)) {
+            // If enabled this will speed up check time, on the other hand will increase server traffic
+            $server_name = DB_Setting('dbasic.networkcheck_server', 'AUTO');
 
-            if ($server_name === 'VATSIM') {
-                $server_url = 'https://data.vatsim.net/v3/vatsim-data.json';
-            } else {
-                $server_url = 'https://api.ivao.aero/v2/tracker/whazzup';
-            }
+            $url_vatsim = 'https://data.vatsim.net/v3/vatsim-data.json';
+            $url_ivao = 'https://api.ivao.aero/v2/tracker/whazzup';
 
             $DB_OnlineSVC = app(DB_OnlineServices::class);
-            $DB_OnlineSVC->DownloadWhazzUp($server_name, $server_url);
+
+            if ($server_name === 'IVAO') {
+                $DB_OnlineSVC->DownloadWhazzUp($server_name, $url_ivao);
+            } elseif ($server_name === 'VATSIM') {
+                $DB_OnlineSVC->DownloadWhazzUp($server_name, $url_vatsim);
+            } else {
+                $DB_OnlineSVC->DownloadWhazzUp('IVAO', $url_ivao);
+                $DB_OnlineSVC->DownloadWhazzUp('VATSIM', $url_vatsim);
+            }
         }
     }
 

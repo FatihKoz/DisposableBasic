@@ -37,7 +37,7 @@ class Pirep_Updated
         if (DB_Setting('dbasic.networkcheck', false)) {
             $pirep = $event->pirep;
 
-            if ($pirep->status === PirepStatus::ENROUTE) {
+            if ($pirep->status === PirepStatus::ENROUTE || $pirep->status === PirepStatus::APPROACH || $pirep->status === PirepStatus::APPROACH_ICAO) {
                 // Get last check
                 $enroute_diff = DB_Setting('dbasic.networkcheck_enroute_margin', 300);
                 $last_check = DB_WhazzUpCheck::where('pirep_id', $pirep->id)->orderBy('created_at', 'DESC')->first();
