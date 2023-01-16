@@ -31,7 +31,7 @@ class Pirep_Filed
         }
 
         if (DB_Setting('dbasic.networkcheck', false)) {
-            // Pirep is Filed, calculate the percentage and write the result
+            // Pirep is Filed, calculate network presence percentage
             $results = DB_WhazzUpCheck::select('is_online')->where('pirep_id', $pirep->id)->get();
             $check_count = $results->count();
             if ($check_count > 0) {
@@ -42,11 +42,21 @@ class Pirep_Filed
                 $check_result = 0;
             }
 
-            Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $check_count . ' P:' . $check_online . ' Calculated Presence %:' . $check_result);
+            // Save the result
             PirepFieldValue::updateOrCreate(
                 ['pirep_id' => $pirep->id, 'name' => 'Network Presence Check', 'slug' => 'network-presence'],
                 ['value' => $check_result, 'source' => 1]
             );
+
+            // Update network name back to OFFLINE if result is 0
+            if ($check_result == 0) {
+                PirepFieldValue::updateOrCreate(
+                    ['pirep_id' => $pirep->id, 'name' => 'Network Online', 'slug' => 'network-online'],
+                    ['value' => 'OFFLINE', 'source' => 1]
+                );
+            }
+
+            Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $check_count . ' P:' . $check_online . ' Calculated Presence %:' . $check_result);
 
             if (DB_Setting('dbasic.networkcheck_callsign', false)) {
                 // Pirep is Filed, read recorded callsigns and write the result
