@@ -381,10 +381,12 @@ class DB_StatServices
         }
 
         /* Rejected Pirep counts, dashed out on purpose
-        if (empty($airline_id)) {
-            $stats[__('DBasic::widgets.pireps_rej')] = DB::table('pireps')->where('state', PirepState::REJECTED)->count();
-        } else {
-            $stats[__('DBasic::widgets.pireps_rej')] = DB::table('pireps')->where(['airline_id' => $airline_id, 'state' => PirepState::REJECTED])->count();
+        if (setting('pireps.delete_rejected_hours') == 0 && $level > 10) {
+            if (empty($airline_id)) {
+                $stats[__('DBasic::widgets.pireps_rej')] = DB::table('pireps')->where('state', PirepState::REJECTED)->count();
+            } else {
+                $stats[__('DBasic::widgets.pireps_rej')] = DB::table('pireps')->where(['airline_id' => $airline_id, 'state' => PirepState::REJECTED])->count();
+            }
         }
         */
 
