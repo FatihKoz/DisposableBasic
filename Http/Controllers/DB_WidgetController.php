@@ -62,11 +62,11 @@ class DB_WidgetController extends Controller
 
             // Fuel Price
             if ($aircraft->subfleet->fuel_type === FuelType::LOW_LEAD) {
-                $fuel_price = filled($base_airport->fuel_100ll_cost) ? $base_airport->fuel_100ll_cost : setting('airports.default_100ll_fuel_cost');
+                $fuel_price = ($base_airport->fuel_100ll_cost > 0) ? $base_airport->fuel_100ll_cost : setting('airports.default_100ll_fuel_cost');
             } elseif ($aircraft->subfleet->fuel_type === FuelType::MOGAS) {
-                $fuel_price = filled($base_airport->fuel_mogas_cost) ? $base_airport->fuel_mogas_cost : setting('airports.default_mogas_fuel_cost');
+                $fuel_price = ($base_airport->fuel_mogas_cost > 0) ? $base_airport->fuel_mogas_cost : setting('airports.default_mogas_fuel_cost');
             } else {
-                $fuel_price = filled($base_airport->fuel_jeta_cost) ? $base_airport->fuel_jeta_cost : setting('airports.default_jet_a_fuel_cost');
+                $fuel_price = ($base_airport->fuel_jeta_cost > 0) ? $base_airport->fuel_jeta_cost : setting('airports.default_jet_a_fuel_cost');
             }
 
             // Ground Handling Prices (with multiplier)
