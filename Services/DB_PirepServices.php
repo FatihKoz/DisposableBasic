@@ -20,7 +20,7 @@ class DB_PirepServices
         }
 
         // Definitions
-        $network_selection = DB_Setting('dbasic.networkcheck_server', 'IVAO');
+        $network_selection = DB_Setting('dbasic.networkcheck_server', 'AUTO');
 
         $user_field_name_ivao = DB_Setting('dbasic.networkcheck_fieldname_ivao', 'IVAO ID');
         $user_field_name_vatsim = DB_Setting('dbasic.networkcheck_fieldname_vatsim', 'VATSIM ID');
@@ -43,66 +43,59 @@ class DB_PirepServices
         // Initial Check For Network Identification
         $identified_network = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-online'])->value('value');
 
-        // Stop proceeding further 'cause user has no network id's provided to VA and this is pre-identified
-        if (isset($identified_network) && $identified_network === 'NONE') {
-            return;
+        // User is already identified on IVAO or VATSIM
+        if ($identified_network === 'IVAO' || $identified_network === 'VATSIM') {
+            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' already identified on ' . $identified_network . ' (Presence Check)');
+            $network_selection = $identified_network;
         }
 
-        // Check user profile and try to find a matching network id and check whazzup data
-        if ($network_selection === 'AUTO' && (empty($identified_network) || $identified_network === 'OFFLINE')) {
-            if (isset($user_ivao_id) && empty($user_vatsim_id)) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is ONLY an IVAO member (Presence Check)');
-                $network_name = 'IVAO';
-            } elseif (isset($user_vatsim_id) && empty($user_ivao_id)) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is ONLY a VATSIM member (Presence Check)');
-                $network_name = 'VATSIM';
-            } elseif (empty($user_vatsim_id) && empty($user_ivao_id)) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' not provided ANY NETWORK memberships (Presence Check)');
-                $network_name = 'NONE';
-            } else {
-                // Check both networks and try to locate the user
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is member of BOTH networks (Presence Check)');
-                // Check IVAO
-                $whazzup_ivao = $this->GetWhazzUpData('IVAO', $network_server_ivao, $network_refresh);
-                $check_ivao =  $this->CheckPilotPresence($whazzup_ivao, $network_field_ivao, $user_ivao_id, 'IVAO');
-                $found_ivao = ($check_ivao && count($check_ivao) > 0) ? true : false;
-                if ($found_ivao === true) {
-                    $network_name = 'IVAO';
-                    Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on IVAO (Presence Check)');
-                } else {
-                    // Check VATSIM
-                    $whazzup_vatsim = $this->GetWhazzUpData('VATSIM', $network_server_vatsim, $network_refresh);
-                    $check_vatsim =  $this->CheckPilotPresence($whazzup_vatsim, $network_field_vatsim, $user_vatsim_id, 'VATSIM');
-                    $found_vatsim = ($check_vatsim && count($check_vatsim) > 0) ? true : false;
-                    if ($found_vatsim === true) {
-                        $network_name = 'VATSIM';
-                        Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on VATSIM (Presence Check)');
-                    } else {
-                        // Not found on IVAO or VATSIM
-                        $network_name = 'OFFLINE';
-                        Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is flying OFFLINE (Presence Check)');
-                    }
-                }
+        // Check user's network preference for AUTO
+        if ($network_selection === 'AUTO' && empty($user_ivao_id) && empty($user_vatsim_id)) {
+            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' not provided ANY NETWORK memberships (Presence Check)');
+            $network_selection = 'NONE';
+        } elseif ($network_selection === 'AUTO' && isset($user_ivao_id) && isset($user_vatsim_id)) {
+            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is member of BOTH networks (Presence Check)');
+            $network_selection = 'AUTO';
+        } elseif ($network_selection === 'AUTO' && isset($user_ivao_id) && empty($user_vatsim_id)) {
+            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is ONLY an IVAO member (Presence Check)');
+            $network_selection = 'IVAO';
+        } elseif ($network_selection === 'AUTO' && empty($user_ivao_id) && isset($user_vatsim_id)) {
+            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is ONLY a VATSIM member (Presence Check)');
+            $network_selection = 'VATSIM';
+        }
+
+        // Check both networks and try to find user
+        if ($network_selection === 'AUTO') {
+            // Check IVAO
+            $whazzup_ivao = $this->GetWhazzUpData('IVAO', $network_server_ivao, $network_refresh);
+            $check_ivao =  $this->CheckPilotPresence($whazzup_ivao, $network_field_ivao, $user_ivao_id, 'IVAO');
+            if ($check_ivao && count($check_ivao) > 0) {
+                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on IVAO (Presence Check)');
+                $network_selection = 'IVAO';
             }
-        } elseif ($network_selection === 'AUTO' && isset($identified_network) && ($identified_network === 'IVAO' || $identified_network === 'VATSIM')) {
-            // Already identified on IVAO or VATSIM
-            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' already identified on ' . $identified_network . ' (Presence Check)');
-            $network_name = $identified_network;
+            // Check VATSIM
+            $whazzup_vatsim = $this->GetWhazzUpData('VATSIM', $network_server_vatsim, $network_refresh);
+            $check_vatsim =  $this->CheckPilotPresence($whazzup_vatsim, $network_field_vatsim, $user_vatsim_id, 'VATSIM');
+            if ($check_vatsim && count($check_vatsim) > 0) {
+                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on VATSIM (Presence Check)');
+                $network_selection = 'VATSIM';
+            }
+        } elseif ($network_selection === 'NONE') {
+            Log::debug('Disposable Basic | Checking nothing (Presence Check)');
         } else {
-            // VA Only allows a certain network
-            Log::debug('Disposable Basic | VA checks only ' . $network_selection . ' (Presence Check)');
-            $network_name = $network_selection;
+            // VA only allows a certain network
+            Log::debug('Disposable Basic | Checking only ' . $network_selection . ' (Presence Check)');
         }
 
         // Record network to Pirep Field Values
-        $this->RecordNetwork($pirep->id, $network_name);
+        $this->RecordNetwork($pirep->id, $network_selection);
 
-        if ($network_name === 'VATSIM') {
+        if ($network_selection === 'VATSIM') {
             $network_field = $network_field_vatsim;
             $network_server = $network_server_vatsim;
             $user_networkid = $user_vatsim_id;
             $network_download = true;
-        } elseif ($network_name === 'IVAO') {
+        } elseif ($network_selection === 'IVAO') {
             $network_field = $network_field_ivao;
             $network_server = $network_server_ivao;
             $user_networkid = $user_ivao_id;
@@ -115,18 +108,18 @@ class DB_PirepServices
         $model_data = [];
         $model_data['user_id'] = $pirep->user_id;
         $model_data['pirep_id'] = $pirep->id;
-        $model_data['network'] = $network_name;
+        $model_data['network'] = $network_selection;
         $model_data['callsign'] = null;
         $model_data['is_online'] = 0;
 
         // Proceed on checks for online networks
         if ($network_download === true) {
             // Get WhazzUp data
-            $whazzup = $this->GetWhazzUpData($network_name, $network_server, $network_refresh);
+            $whazzup = $this->GetWhazzUpData($network_selection, $network_server, $network_refresh);
             // Check the user and update model data array if necesary
             if ($whazzup && $user_networkid) {
 
-                $online_pilots = $this->CheckPilotPresence($whazzup, $network_field, $user_networkid, $network_name);
+                $online_pilots = $this->CheckPilotPresence($whazzup, $network_field, $user_networkid, $network_selection);
 
                 if ($online_pilots && count($online_pilots) > 0) {
                     $model_data['callsign'] = $online_pilots->first()->callsign;
@@ -137,15 +130,6 @@ class DB_PirepServices
 
         // Save check result
         DB_WhazzUpCheck::create($model_data);
-    }
-
-    // Record Selected Network to Pirep Field Values
-    public function RecordNetwork($pirep_id, $network_name)
-    {
-        PirepFieldValue::updateOrCreate(
-            ['pirep_id' => $pirep_id, 'name' => 'Network Online', 'slug' => 'network-online'],
-            ['value' => $network_name, 'source' => 1]
-        );
     }
 
     // Get WhazzUp Data and Update if necessary
@@ -162,11 +146,21 @@ class DB_PirepServices
         return $whazzup;
     }
 
+    // Search Pilot In Downloaded Network Data
     public function CheckPilotPresence($whazzup, $network_field, $user_networkid, $network_name)
     {
         Log::debug('Disposable Basic | Searching ' . $user_networkid . ' in ' . $network_name . ' WhazzUp data (Presence Check)');
         $online_pilots = collect(json_decode($whazzup->pilots));
 
         return $online_pilots->where($network_field, $user_networkid);
+    }
+
+    // Record Selected Network to Pirep Field Values
+    public function RecordNetwork($pirep_id, $network_name)
+    {
+        PirepFieldValue::updateOrCreate(
+            ['pirep_id' => $pirep_id, 'name' => 'Network Online', 'slug' => 'network-online'],
+            ['value' => $network_name, 'source' => 1]
+        );
     }
 }
