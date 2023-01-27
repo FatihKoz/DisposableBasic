@@ -44,7 +44,7 @@ class DB_PirepServices
         $identified_network = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-online'])->value('value');
 
         // User is already identified on IVAO or VATSIM
-        if ($identified_network === 'IVAO' || $identified_network === 'VATSIM') {
+        if ($network_selection === 'AUTO' && ($identified_network === 'IVAO' || $identified_network === 'VATSIM')) {
             Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' already identified on ' . $identified_network . ' (Presence Check)');
             $network_selection = $identified_network;
         }
