@@ -30,7 +30,7 @@ class DB_PirepServices
         $network_server_vatsim = 'https://data.vatsim.net/v3/vatsim-data.json';
         $network_field_ivao = 'userId';
         $network_server_ivao = 'https://api.ivao.aero/v2/tracker/whazzup';
-        $network_refresh = 150;
+        $network_refresh = 90;
 
         // Get Custom User Field ID's
         $user_field_id_ivao = optional(UserField::select('id')->where('name', $user_field_name_ivao)->first())->id;
@@ -64,47 +64,8 @@ class DB_PirepServices
             $network_selection = 'VATSIM';
         }
 
-        // Check both networks and try to find user
-        if ($network_selection === 'AUTO') {
-            // Check IVAO
-            $whazzup_ivao = $this->GetWhazzUpData('IVAO', $network_server_ivao, $network_refresh);
-            $check_ivao =  $this->CheckPilotPresence($whazzup_ivao, $network_field_ivao, $user_ivao_id, 'IVAO');
-            if ($check_ivao && count($check_ivao) > 0) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on IVAO (Presence Check)');
-                $network_selection = 'IVAO';
-            }
-            // Check VATSIM
-            $whazzup_vatsim = $this->GetWhazzUpData('VATSIM', $network_server_vatsim, $network_refresh);
-            $check_vatsim =  $this->CheckPilotPresence($whazzup_vatsim, $network_field_vatsim, $user_vatsim_id, 'VATSIM');
-            if ($check_vatsim && count($check_vatsim) > 0) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on VATSIM (Presence Check)');
-                $network_selection = 'VATSIM';
-            }
-        } elseif ($network_selection === 'NONE') {
-            Log::debug('Disposable Basic | Checking nothing (Presence Check)');
-        } else {
-            // VA only allows a certain network
-            Log::debug('Disposable Basic | Checking only ' . $network_selection . ' (Presence Check)');
-        }
-
-        // Record network to Pirep Field Values
-        $this->RecordNetwork($pirep->id, $network_selection);
-
-        if ($network_selection === 'VATSIM') {
-            $network_field = $network_field_vatsim;
-            $network_server = $network_server_vatsim;
-            $user_networkid = $user_vatsim_id;
-            $network_download = true;
-        } elseif ($network_selection === 'IVAO') {
-            $network_field = $network_field_ivao;
-            $network_server = $network_server_ivao;
-            $user_networkid = $user_ivao_id;
-            $network_download = true;
-        } else {
-            $network_download = false;
-        }
-
         // Create main Model data
+        $model_update = true;
         $model_data = [];
         $model_data['user_id'] = $pirep->user_id;
         $model_data['pirep_id'] = $pirep->id;
@@ -112,47 +73,91 @@ class DB_PirepServices
         $model_data['callsign'] = null;
         $model_data['is_online'] = 0;
 
-        // Proceed on checks for online networks
-        if ($network_download === true) {
-            // Get WhazzUp data
-            $whazzup = $this->GetWhazzUpData($network_selection, $network_server, $network_refresh);
-            // Check the user and update model data array if necesary
-            if ($whazzup && $user_networkid) {
-
-                $online_pilots = $this->CheckPilotPresence($whazzup, $network_field, $user_networkid, $network_selection);
-
-                if ($online_pilots && count($online_pilots) > 0) {
-                    $model_data['callsign'] = $online_pilots->first()->callsign;
-                    $model_data['is_online'] = 1;
-                }
+        // Check both networks and try to find user
+        if ($network_selection === 'NONE') {
+            // Do Nothing
+            // Log::debug('Disposable Basic | Checking NOTHING (Presence Check)');
+            $model_update = false;
+        } elseif ($network_selection === 'IVAO') {
+            // Check IVAO
+            // Log::debug('Disposable Basic | Checking only ' . $network_selection . ' (Presence Check)');
+            $network_check = $this->CheckNetwork($network_selection, $network_server_ivao, $network_refresh, $network_field_ivao, $user_ivao_id);
+            $model_data['callsign'] = $network_check['callsign'];
+            $model_data['is_online'] = $network_check['is_online'];
+        } elseif ($network_selection === 'VATSIM') {
+            // Check VATSIM
+            // Log::debug('Disposable Basic | Checking only ' . $network_selection . ' (Presence Check)');
+            $network_check = $this->CheckNetwork($network_selection, $network_server_vatsim, $network_refresh, $network_field_vatsim, $user_vatsim_id);
+            $model_data['callsign'] = $network_check['callsign'];
+            $model_data['is_online'] = $network_check['is_online'];
+        } elseif ($network_selection === 'AUTO') {
+            // Check BOTH
+            Log::debug('Disposable Basic | Checking BOTH networks (Presence Check)');
+            // Check IVAO
+            $ivao_check = $this->CheckNetwork('IVAO', $network_server_ivao, $network_refresh, $network_field_ivao, $user_ivao_id);
+            if ($ivao_check['is_online'] === 1) {
+                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on IVAO (Presence Check)');
+                $network_selection = $ivao_check['network'];
+                $model_data['network'] = $ivao_check['network'];
+                $model_data['callsign'] = $ivao_check['callsign'];
+                $model_data['is_online'] = $ivao_check['is_online'];
+            }
+            // Check VATSIM
+            $vatsim_check = $this->CheckNetwork('VATSIM', $network_server_vatsim, $network_refresh, $network_field_vatsim, $user_vatsim_id);
+            if ($vatsim_check['is_online'] === 1) {
+                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on VATSIM (Presence Check)');
+                $network_selection = $vatsim_check['network'];
+                $model_data['network'] = $vatsim_check['network'];
+                $model_data['callsign'] = $vatsim_check['callsign'];
+                $model_data['is_online'] = $vatsim_check['is_online'];
+            }
+            // User Flying Offline
+            if ($ivao_check['is_online'] === 0 && $vatsim_check['is_online'] === 0) {
+                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is flying OFFLINE (Presence Check)');
+                $model_data['network'] = 'OFFLINE';
             }
         }
 
-        // Save check result
-        DB_WhazzUpCheck::create($model_data);
+        // Record network to Pirep Field Values
+        $this->RecordNetwork($pirep->id, $network_selection);
+
+        // Record network presence check data
+        if ($model_update === true) {
+            DB_WhazzUpCheck::create($model_data);
+        }
     }
 
-    // Get WhazzUp Data and Update if necessary
-    public function GetWhazzUpData($network_name, $network_server, $network_refresh)
+    // Check Network Data for user presence
+    // Return the result as an array (network name, callsign being used and check result)
+    public function CheckNetwork($network_name, $network_server, $network_refresh, $network_field, $user_networkid)
     {
+        //Get WhazzUp Data from DB
         $whazzup = DB_WhazzUp::where('network', $network_name)->orderby('updated_at', 'desc')->first();
 
+        // Update If Necessary
         if (!$whazzup || $whazzup->updated_at->diffInSeconds() > $network_refresh) {
             Log::debug('Disposable Basic | Downloading ' . $network_name . ' WhazzUp data (Presence Check)');
             $OnlineSvc = app(DB_OnlineServices::class);
             $whazzup = $OnlineSvc->DownloadWhazzUp($network_name, $network_server);
         }
 
-        return $whazzup;
-    }
-
-    // Search Pilot In Downloaded Network Data
-    public function CheckPilotPresence($whazzup, $network_field, $user_networkid, $network_name)
-    {
+        // Search Pilot in Network Feed
         Log::debug('Disposable Basic | Searching ' . $user_networkid . ' in ' . $network_name . ' WhazzUp data (Presence Check)');
         $online_pilots = collect(json_decode($whazzup->pilots));
+        $online_pilots = $online_pilots->where($network_field, $user_networkid);
 
-        return $online_pilots->where($network_field, $user_networkid);
+        $result = [];
+        $result['network'] = $network_name;
+        $result['callsign'] = null;
+        $result['is_online'] = 0;
+
+        if ($online_pilots && count($online_pilots) > 0) {
+            $result['callsign'] = $online_pilots->first()->callsign;
+            $result['is_online'] = 1;
+        }
+
+        // Return array
+        return $result;
     }
 
     // Record Selected Network to Pirep Field Values
