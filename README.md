@@ -549,6 +549,7 @@ If you have duplicated blades and encounter problems after updating the module o
 28.JAN.23
 
 * Network Presence check update (bugfix and logic improvements)
+* Aircraft Transfer widget fix (fuel price calculation was failing in some rare cases)
 
 15.JAN.23
 
@@ -563,7 +564,7 @@ If you have duplicated blades and encounter problems after updating the module o
 
 12.JAN.23
 
-* DE Translation ([Cyber Air](http://www.cyber-air.org/))
+* DE Translation (Thanks to [Cyber Air](http://www.cyber-air.org/))
 * Failsafe for null landing rate (Auto Reject)
 * Stable Approach Report visual fix (following SA 1.4.x beta changes)
 
