@@ -546,6 +546,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+28.JAN.23
+
+* Network Presence check update (bugfix and logic improvements)
+
 15.JAN.23
 
 * More Network Presence check updates (performance improvements mostly)
