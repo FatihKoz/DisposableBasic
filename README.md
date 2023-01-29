@@ -30,7 +30,11 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Daily random flight assignments/offerings
 * Fleet/Flights/Pireps Maps (based on leaflet, mostly customizable)
 * Manual Awarding and Manual Payment features
+* Aircraft state control (in use, in air, on ground)
+* IVAO/VATSIM Network Presence Check (with additional callsign checks)
+* Pirep Auto Rejecting capabilities,
 * Some widgets to enhance any page/layout as per virtual airline needs
+* Database checks (to identify errors easily when needed)
 
 ## Installation and Updates
 
@@ -83,11 +87,12 @@ DBasic.news      /dnews             // News index page
 DBasic.livewx    /dlivewx           // Live Weather Map index page
 DBasic.pireps    /dpireps           // All Pireps index page
 DBasic.ranks     /dranks            // Ranks index page
+DBasic.reports   /dreports          // All Pireps index page (public, for IVAO/VATSIM)
 DBasic.roster    /droster           // Roster index page (full roster)
 DBasic.stats     /dstats            // Statistics index page
 ```
 
-Also for embedding in your main (landing) sites, two public url's are available.  
+Also for embedding in your main (landing) sites, some public url's are available.  
 These pages will have no logo, background image or menu items. They are suitable for iframe usage at your landing pages (or main sites)
 
 ```php
