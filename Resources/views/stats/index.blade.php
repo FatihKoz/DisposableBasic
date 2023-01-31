@@ -4,7 +4,7 @@
 @section('content')
   <div class="row row-cols-lg-3">
     {{-- LEFT --}}
-    <div class="col-lg">
+    <div class="col-lg-4">
       <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1">
@@ -47,8 +47,54 @@
       @endif
     </div>
     {{-- MIDDLE --}}
-    <div class="col-lg">
-      <div class="row row-cols-md-2 row-cols-lg-1">
+    <div class="col-lg-5">
+      <div class="row row-cols-md-1 row-cols-lg-2">
+        <div class="col-md">
+          @if($stats_ivao)
+            <div class="card mb-2">
+              <div class="card-header p-1">
+                <h5 class="m-1">
+                  IVAO Network Statistics
+                  <i class="fas fa-file-upload float-end"></i>
+                </h5>
+              </div>
+              <div class="card-body p-0 table-responsive">
+                <table class="table table-sm table-borderless table-striped align-middle mb-0">
+                  @foreach($stats_ivao as $key => $value)
+                    <tr>
+                      <th class="text-start">{{ $key }}</th>
+                      <td class="text-end">{{ $value }}</td>
+                    </tr>
+                  @endforeach
+                </table>
+              </div>
+            </div>
+          @endif
+        </div>
+        <div class="col-md">
+          @if($stats_vatsim)
+            <div class="card mb-2">
+              <div class="card-header p-1">
+                <h5 class="m-1">
+                  VATSIM Network Statistics
+                  <i class="fas fa-file-upload float-end"></i>
+                </h5>
+              </div>
+              <div class="card-body p-0 table-responsive">
+                <table class="table table-sm table-borderless table-striped align-middle mb-0">
+                  @foreach($stats_vatsim as $key => $value)
+                    <tr>
+                      <th class="text-start">{{ $key }}</th>
+                      <td class="text-end">{{ $value }}</td>
+                    </tr>
+                  @endforeach
+                </table>
+              </div>
+            </div>
+          @endif
+        </div>
+      </div>
+      <div class="row row-cols-md-1 row-cols-lg-2">
         <div class="col-md">
           @widget('DBasic::LeaderBoard', ['source' => 'dep', 'count' => 3])
         </div>
@@ -58,7 +104,7 @@
       </div>
     </div>
     {{-- RIGHT --}}
-    <div class="col-lg">
+    <div class="col-lg-3">
       @if($stats_pirep)
         <div class="card mb-2">
           <div class="card-header p-1">

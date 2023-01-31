@@ -21,10 +21,14 @@ class DB_StatisticController extends Controller
         $stats_basic[__('DBasic::common.hubs')] = DB::table('airports')->where('hub', 1)->count();
 
         $stats_pirep = $StatSvc->PirepStats();
+        $stats_ivao = $StatSvc->NetworkStats('IVAO');
+        $stats_vatsim = $StatSvc->NetworkStats('VATSIM');
 
         return view('DBasic::stats.index', [
             'multi_airline' => $multi_airline, 
             'stats_basic'   => $stats_basic,
+            'stats_ivao'    => $stats_ivao,
+            'stats_vatsim'  => $stats_vatsim,
             'stats_pirep'   => $stats_pirep,
         ]);
     }

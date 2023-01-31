@@ -486,4 +486,73 @@ class DB_StatServices
 
         return $finance;
     }
+
+    // Network Stats for IVAO/VATSIM (uses cache)
+    public function NetworkStats($network = 'BOTH')
+    {
+        if ($network === 'IVAO') {
+            $network_array = ['IVAO'];
+        } elseif ($network === 'VATSIM') {
+            $network_array = ['VATSIM'];
+        } else {
+            $network_array = ['IVAO', 'VATSIM'];
+        }
+
+        $nwstats = [];
+
+        // Cache
+        $cache_overall = 'ns-alltime-' . $network;
+        $cache_last90 = 'ns-last90-' . $network;
+        $cache_last180 = 'ns-last180-' . $network;
+        $cache_until = Carbon::now()->endOfDay();
+
+        // Periods
+        $start90 = Carbon::now()->subDays(90);
+        $start180 = Carbon::now()->subDays(180);
+
+        $overall = cache()->remember($cache_overall, $cache_until, function () use ($network_array) {
+            return DB::table('pirep_field_values')->selectRaw('value as network, count(value) as pireps')
+            ->where('slug', 'network-online')
+                ->whereIn('value', $network_array)
+                ->groupBy('value')->get();
+        });
+
+        if (filled($overall) && $overall->count() > 0) {
+            foreach ($overall as $ns) {
+                $nwstats[$ns->network . ' (All Time)'] = $ns->pireps;
+            }
+        }
+
+        $last90days = cache()->remember($cache_last90, $cache_until, function () use ($network_array, $start90) {
+            return DB::table('pirep_field_values')->selectRaw('value as network, count(value) as pireps')
+            ->where('slug', 'network-online')
+                ->where('created_at', '>', $start90)
+                ->whereIn('value', $network_array)
+                ->groupBy('value')->get();
+        });
+
+        if (filled($last90days) && $last90days->count() > 0) {
+            foreach ($last90days as $ns) {
+                $nwstats[$ns->network . ' (Last 90 Days)'] = $ns->pireps;
+            }
+        }
+
+        $last180days = cache()->remember($cache_last180, $cache_until, function () use ($network_array, $start180) {
+            return DB::table('pirep_field_values')->selectRaw('value as network, count(value) as pireps')
+            ->where('slug', 'network-online')
+                ->where('created_at', '>', $start180)
+                ->whereIn('value', $network_array)
+                ->groupBy('value')->get();
+        });
+
+        if (filled($last180days) && $last180days->count() > 0) {
+            foreach ($last180days as $ns) {
+                $nwstats[$ns->network . ' (Last 180 Days)'] = $ns->pireps;
+            }
+        }
+
+        ksort($nwstats, SORT_NATURAL);
+
+        return $nwstats;
+    }
 }

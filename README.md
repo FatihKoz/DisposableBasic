@@ -72,24 +72,25 @@ Module does not provide auto links to your phpvms theme, Disposable Theme v3 has
 Named Routes and Url's
 
 ```php
-DBasic.airlines  /dairlines         // Airlines index page
-DBasic.airline   /dairlines/DSP     // Airline details page, needs an {icao} code to run
+DBasic.airlines    /dairlines         // Airlines index page
+DBasic.airline     /dairlines/DSP     // Airline details page, needs an {icao} code to run
 
-DBasic.hubs      /dhubs             // Hubs index page
-DBasic.hub       /dhubs/LTAI        // Hub details page, needs an {icao} code to run
+DBasic.hubs        /dhubs             // Hubs index page
+DBasic.hub         /dhubs/LTAI        // Hub details page, needs an {icao} code to run
 
-DBasic.fleet     /dfleet            // Fleet index page
-DBasic.subfleet  /dfleet/B738-DSP   // Subfleet details page, needs a {subfleet_type} code to run
-DBasic.aircraft  /daircraft/TC-DHA  // Aircraft details page, needs a {registration} code to run
+DBasic.fleet       /dfleet            // Fleet index page
+DBasic.subfleet    /dfleet/B738-DSP   // Subfleet details page, needs a {subfleet_type} code to run
+DBasic.aircraft    /daircraft/TC-DHA  // Aircraft details page, needs a {registration} code to run
 
-DBasic.awards    /dawards           // Awards index page
-DBasic.news      /dnews             // News index page
-DBasic.livewx    /dlivewx           // Live Weather Map index page
-DBasic.pireps    /dpireps           // All Pireps index page
-DBasic.ranks     /dranks            // Ranks index page
-DBasic.reports   /dreports          // All Pireps index page (public, for IVAO/VATSIM)
-DBasic.roster    /droster           // Roster index page (full roster)
-DBasic.stats     /dstats            // Statistics index page
+DBasic.awards      /dawards           // Awards index page
+DBasic.news        /dnews             // News index page
+DBasic.livewx      /dlivewx           // Live Weather Map index page
+DBasic.pireps      /dpireps           // All Pireps index page
+DBasic.ranks       /dranks            // Ranks index page
+DBasic.reports     /dreports          // All Pireps index page (public, for IVAO/VATSIM)
+DBasic.roster      /droster           // Roster index page (full roster)
+DBasic.stats       /dstats            // Statistics index page
+DBasic.statistics  /dstatistics       // Statistics index page (public, for IVAO/VATSIM)
 ```
 
 Also for embedding in your main (landing) sites, some public url's are available.  
@@ -550,6 +551,11 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+31.JAN.23
+
+* Added Network Statistics (for IVAO and VATSIM audits)
+* Provided a public route for stats (for IVAO and VATSIM audits)
 
 28.JAN.23
 
