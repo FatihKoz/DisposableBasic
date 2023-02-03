@@ -22,7 +22,7 @@
                   @if($st->field_type === 'decimal')
                     type="number" step="0.0001" min="0" max="9999"
                   @elseif($st->field_type === 'numeric')
-                    type="number" step="1" min="0" max="9999"
+                    type="number" step="1" @if($st->key === 'dbasic.ar_marginlrate') min="-9999" max="9999" @else min="0" max="9999" @endif
                   @else
                     type="text" maxlength="500"
                   @endif
