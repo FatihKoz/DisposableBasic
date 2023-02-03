@@ -552,10 +552,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
-31.JAN.23
+03.FEB.23
 
 * Added Network Statistics (for IVAO and VATSIM audits)
 * Provided a public route for stats (for IVAO and VATSIM audits)
+* Fixed Auto Reject settings (forced negative values for landing rate criteria)
 
 28.JAN.23
 
