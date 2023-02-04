@@ -552,6 +552,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+04.FEB.23
+
+* Fixed Auto Reject (not working for network presence and callsign)
+* Improved Auto Reject (it will consider online flights only for callsign based rejection)
+
 03.FEB.23
 
 * Added Network Statistics (for IVAO and VATSIM audits)
