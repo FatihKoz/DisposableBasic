@@ -44,15 +44,15 @@ class Pirep_Filed
 
             // Save the result
             PirepFieldValue::updateOrCreate(
-                ['pirep_id' => $pirep->id, 'name' => 'Network Presence Check', 'slug' => 'network-presence'],
-                ['value' => $check_result, 'source' => 1]
+                ['pirep_id' => $pirep->id, 'slug' => 'network-presence-check'],
+                ['name' => 'Network Presence Check', 'value' => $check_result, 'source' => 1]
             );
 
             // Update network name back to OFFLINE if result is 0
             if ($check_result == 0) {
                 PirepFieldValue::updateOrCreate(
-                    ['pirep_id' => $pirep->id, 'name' => 'Network Online', 'slug' => 'network-online'],
-                    ['value' => 'OFFLINE', 'source' => 1]
+                    ['pirep_id' => $pirep->id, 'slug' => 'network-online'],
+                    ['name' => 'Network Online', 'value' => 'OFFLINE', 'source' => 1]
                 );
             }
 
@@ -81,10 +81,12 @@ class Pirep_Filed
 
                 Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $callsigns_count . ' P:' . $callsign_check . ' Calculated Callsign Match %:' . $callsign_result);
                 PirepFieldValue::updateOrCreate(
-                    ['pirep_id' => $pirep->id, 'name' => 'Network Callsign Check', 'slug' => 'network-callsign'],
-                    ['value' => $callsign_result, 'source' => 1]
+                    ['pirep_id' => $pirep->id, 'slug' => 'network-callsign-check'],
+                    ['name' => 'Network Callsign Check', 'value' => $callsign_result, 'source' => 1]
                 );
             }
+
+            // $pirep->save();
         }
     }
 }

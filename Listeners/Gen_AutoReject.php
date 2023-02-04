@@ -20,7 +20,7 @@ class Gen_AutoReject
         $margin_fburn = DB_Setting('dbasic.ar_marginfburn', 0);
         $margin_thrdist = DB_Setting('dbasic.ar_marginthrdist', 0);
         $margin_gforce = DB_Setting('dbasic.ar_margingforce', 0);
-        $margin_presence = DB_Setting('dbasic.networkcheck_margin', 75);
+        $margin_presence = DB_Setting('dbasic.networkcheck_margin', 80);
         $reject_presence = DB_Setting('dbasic.ar_presence', false);
         $reject_callsign = DB_Setting('dbasic.ar_callsign', false);
 
@@ -49,13 +49,13 @@ class Gen_AutoReject
 
         // Read Pirep Field Values
         if ($use_direct_db === true) {
-            $network_presence = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-presence'])->value('value');
-            $network_callsign = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-callsign'])->value('value');
+            $network_presence = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-presence-check'])->value('value');
+            $network_callsign = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-callsign-check'])->value('value');
             $thr_dist = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'arrival-threshold-distance'])->value('value');
             $g_force = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'landing-g-force'])->value('value');
         } else {
-            $network_presence = optional($pirep->fields->where('slug', 'network-presence')->first())->value;
-            $network_callsign = optional($pirep->fields->where('slug', 'network-callsign')->first())->value;
+            $network_presence = optional($pirep->fields->where('slug', 'network-presence-check')->first())->value;
+            $network_callsign = optional($pirep->fields->where('slug', 'network-callsign-check')->first())->value;
             $thr_dist = optional($pirep->fields->where('slug', 'arrival-threshold-distance')->first())->value;
             $g_force = optional($pirep->fields->where('slug', 'landing-g-force')->first())->value;
         }
@@ -110,7 +110,7 @@ class Gen_AutoReject
         }
 
         // Reject By Network Callsign Check (IVAO/VATSIM only)
-        if ($reject_callsign && isset($network_callsign) && $network_callsign < $margin_presence) {
+        if ($reject_callsign && isset($network_callsign) && isset($network_presence) && $network_presence > 0 && $network_callsign < $margin_presence) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flights must be operated online with proper callsigns!']);
             $pirep_state = PirepState::REJECTED;
             Log::info('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Callsign. Check Result:' . $network_callsign . '% Requirement:' . $margin_presence . '%');
