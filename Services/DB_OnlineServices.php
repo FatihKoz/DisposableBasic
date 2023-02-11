@@ -35,7 +35,7 @@ class DB_OnlineServices
         if ($network_selection === 'VATSIM') {
             $whazzup_sections = [
                 'network' => $network_selection,
-                'pilots'  => json_encode($whazzupdata->pilots),
+                'pilots'  => (isset($whazzupdata)) ? json_encode($whazzupdata->pilots) : null,
                 // 'atcos'   => json_encode($whazzupdata->controllers),
                 // 'servers' => json_encode($whazzupdata->servers),
                 // 'rawdata' => json_encode($whazzupdata),
@@ -43,7 +43,7 @@ class DB_OnlineServices
         } else {
             $whazzup_sections = [
                 'network' => $network_selection,
-                'pilots'  => json_encode($whazzupdata->clients->pilots),
+                'pilots'  => (isset($whazzupdata)) ? json_encode($whazzupdata->clients->pilots) : null,
                 // 'atcos'        => json_encode($whazzupdata->clients->atcs),
                 // 'observers'    => json_encode($whazzupdata->clients->observers),
                 // 'servers'      => json_encode($whazzupdata->servers),

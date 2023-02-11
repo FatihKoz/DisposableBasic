@@ -552,6 +552,11 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+11.FEB.23
+
+* Updated Discord Widget (to fix "Rate Limit" problems)
+* Updated WhazzUp Data download (to bypass VATSIM server feed errors)
+
 04.FEB.23
 
 * Fixed Auto Reject (not working for network presence and callsign)
