@@ -120,6 +120,7 @@ return [
     'fleet_map'    => 'Mappa Flotta',
     'airline_map'  => 'Mappa dei voli delle Compagnie',
     'assignm_map'  => 'Mappa degli incarichi mensili',
+    'aerodr_map'   => 'Mappe degli Aeroporti',
     'citypairs'    => 'Città(coppie)',
     'airports'     => 'Aeroporti',
     'hubs'         => 'Hubs',

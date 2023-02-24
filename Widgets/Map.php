@@ -62,6 +62,8 @@ class Map extends Widget
             $type = 'user';
         } elseif ($this->config['source'] === 'fleet') {
             $type = 'fleet';
+        } elseif ($this->config['source'] === 'aerodromes') {
+            $type = 'aerodromes';
         } elseif ($this->config['source'] === 'assignment') {
             $type = 'assignment';
         } else {
@@ -70,7 +72,7 @@ class Map extends Widget
         }
 
         // Build User's Flown CityPairs for Flight Maps Only
-        if (isset($user) && $type != 'fleet' && $type != 'assignment') {
+        if (isset($user) && $type != 'fleet' && $type != 'assignment' && $type != 'aerodromes') {
             $user_pireps = DB::table('pireps')->select('arr_airport_id', 'dpt_airport_id')->where(['user_id' => $user->id, 'state' => 2])->get();
             $user_citypairs = collect();
             foreach ($user_pireps as $up) {
@@ -109,6 +111,7 @@ class Map extends Widget
         }
 
         $eager_load = ['airline:id,name,icao,iata', 'arr_airport:id,name,lat,lon,hub', 'dpt_airport:id,name,lat,lon,hub'];
+
         // User Pireps Map
         if ($type === 'user') {
             $mapflights = Pirep::with($eager_load)
@@ -168,6 +171,11 @@ class Map extends Widget
                 })->get();
         }
 
+        // Aerodromes - Airports Map
+        elseif ($type === 'aerodromes') {
+            $airports = DB::table('airports')->select('id', 'hub', 'iata', 'icao', 'lat', 'lon', 'name')->orderBy('id')->get();
+        }
+
         // Fleet Locations Map
         elseif ($type === 'fleet') {
             $awhere = [];
@@ -202,7 +210,7 @@ class Map extends Widget
         }
 
         // Build Unique City Pairs From Flights/Pireps
-        if ($type != 'fleet') {
+        if ($type != 'fleet' && $type != 'aerodromes') {
             $citypairs = [];
             $airports_pack = collect();
             foreach ($mapflights as $mf) {
@@ -231,7 +239,7 @@ class Map extends Widget
         }
 
         // Auto disable popups to increase performance and reduce php timeout errors
-        if ($type != 'fleet' && is_countable($mapflights) && count($mapflights) >= 1000) {
+        if ($type != 'fleet' && $type != 'aerodromes' && is_countable($mapflights) && count($mapflights) >= 1000) {
             $detailed_popups = false;
         }
 

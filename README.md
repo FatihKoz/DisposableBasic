@@ -407,9 +407,10 @@ Generates a leaflet map according to config options defined.
 @widget('DBasic::Map', ['source' => $hub->id, 'limit' => 1000])
 @widget('DBasic::Map', ['location' => true])
 @widget('DBasic::Map', ['source' => 'assignment'])
+@widget('DBasic::Map', ['source' => 'aerodromes'])
 ```
 
-* `'source'` can be an airport_id (like `$airport->id` or `'EHAM'`), an airline_id (like `$airline->id` or `3`), `'user'`, `'fleet'`, `'assignment'`
+* `'source'` can be an airport_id (like `$airport->id` or `'EHAM'`), an airline_id (like `$airline->id` or `3`), `'user'`, `'fleet'`, `'assignment'`, `'aerodromes'`
 * `'visible'` can be either `true` or `false` (to show or skip visible flights as per phpvms settings)
 * `'limit'` can be a numeric value like `500` (to limit the drawn flights/pireps on the map due to performance reasons)
 
@@ -551,6 +552,10 @@ As you can see from the above example, filename and sub-folder location is not c
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
 ## Release / Update Notes
+
+24.FEB.23
+
+* Added a new option to Map Widget (Airports)
 
 11.FEB.23
 

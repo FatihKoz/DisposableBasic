@@ -123,6 +123,7 @@ return [
     'airline_map'  => 'Mapa de Voos da Cia',
     'assignm_map'  => 'Mapa da Escala Mensal',
     'citypairs'    => 'Pares de Cidades',
+    'aerodr_map'   => 'Mapa de Aeroportos',
     'airports'     => 'Aeroportos',
     'hubs'         => 'Hubs',
 ];

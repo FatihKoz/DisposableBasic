@@ -122,6 +122,7 @@ return [
     'fleet_map'    => 'Mapa de flota',
     'airline_map'  => 'Rutas de la aerolínea',
     'assignm_map'  => 'Mapa de asignaciones mensuales',
+    'aerodr_map'   => 'Mapa de aeropuertos',
     'citypairs'    => 'CityPairs',
     'airports'     => 'Aeropuertos',
     'hubs'         => 'Hubs',

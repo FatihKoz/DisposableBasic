@@ -11,6 +11,8 @@
           @lang('DBasic::widgets.airline_map')
         @elseif($mapsource === 'assignment')
           @lang('DBasic::widgets.assignm_map')
+        @elseif($mapsource === 'aerodromes')
+          @lang('DBasic::widgets.aerodr_map')
         @else
           @lang('DBasic::widgets.flights_map')
         @endif
@@ -32,6 +34,8 @@
               @lang('DBasic::widgets.airline_map')
             @elseif($mapsource === 'assignment')
               @lang('DBasic::widgets.assignm_map')
+            @elseif($mapsource === 'aerodromes')
+              @lang('DBasic::widgets.aerodr_map')
             @else
               @lang('DBasic::widgets.flights_map')
             @endif
@@ -80,7 +84,7 @@
           var HUB_{{ $hub['id'] }} = L.marker([{{ $hub['loc'] }}], {icon: GreenIcon , opacity: 0.8}).bindPopup({!! "'".$hub['pop']."'" !!}).addTo(mHubs).addTo(mBoundary);
         @endforeach
         @foreach ($mapAirports as $airport)
-          var APT_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: BlueIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mAirports).addTo(mBoundary);
+          var APT_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: BlueIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mAirports)@if($mapsource === 'aerodromes' && $loop->first || $mapsource === 'aerodromes' && $loop->last).addTo(mBoundary)@elseif($mapsource != 'aerodromes').addTo(mBoundary)@endif;
         @endforeach
         // Build City Pairs / Flights Layer Group
         @if(count($mapCityPairs) > 0)
@@ -113,7 +117,7 @@
         var BaseLayers = {'Dark Matter': DarkMatter, 'OpenSM Mapnik': OpenSM, 'NatGEO World': NatGeo, 'World Topo': WorldTopo};
         var Overlays = {'Hubs': mHubs, 'Airports': mAirports, @if(count($mapCityPairs) > 0) 'Flights': mFlights ,@endif 'OpenAIP Data': OpenAIP};
         // Define Map and Add Control Box
-        var {{ $mapsource }} = L.map('{{ $mapsource }}', {center: [{{ $mapcenter }}], layers: [DarkMatter, mHubs, mAirports, @if(count($mapCityPairs) > 0) mFlights @endif], scrollWheelZoom: false}).fitBounds(mBoundary.getBounds().pad(0.2));;
+        var {{ $mapsource }} = L.map('{{ $mapsource }}', {center: [{{ $mapcenter }}], layers: [DarkMatter, mHubs, mAirports @if(count($mapCityPairs) > 0), mFlights @endif], scrollWheelZoom: false}).fitBounds(mBoundary.getBounds().pad(0.2));;
         L.control.layers(BaseLayers, Overlays).addTo({{ $mapsource }});
         // TimeOut to ReDraw The Map in Modal
         setTimeout(function(){ {{ $mapsource }}.invalidateSize().fitBounds(mBoundary.getBounds().pad(0.2))}, 300);

@@ -122,6 +122,7 @@ return [
     'fleet_map'    => 'Fleet Map',
     'airline_map'  => 'Airline Flights Map',
     'assignm_map'  => 'Monthly Assignments Map',
+    'aerodr_map'   => 'Airports Map',
     'citypairs'    => 'CityPairs',
     'airports'     => 'Airports',
     'hubs'         => 'Hubs',
