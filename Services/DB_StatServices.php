@@ -362,6 +362,7 @@ class DB_StatServices
         $stats = [];
         $level = 100;
         $unit_distance = setting('units.distance');
+        $unit_weight = setting('units.weight');
         $unit_fuel = setting('units.fuel');
 
         $where = [];
@@ -390,6 +391,27 @@ class DB_StatServices
         }
         */
 
+        // Count carried PAX and CGO for fancy stats
+        $paxfares = DB::table('fares')->select('id')->where('type', 0)->pluck('id')->toArray();
+        $cgofares = DB::table('fares')->select('id')->where('type', 1)->pluck('id')->toArray();
+        $allpireps = DB::table('pireps')->select('id')->where($where)->pluck('id')->toArray();
+
+        $pax_amount = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $paxfares)->sum('count');
+        $pax_avg = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $paxfares)->avg('count');
+        $cgo_amount = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $cgofares)->sum('count');
+        $cgo_avg = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $cgofares)->avg('count');
+
+        if ($pax_amount > 0) {
+            $stats[__('DBasic::widgets.pireps_pax')] = number_format($pax_amount);
+            $stats[__('DBasic::widgets.avg_pax')] = number_format($pax_avg);
+        }
+        
+        if ($cgo_amount > 0) {
+            $stats[__('DBasic::widgets.pireps_cgo')] = number_format($cgo_amount) . ' ' . $unit_weight;
+            $stats[__('DBasic::widgets.avg_cgo')] = number_format($cgo_avg) . ' ' . $unit_weight;
+        }
+
+        // Basic Pirep Statistics
         $total_time = DB::table('pireps')->where($where)->sum('flight_time');
         $total_dist = DB::table('pireps')->where($where)->sum('distance');
         $total_fuel = DB::table('pireps')->where($where)->sum('fuel_used');

@@ -553,6 +553,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+12.MAR.23
+
+* Added total/average passenger and freight figures to statistics
+
 24.FEB.23
 
 * Added a new option to Map Widget (Airports)
