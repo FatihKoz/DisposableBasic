@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Listeners;
 
 use App\Events\PirepFiled;
+use App\Models\Enums\PirepSource;
 use App\Models\Enums\PirepState;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -60,6 +61,8 @@ class Gen_AutoReject
             $g_force = optional($pirep->fields->where('slug', 'landing-g-force')->first())->value;
         }
 
+        $acars_pirep = ($pirep->source == PirepSource::ACARS) ? true : false;
+
         // Reject By Aircraft (A pirep with No Aircraft is rare but may happen, should be rejected)
         if (!$aircraft) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: No Aircraft Registration Provided']);
@@ -103,14 +106,14 @@ class Gen_AutoReject
         }
 
         // Reject By Network Presence Check (IVAO/VATSIM only)
-        if ($reject_presence && isset($network_presence) && $network_presence < $margin_presence) {
+        if ($acars_pirep && $reject_presence && isset($network_presence) && $network_presence < $margin_presence) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flights must be operated online! Network Presence below required minimums']);
             $pirep_state = PirepState::REJECTED;
             Log::info('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Presence. Check Result:' . $network_presence . '% Requirement:' . $margin_presence . '%');
         }
 
         // Reject By Network Callsign Check (IVAO/VATSIM only)
-        if ($reject_callsign && isset($network_callsign) && isset($network_presence) && $network_presence > 0 && $network_callsign < $margin_presence) {
+        if ($acars_pirep && $reject_callsign && isset($network_callsign) && isset($network_presence) && $network_presence > 0 && $network_callsign < $margin_presence) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flights must be operated online with proper callsigns!']);
             $pirep_state = PirepState::REJECTED;
             Log::info('Disposable Basic | Pirep:' . $pirep->id . ' Rejected automatically by Callsign. Check Result:' . $network_callsign . '% Requirement:' . $margin_presence . '%');

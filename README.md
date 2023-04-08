@@ -553,6 +553,10 @@ If you have duplicated blades and encounter problems after updating the module o
 
 ## Release / Update Notes
 
+08.APR.23
+
+* Updated Auto Reject (Manual pireps will not be considered during Network Presence checks)
+
 12.MAR.23
 
 * Added total/average passenger and freight figures to statistics
