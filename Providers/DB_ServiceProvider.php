@@ -157,9 +157,12 @@ class DB_ServiceProvider extends ServiceProvider
 
         $this->publishes([$sourcePath => $viewPath,], 'views');
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/DisposableBasic';
-        }, \Config::get('view.paths')), [$sourcePath]), 'DBasic');
+        $this->loadViewsFrom(array_map(function ($path) {
+            if ($path === resource_path('views')) {
+                return $sourcePath;
+            }
+            return $path.'/modules/DisposableBasic';
+        }, \Config::get('view.paths')), 'DBasic');
     }
 
     public function provides(): array
