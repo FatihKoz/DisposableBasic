@@ -49,9 +49,13 @@
               </a>
             </td>
             <td>
+              @if($flight->aircraft_id === null)
+                Not Assigned
+              @else
               <a href="{{ route('DBasic.aircraft', [$flight->aircraft->registration]) }}">
                 {{ $flight->aircraft->registration.' ('.$flight->aircraft->icao.')' }}
               </a>
+              @endif
             </td>
             <td>{{ optional($flight->position)->altitude.' ft' }}</td>
             <td>{{ optional($flight->position)->gs.' kts' }}</td>
