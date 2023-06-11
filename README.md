@@ -2,18 +2,9 @@
 
 phpVMS v7 module for Basic VA features
 
-Compatible with phpVMS v7 builds as described below;
-
-* Module versions starting with v3.1.xx and up supports only php8 and laravel9
-* Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220314.128480` for v3.1.xx
-* Module version v3.0.19 is the latest version with php7.4 and laravel8 support
-* Latest available phpVMS v7 version is phpVms `7.0.0-dev+220307.00bf18` (07.MAR.22) for v3.0.19
-* Minimum required phpVMS v7 version is phpVms `7.0.0-dev+220211.78fd83` (11.FEB.22) for v3.0.19
----
-* If you try to use latest version of this addon with an old version of phpvms, it will fail.
-* If you try to use latest phpvms with an old version of this addon, it will fail.
-* If you try to use your duplicated old blades with this version without checking and applying necessary changes, it will fail.
----
+* Module supports **only** php8 and laravel9 (php8.1.x is preferred)
+* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+230515.3828b8`
+  _(If you are somehow stuck with php7.4 and laravel8 check releases and use v3.0.19)_
 
 Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
 
@@ -35,6 +26,16 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Pirep Auto Rejecting capabilities,
 * Some widgets to enhance any page/layout as per virtual airline needs
 * Database checks (to identify errors easily when needed)
+
+## Compatibility with other addons
+
+This addon is fully compatible with phpVMS v7 and it will work with any other addon, specially acars softwares which are %100 compatible with phpVMS v7 too.  
+
+If the acars solution you are using is not compatible with phpVMS v7, then it is highly probable that you will face errors over and there. In this case, please speak with your addon provider not me 'cause I can not fix something I did not broke, or I can not cover somebody else's mistakes, poor compatibility problems etc.
+
+If an addon is fully compatible with phpVMS v7 and needs/uses some custom features, then I can work on this module to support that addon's special needs too.
+
+As of date, module supports vmsACARS.
 
 ## Installation and Updates
 
@@ -551,7 +552,16 @@ All Disposable Modules are capable of displaying customized files located under 
 As you can see from the above example, filename and sub-folder location is not changed. We only copy a file from a location to another and have a copied version of it.  
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
+## Known Bugs / Problems
+
+Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
+
 ## Release / Update Notes
+
+11.JUN.23
+
+* Rounded up version, added compatibility notice
+* Added some missing Spanish translations for widgets (Thanks to @arv187)
 
 08.APR.23
 
