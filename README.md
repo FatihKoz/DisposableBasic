@@ -3,7 +3,7 @@
 phpVMS v7 module for Basic VA features
 
 * Module supports **only** php8 and laravel9 (php8.1.x is preferred)
-* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+230515.3828b8`
+* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+230515.3828b8`  
   _(If you are somehow stuck with php7.4 and laravel8 check releases and use v3.0.19)_
 
 Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
