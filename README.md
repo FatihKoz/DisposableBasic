@@ -558,6 +558,10 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+16.JUN.23
+
+* PT-BR translation updated (Thanks to [FsBrasil](https://fsbrasil.net.br/))
+
 11.JUN.23
 
 * Rounded up version, added compatibility notice

@@ -23,8 +23,8 @@ return [
     'd6' => 'Sábado',
     'd7' => 'Domingo',
     // Quarto Names
-    'q1' => '1. Quarto',
-    'q2' => '2. Quarto',
-    'q3' => '3. Quarto',
-    'q4' => '4. Quarto',
+    'q1' => '1. Trimestre',
+    'q2' => '2. Trimestre',
+    'q3' => '3. Trimestre',
+    'q4' => '4. Trimestre',
 ];
