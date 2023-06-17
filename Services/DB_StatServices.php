@@ -392,14 +392,12 @@ class DB_StatServices
         */
 
         // Count carried PAX and CGO for fancy stats
-        $paxfares = DB::table('fares')->select('id')->where('type', 0)->pluck('id')->toArray();
-        $cgofares = DB::table('fares')->select('id')->where('type', 1)->pluck('id')->toArray();
         $allpireps = DB::table('pireps')->select('id')->where($where)->pluck('id')->toArray();
 
-        $pax_amount = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $paxfares)->sum('count');
-        $pax_avg = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $paxfares)->avg('count');
-        $cgo_amount = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $cgofares)->sum('count');
-        $cgo_avg = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $cgofares)->avg('count');
+        $pax_amount = DB::table('pirep_fares')->where('type', 0)->whereIn('pirep_id', $allpireps)->sum('count');
+        $pax_avg = DB::table('pirep_fares')->where('type', 0)->whereIn('pirep_id', $allpireps)->avg('count');
+        $cgo_amount = DB::table('pirep_fares')->where('type', 1)->whereIn('pirep_id', $allpireps)->sum('count');
+        $cgo_avg = DB::table('pirep_fares')->where('type', 1)->whereIn('pirep_id', $allpireps)->avg('count');
 
         if ($pax_amount > 0) {
             $stats[__('DBasic::widgets.pireps_pax')] = number_format($pax_amount);
