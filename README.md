@@ -2,9 +2,11 @@
 
 phpVMS v7 module for Basic VA features
 
-* Module supports **only** php8 and laravel9 (php8.1.x is preferred)
-* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+230515.3828b8`  
-  _(If you are somehow stuck with php7.4 and laravel8 check releases and use v3.0.19)_
+* Module supports **only** php8.1+ and laravel10
+* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+230621.16a31d`  
+
+* _php8.0 and laravel9 compatible latest version: v3.3.1_
+* _php7.4 and laravel8 compatible latest version: v3.0.19_  
 
 Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
 
@@ -558,7 +560,13 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+23.JUN.23
+
+* Updated module to be compatible with Laravel10
+
 16.JUN.23
+
+**WARNING: THIS IS THE LAST VERSION SUPPORTING PHP 7.4.xx AND LARAVEL 8**
 
 * PT-BR translation updated (Thanks to [FsBrasil](https://fsbrasil.net.br/))
 
