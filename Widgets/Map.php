@@ -110,7 +110,7 @@ class Map extends Widget
             $orwhere['visible'] = 1;
         }
 
-        $eager_load = ['airline:id,name,icao,iata', 'arr_airport:id,name,lat,lon,hub', 'dpt_airport:id,name,lat,lon,hub'];
+        $eager_load = ['airline' => function ($query) { return $query->withTrashed(); }, 'arr_airport' => function ($query) { return $query->withTrashed(); }, 'dpt_airport' => function ($query) { return $query->withTrashed(); },];
 
         // User Pireps Map
         if ($type === 'user') {
