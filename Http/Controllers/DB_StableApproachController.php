@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
+use App\Models\Enums\PirepState;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -66,7 +67,7 @@ class DB_StableApproachController extends Controller
 
         if (!isset($status)) {
             // Check Pirep
-            $pirep_id = DB::table('pireps')->where(['user_id' => $user_id, 'state' => 0])->orderBy('created_at', 'desc')->value('id');
+            $pirep_id = DB::table('pireps')->where(['user_id' => $user_id, 'state' => PirepState::IN_PROGRESS])->orderBy('created_at', 'desc')->value('id');
             $status = isset($pirep_id) ? null : 'No active pirep';
         }
 

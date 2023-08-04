@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Enums\PirepState;
 use Illuminate\Support\Facades\DB;
 use Modules\DisposableBasic\Models\DB_Runway;
 use Modules\DisposableBasic\Models\DB_Spec;
@@ -17,7 +18,7 @@ if (!function_exists('DB_AvgTaxiTime')) {
             $out_in = 'taxi-out-time';
         }
 
-        $pireps = DB::table('pireps')->select('id')->where([$dep_arr => $icao, 'state' => 2])->pluck('id')->all();
+        $pireps = DB::table('pireps')->whereNull('deleted_at')->select('id')->where([$dep_arr => $icao, 'state' => PirepState::ACCEPTED])->pluck('id')->all();
         $field_values = DB::table('pirep_field_values')->select('value')->whereIn('pirep_id', $pireps)->where('slug', $out_in)->orderby('created_at', 'desc')->take(100)->pluck('value')->all();
         $taxi_times = collect();
 

@@ -9,6 +9,8 @@ use App\Models\Subfleet;
 use App\Models\User;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\PirepStatus;
 use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +75,7 @@ class Map extends Widget
 
         // Build User's Flown CityPairs for Flight Maps Only
         if (isset($user) && $type != 'fleet' && $type != 'assignment' && $type != 'aerodromes') {
-            $user_pireps = DB::table('pireps')->select('arr_airport_id', 'dpt_airport_id')->where(['user_id' => $user->id, 'state' => 2])->get();
+            $user_pireps = DB::table('pireps')->whereNull('deleted_at')->select('arr_airport_id', 'dpt_airport_id')->where(['user_id' => $user->id, 'state' => PirepState::ACCEPTED])->get();
             $user_citypairs = collect();
             foreach ($user_pireps as $up) {
                 $user_citypairs->push($up->dpt_airport_id . $up->arr_airport_id);
@@ -110,13 +112,19 @@ class Map extends Widget
             $orwhere['visible'] = 1;
         }
 
-        $eager_load = ['airline' => function ($query) { return $query->withTrashed(); }, 'arr_airport' => function ($query) { return $query->withTrashed(); }, 'dpt_airport' => function ($query) { return $query->withTrashed(); },];
+        $eager_load = ['airline' => function ($query) {
+            return $query->withTrashed();
+        }, 'arr_airport' => function ($query) {
+            return $query->withTrashed();
+        }, 'dpt_airport' => function ($query) {
+            return $query->withTrashed();
+        },];
 
         // User Pireps Map
         if ($type === 'user') {
             $mapflights = Pirep::with($eager_load)
                 ->select('id', 'airline_id', 'flight_number', 'dpt_airport_id', 'arr_airport_id')
-                ->where(['user_id' => $user->id, 'state' => 2])
+                ->where(['user_id' => $user->id, 'state' => PirepState::ACCEPTED])
                 ->orderby('submitted_at', 'desc')
                 ->when(is_numeric($take_limit), function ($query) use ($take_limit) {
                     return $query->take($take_limit);
@@ -173,7 +181,7 @@ class Map extends Widget
 
         // Aerodromes - Airports Map
         elseif ($type === 'aerodromes') {
-            $airports = DB::table('airports')->select('id', 'hub', 'iata', 'icao', 'lat', 'lon', 'name')->orderBy('id')->get();
+            $airports = DB::table('airports')->whereNull('deleted_at')->select('id', 'hub', 'iata', 'icao', 'lat', 'lon', 'name')->orderBy('id')->get();
         }
 
         // Fleet Locations Map
@@ -206,7 +214,7 @@ class Map extends Widget
             // Build Unique Locations
             $aircraft_locations = $aircraft->pluck('airport_id')->toArray();
             $aircraft_locations = array_unique($aircraft_locations, SORT_STRING);
-            $airports = DB::table('airports')->select('id', 'hub', 'iata', 'icao', 'lat', 'lon', 'name')->whereIn('id', $aircraft_locations)->get();
+            $airports = DB::table('airports')->whereNull('deleted_at')->select('id', 'hub', 'iata', 'icao', 'lat', 'lon', 'name')->whereIn('id', $aircraft_locations)->get();
         }
 
         // Build Unique City Pairs From Flights/Pireps

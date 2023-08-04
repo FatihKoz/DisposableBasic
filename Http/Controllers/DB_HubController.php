@@ -9,6 +9,8 @@ use App\Models\Flight;
 use App\Models\Pirep;
 use App\Models\Subfleet;
 use App\Models\User;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\PirepStatus;
 use App\Models\Enums\UserState;
 use League\ISO3166\ISO3166;
 use Illuminate\Support\Facades\Auth;
@@ -35,15 +37,15 @@ class DB_HubController extends Controller
 
         $counts = DB::table('users')->selectRaw('home_airport_id as hub, count(id) as members')->whereIn('state', $states)->groupBy('hub')->orderBy('hub', 'asc')->get();
 
-        $pc = [];
+        $pilot_counts = [];
         foreach ($counts as $count) {
-            $pc[$count->hub] = $count->members;
+            $pilot_counts[$count->hub] = $count->members;
         }
 
         return view('DBasic::hubs.index', [
             'country' => new ISO3166(),
             'hubs'    => $hubs,
-            'pilots'  => $pc,
+            'pilots'  => $pilot_counts,
         ]);
     }
 
@@ -70,13 +72,16 @@ class DB_HubController extends Controller
             // Aircraft
             $hub_subfleets = Subfleet::where('hub_id', $hub->id)->pluck('id')->toArray();
             $eager_aircraft = ['airline', 'subfleet'];
-            $withCount_aircraft = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+            $withCount_aircraft = ['simbriefs' => function ($query) {
+                $query->whereNull('pirep_id');
+            }];
 
             $aircraft_hub = Aircraft::withCount($withCount_aircraft)->with($eager_aircraft)
                 ->whereIn('subfleet_id', $hub_subfleets)
                 ->orWhere('hub_id', $hub->id)
                 ->orderby('icao')->orderby('registration')
                 ->get();
+
             $aircraft_off = Aircraft::withCount($withCount_aircraft)->with($eager_aircraft)
                 ->where('airport_id', $hub->id)
                 ->where(function ($query) use ($hub_subfleets, $hub) {
@@ -108,8 +113,8 @@ class DB_HubController extends Controller
             $off_where['curr_airport_id'] = $hub->id;
 
             if (setting('pilots.hide_inactive')) {
-                $hub_where['state'] = 1;
-                $off_where['state'] = 1;
+                $hub_where['state'] = UserState::ACTIVE;
+                $off_where['state'] = UserState::ACTIVE;
             }
 
             $eager_users = ['airline', 'current_airport', 'home_airport', 'rank'];
@@ -120,7 +125,7 @@ class DB_HubController extends Controller
             $is_visible['pilots'] = ($users_hub->count() > 0 || $users_off->count() > 0) ? true : false;
 
             // Pilot Reports
-            $p_where = ['state' => 2, 'status' => 'ONB'];
+            $p_where = ['state' => PirepState::ACCEPTED, 'status' => PirepStatus::ARRIVED];
             $eager_pireps = ['aircraft', 'airline', 'arr_airport', 'dpt_airport', 'user'];
 
             $pireps = Pirep::with($eager_pireps)->where('dpt_airport_id', $hub->id)->where($p_where)

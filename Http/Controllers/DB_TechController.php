@@ -36,7 +36,7 @@ class DB_TechController extends Controller
         //Get Aircraft ICAO List
         $tech_details = DB_Tech::orderby('icao')->get();
         $defined_icao_types = $tech_details->pluck('icao')->all();
-        $icao_types = DB::table('aircraft')->whereNotNull('icao')->whereNotIn('icao', $defined_icao_types)->groupby('icao')->orderby('icao')->pluck('icao')->toArray();
+        $icao_types = DB::table('aircraft')->whereNull('deleted_at')->whereNotNull('icao')->whereNotIn('icao', $defined_icao_types)->groupby('icao')->orderby('icao')->pluck('icao')->toArray();
 
         return view('DBasic::admin.tech', [
             'icao_types'   => $icao_types,
@@ -57,7 +57,8 @@ class DB_TechController extends Controller
         DB_Tech::updateOrCreate(
             [
                 'icao'         => $request->icao,
-            ],[
+            ],
+            [
                 'f0_name'      => $request->f0_name,
                 'f0_speed'     => $request->f0_speed,
                 'f1_name'      => $request->f1_name,

@@ -34,7 +34,7 @@ class DB_WidgetController extends Controller
         if (!$selected_ac) {
             flash()->error(__('DBasic::widgets.ta_err_ac'));
 
-            return redirect(url($current_page));
+            return back(); // return redirect(url($current_page));
         }
 
         $aircraft = Aircraft::with('subfleet')->where('id', $selected_ac)->first();
@@ -47,14 +47,14 @@ class DB_WidgetController extends Controller
             flash()->success(__('DBasic::widgets.ta_ok_free', ['registration' => $aircraft->registration]));
             Log::info('Disposable Basic | Free Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
 
-            return redirect(url($current_page));
+            return back(); // return redirect(url($current_page));
         }
 
         // Transfer price is auto (Calculate cost, continue)
         if ($price === 'auto') {
             $ac_location = filled($aircraft->airport_id) ? $aircraft->airport_id : $aircraft->subfleet->hub_id;
-            $base_airport = DB::table('airports')->where('id', $ac_location)->first();
-            $dest_airport = DB::table('airports')->where('id', $user_location)->first();
+            $base_airport = DB::table('airports')->whereNull('deleted_at')->where('id', $ac_location)->first();
+            $dest_airport = DB::table('airports')->whereNull('deleted_at')->where('id', $user_location)->first();
 
             // Distance
             $AirportSvc = app(AirportService::class);
@@ -76,9 +76,9 @@ class DB_WidgetController extends Controller
             $gh_cost = Math::applyAmountOrPercent(round($orig_gh + $dest_gh, 2), $gh_multiplier);
 
             // Fuel Burn (per nm, with subfleet averages)
-            $subfleet_members = DB::table('aircraft')->where('subfleet_id', $aircraft->subfleet_id)->pluck('id')->toArray();
-            $total_fuelused = DB::table('pireps')->where('state', PirepState::ACCEPTED)->whereIn('aircraft_id', $subfleet_members)->sum('fuel_used');
-            $total_distance = DB::table('pireps')->where('state', PirepState::ACCEPTED)->whereIn('aircraft_id', $subfleet_members)->sum('distance');
+            $subfleet_members = DB::table('aircraft')->whereNull('deleted_at')->where('subfleet_id', $aircraft->subfleet_id)->pluck('id')->toArray();
+            $total_fuelused = DB::table('pireps')->whereNull('deleted_at')->where('state', PirepState::ACCEPTED)->whereIn('aircraft_id', $subfleet_members)->sum('fuel_used');
+            $total_distance = DB::table('pireps')->whereNull('deleted_at')->where('state', PirepState::ACCEPTED)->whereIn('aircraft_id', $subfleet_members)->sum('distance');
             if ($total_fuelused > 0 && $total_distance > 0) {
                 $avrg_fuelburn = round($total_fuelused / $total_distance, 3);
             } else {
@@ -109,14 +109,14 @@ class DB_WidgetController extends Controller
         if ($interim_price === true) {
             flash()->info('Aprx. Transfer Cost: ' . $transfer_cost . ' | ' . $aircraft->registration);
 
-            return redirect(url($current_page));
+            return back(); // return redirect(url($current_page));
         }
 
         // Check User Balance (abort or continue)
         if ($transfer_cost > $user->journal->balance) {
             flash()->error(__('DBasic::widgets.ta_err_funds', ['price' => $transfer_cost]));
 
-            return redirect(url($current_page));
+            return back(); // return redirect(url($current_page));
         }
 
         // Balance OK (Debit from User, Credit to aircraft owner Airline)
@@ -154,7 +154,7 @@ class DB_WidgetController extends Controller
         $aircraft->save();
         Log::info('Disposable Basic | Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private . '. Price: ' . $transfer_cost);
 
-        return redirect(url($current_page));
+        return back(); // return redirect(url($current_page));
     }
 
     // JumpSeat Travel
@@ -199,16 +199,16 @@ class DB_WidgetController extends Controller
         }
 
         if ($interim_price === true) {
-            flash()->info('Aprx. Ticket Price: '. $transfer_cost . ' | ' . $new_location);
+            flash()->info('Aprx. Ticket Price: ' . $transfer_cost . ' | ' . $new_location);
 
-            return redirect(url($current_page));
+            return back(); // return redirect(url($current_page));
         }
 
         // Check User Balance (abort or continue)
         if ($transfer_cost > $user->journal->balance) {
             flash()->error(__('DBasic::widgets.js_err_funds', ['price' => $transfer_cost]));
 
-            return redirect(url($current_page));
+            return back(); // return redirect(url($current_page));
         }
 
         // Balance OK (Debit from User, Credit to user Airline)
@@ -245,6 +245,6 @@ class DB_WidgetController extends Controller
         $user->curr_airport_id = $new_location;
         $user->save();
 
-        return redirect(url($current_page));
+        return back(); // return redirect(url($current_page));
     }
 }

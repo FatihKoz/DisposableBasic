@@ -23,8 +23,8 @@ class DB_AirportServices
         }
 
         $user_states = [UserState::ACTIVE, UserState::ON_LEAVE];
-        $users_array = DB::table('users')->whereIn('state', $user_states)->pluck('id')->toArray();
-        $airlines_array = DB::table('airlines')->where('active', 1)->pluck('id')->toArray();
+        $users_array = DB::table('users')->whereNull('deleted_at')->whereIn('state', $user_states)->pluck('id')->toArray();
+        $airlines_array = DB::table('airlines')->whereNull('deleted_at')->where('active', 1)->pluck('id')->toArray();
 
         $eager_load = ['aircraft', 'airline', 'arr_airport', 'dpt_airport', 'user'];
         $where = ['state' => PirepState::ACCEPTED, 'status' => PirepStatus::ARRIVED];
@@ -52,7 +52,7 @@ class DB_AirportServices
         }
 
         $states_array = [UserState::ACTIVE, UserState::ON_LEAVE];
-        $airlines_array = DB::table('airlines')->where('active', 1)->pluck('id')->toArray();
+        $airlines_array = DB::table('airlines')->whereNull('deleted_at')->where('active', 1)->pluck('id')->toArray();
 
         $eager_load = ['airline', 'rank', 'home_airport'];
         $where = ['curr_airport_id' => $location];
@@ -78,7 +78,9 @@ class DB_AirportServices
 
         $statuses_array = [AircraftStatus::ACTIVE, AircraftStatus::MAINTENANCE];
 
-        $withCount = ['simbriefs' => function ($query) { $query->whereNull('pirep_id'); }];
+        $withCount = ['simbriefs' => function ($query) {
+            $query->whereNull('pirep_id');
+        }];
         $eager_load = ['airline', 'subfleet'];
         $where = ['airport_id' => $location, 'state' => AircraftState::PARKED];
 

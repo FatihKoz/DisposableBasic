@@ -21,7 +21,7 @@ class DB_RunwayController extends Controller
                 flash()->success('Runway deleted.');
             }
 
-            return redirect(route('DBasic.runway').'?airport='.$request->input('airport'));
+            return redirect(route('DBasic.runway') . '?airport=' . $request->input('airport'));
         }
 
         if ($request->input('airport')) {
@@ -33,8 +33,8 @@ class DB_RunwayController extends Controller
                 return redirect(route('DBasic.runway'));
             }
         }
-        
-        $airports = DB::table('airports')->select('id', 'name')->orderBy('id')->get();
+
+        $airports = DB::table('airports')->whereNull('deleted_at')->select('id', 'name')->orderBy('id')->get();
         $runways_array = DB::table('disposable_runways')->whereNotNull('airport_id')->groupBy('airport_id')->pluck('airport_id')->toArray();
 
         $airports_with = $airports->whereIn('id', $runways_array);
@@ -66,7 +66,8 @@ class DB_RunwayController extends Controller
         DB_Runway::updateOrCreate(
             [
                 'id' => $request->id,
-            ],[
+            ],
+            [
                 'airport_id'   => $request->airport_id,
                 'runway_ident' => $request->runway_ident,
                 'lat'          => $request->lat,
@@ -80,6 +81,6 @@ class DB_RunwayController extends Controller
         );
 
         flash()->success('Runway saved');
-        return redirect(route('DBasic.runway').'?airport='.$request->airport_id);
+        return redirect(route('DBasic.runway') . '?airport=' . $request->airport_id);
     }
 }

@@ -50,12 +50,10 @@ class Discord extends Widget
                 if ($response->getStatusCode() == 200) {
                     $model_data['rawdata'] = $response->getBody();
                 } else {
-                    Log::error('Disposable Basic, HTTP ' . $response->getStatusCode() . ' error occured during download !');
-                    // return null;
+                    Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' error occured during download !');
                 }
             } catch (GuzzleException $e) {
-                Log::error('Disposable Basic, Discord Widget download error | ' . $e->getMessage());
-                // return null;
+                Log::error('Disposable Basic | Discord Widget Download Error : ' . $e->getMessage());
             }
 
             $discord = DB_Discord::updateOrCreate(['server_id' => $server_id], $model_data);

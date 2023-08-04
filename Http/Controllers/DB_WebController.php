@@ -7,6 +7,8 @@ use App\Models\Airline;
 use App\Models\Airport;
 use App\Models\Pirep;
 use App\Models\User;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\PirepStatus;
 use App\Models\Enums\UserState;
 use League\ISO3166\ISO3166;
 use Illuminate\Http\Request;
@@ -40,8 +42,8 @@ class DB_WebController extends Controller
         $count = is_numeric($request->input('count')) ? $request->input('count') : 10;
         $where = [];
 
-        $where['state'] = '2';
-        $where['status'] = 'ONB';
+        $where['state'] = PirepState::ACCEPTED;
+        $where['status'] = PirepStatus::ARRIVED;
 
         $eager_load = ['airline', 'aircraft', 'arr_airport', 'dpt_airport', 'user'];
         $pireps = Pirep::with($eager_load)->where($where)->orderby('submitted_at', 'DESC')->take($count)->get();

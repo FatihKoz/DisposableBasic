@@ -5,6 +5,7 @@ namespace Modules\DisposableBasic\Http\Controllers;
 use App\Contracts\Controller;
 use App\Models\User;
 use App\Models\UserAward;
+use App\Models\Enums\UserState;
 use App\Services\FinanceService;
 use App\Support\Money;
 use Carbon\Carbon;
@@ -24,7 +25,7 @@ class DB_AdminController extends Controller
 
         // Manual Awards and Bonus Payments
         $awards = DB::table('awards')->select('id', 'name')->orderBy('name')->get();
-        $users = DB::table('users')->select('id', 'pilot_id', 'name')->where('state', 1)->orderBy('pilot_id')->get();
+        $users = DB::table('users')->select('id', 'pilot_id', 'name')->where('state', UserState::ACTIVE)->orderBy('pilot_id')->get();
 
         return view('DBasic::admin.index', [
             'awards'   => $awards,
@@ -75,10 +76,6 @@ class DB_AdminController extends Controller
 
         $user = User::with('journal', 'airline.journal')->where('id', $user_id)->first();
         $amount = Money::createFromAmount($amount);
-
-        // Debug values
-        // Log::debug('Disposable Basic | Bonus Payment Amount: ' . $amount);
-        // Log::debug('Disposable Basic | Bonus Payment Airline Balance: ' . $user->airline->journal->balance);
 
         if (filled($user) && $user->airline->journal->balance > $amount) {
             // Payment Details
@@ -140,7 +137,7 @@ class DB_AdminController extends Controller
         }
 
         flash()->success($section . ' settings saved.');
-        return redirect(route('DBasic.admin'));
+        return back(); // return redirect(route('DBasic.admin'));
     }
 
     // Park Stuck Aircraft
@@ -158,42 +155,49 @@ class DB_AdminController extends Controller
             flash()->success('Aircraft State Changed Back to PARKED and Pirep CANCELLED');
         }
 
-        return redirect(route('DBasic.admin'));
+        return back(); // return redirect(route('DBasic.admin'));
     }
 
     // Database Checks
     public function health_check()
     {
-        // Build Arrays from what we have
-        $current_users = DB::table('users')->pluck('id')->toArray();
-        $current_airports = DB::table('airports')->pluck('id')->toArray();
-        $current_pireps = DB::table('pireps')->pluck('id')->toArray();
-        $current_airlines = DB::table('airlines')->pluck('id')->toArray();
-        $current_aircraft = DB::table('aircraft')->pluck('id')->toArray();
-        // Check Pireps
-        $pirep_user = DB::table('pireps')->whereNotIn('user_id', $current_users)->pluck('id')->toArray();
-        $pirep_comp = DB::table('pireps')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
-        $pirep_orig = DB::table('pireps')->whereNotIn('dpt_airport_id', $current_airports)->pluck('id')->toArray();
-        $pirep_dest = DB::table('pireps')->whereNotIn('arr_airport_id', $current_airports)->pluck('id')->toArray();
-        $pirep_acft = DB::table('pireps')->whereNotIn('aircraft_id', $current_aircraft)->pluck('id')->toArray();
-        // Check Acars Table
+        // Build Arrays from what we have (not trashed)
+        $current_aircraft = DB::table('aircraft')->whereNull('deleted_at')->pluck('id')->toArray();
+        $current_airlines = DB::table('airlines')->whereNull('deleted_at')->pluck('id')->toArray();
+        $current_airports = DB::table('airports')->whereNull('deleted_at')->pluck('id')->toArray();
+        $current_pireps = DB::table('pireps')->whereNull('deleted_at')->pluck('id')->toArray();
+        $current_users = DB::table('users')->whereNull('deleted_at')->pluck('id')->toArray();
+
+        // Acars Checks
         $acars_pirep = DB::table('acars')->whereNotIn('pirep_id', $current_pireps)->pluck('id')->toArray();
-        // Check Subfleets
-        $fleet_comp = DB::table('subfleets')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
-        // Check Flights
-        $flight_comp = DB::table('flights')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
-        $flight_orig = DB::table('flights')->whereNotIn('dpt_airport_id', $current_airports)->pluck('id')->toArray();
-        $flight_dest = DB::table('flights')->whereNotIn('arr_airport_id', $current_airports)->pluck('id')->toArray();
-        // Check Users
-        $users_comp = DB::table('users')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
+
+        // Airport Checks
+        $airports_pilot_home = DB::table('users')->whereNull('deleted_at')->whereNotIn('home_airport_id', $current_airports)->groupBy('home_airport_id')->pluck('home_airport_id')->toArray();
+        $airports_pilot_curr = DB::table('users')->whereNull('deleted_at')->whereNotIn('curr_airport_id', $current_airports)->groupBy('curr_airport_id')->pluck('curr_airport_id')->toArray();
+        $airports_pirep_dep = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
+        $airports_pirep_arr = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
+        $airports_flight_dep = DB::table('flights')->whereNull('deleted_at')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
+        $airports_flight_arr = DB::table('flights')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
+
+        // Flight Checks
+        $flight_comp = DB::table('flights')->whereNull('deleted_at')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
+        $flight_orig = DB::table('flights')->whereNull('deleted_at')->whereNotIn('dpt_airport_id', $current_airports)->pluck('id')->toArray();
+        $flight_dest = DB::table('flights')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->pluck('id')->toArray();
+
+        // Pirep Checks
+        $pirep_user = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('user_id', $current_users)->pluck('id')->toArray();
+        $pirep_comp = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
+        $pirep_orig = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('dpt_airport_id', $current_airports)->pluck('id')->toArray();
+        $pirep_dest = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->pluck('id')->toArray();
+        $pirep_acft = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('aircraft_id', $current_aircraft)->pluck('id')->toArray();
+
+        // Subfleet Checks
+        $fleet_comp = DB::table('subfleets')->whereNull('deleted_at')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
+
+        // User Checks
+        $users_comp = DB::table('users')->whereNull('deleted_at')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
         $users_field = DB::table('user_field_values')->whereNotIn('user_id', $current_users)->pluck('id')->toArray();
-        // Missing Airports
-        $airports_pilot_home = DB::table('users')->whereNotIn('home_airport_id', $current_airports)->groupBy('home_airport_id')->pluck('home_airport_id')->toArray();
-        $airports_pilot_curr = DB::table('users')->whereNotIn('curr_airport_id', $current_airports)->groupBy('curr_airport_id')->pluck('curr_airport_id')->toArray();
-        $airports_pirep_dep = DB::table('pireps')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
-        $airports_pirep_arr = DB::table('pireps')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
-        $airports_flight_dep = DB::table('flights')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
-        $airports_flight_arr = DB::table('flights')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
+
         // Additional Checks
         $rwy_ident_errors = DB::table('pirep_field_values')->where(function ($query) {
             $query->where('slug', 'arrival-heading-deviation')->orWhere('slug', 'landing-heading-deviation');

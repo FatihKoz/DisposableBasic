@@ -18,11 +18,11 @@ class DB_WhazzUpCheck extends Model
 
     // Validation rules
     public static $rules = [
-        'user_id'     => 'required',
-        'pirep_id'    => 'required',
-        'network'     => 'required',
-        'is_online'   => 'required',
-        'callsign'    => 'nullable',
+        'user_id'   => 'required',
+        'pirep_id'  => 'required',
+        'network'   => 'required',
+        'is_online' => 'required',
+        'callsign'  => 'nullable',
     ];
 
     // Relationships

@@ -41,7 +41,7 @@ class JumpSeat extends Widget
                 $where['hub'] = 1;
             }
 
-            $js_airports = DB::table('airports')->select('id', 'name', 'location', 'country')->where($where)->orderBy('id')->get();
+            $js_airports = DB::table('airports')->whereNull('deleted_at')->select('id', 'name', 'location', 'country')->where($where)->orderBy('id')->get();
         }
 
         return view('DBasic::widgets.jumpseat_travel', [

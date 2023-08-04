@@ -6,6 +6,7 @@ use App\Events\PirepFiled;
 use App\Models\Airline;
 use App\Models\PirepFieldValue;
 use App\Models\Enums\AircraftState;
+use App\Models\Enums\PirepSource;
 use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Models\DB_WhazzUpCheck;
 use Modules\DisposableBasic\Services\DB_NotificationServices;
@@ -45,14 +46,14 @@ class Pirep_Filed
             // Save the result
             PirepFieldValue::updateOrCreate(
                 ['pirep_id' => $pirep->id, 'slug' => 'network-presence-check'],
-                ['name' => 'Network Presence Check', 'value' => $check_result, 'source' => 1]
+                ['name' => 'Network Presence Check', 'value' => $check_result, 'source' => PirepSource::ACARS]
             );
 
             // Update network name back to OFFLINE if result is 0
             if ($check_result == 0) {
                 PirepFieldValue::updateOrCreate(
                     ['pirep_id' => $pirep->id, 'slug' => 'network-online'],
-                    ['name' => 'Network Online', 'value' => 'OFFLINE', 'source' => 1]
+                    ['name' => 'Network Online', 'value' => 'OFFLINE', 'source' => PirepSource::ACARS]
                 );
             }
 
@@ -82,7 +83,7 @@ class Pirep_Filed
                 Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $callsigns_count . ' P:' . $callsign_check . ' Calculated Callsign Match %:' . $callsign_result);
                 PirepFieldValue::updateOrCreate(
                     ['pirep_id' => $pirep->id, 'slug' => 'network-callsign-check'],
-                    ['name' => 'Network Callsign Check', 'value' => $callsign_result, 'source' => 1]
+                    ['name' => 'Network Callsign Check', 'value' => $callsign_result, 'source' => PirepSource::ACARS]
                 );
             }
 
