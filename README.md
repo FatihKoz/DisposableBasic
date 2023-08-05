@@ -561,7 +561,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 05.AUG.23
 
-* Compatability update for core v7 changes (Softdelete support and PirepState changes)
+* Compatibility update for core v7 changes (Softdelete support and PirepState changes)
 
 23.JUN.23
 
