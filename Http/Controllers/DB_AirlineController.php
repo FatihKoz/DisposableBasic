@@ -7,7 +7,9 @@ use App\Models\Airline;
 use App\Models\Pirep;
 use App\Models\Subfleet;
 use App\Models\User;
+use App\Models\Enums\ActiveState;
 use App\Models\Enums\PirepState;
+use App\Models\Enums\UserState;
 use Modules\DisposableBasic\Services\DB_StatServices;
 use League\ISO3166\ISO3166;
 
@@ -16,7 +18,7 @@ class DB_AirlineController extends Controller
     // Airlines
     public function index()
     {
-        $airlines = Airline::where('active', 1)->orderby('name')->get();
+        $airlines = Airline::where('active', ActiveState::ACTIVE)->orderby('name')->get();
 
         if (!$airlines) {
             flash()->error('No active airline found !');
@@ -62,7 +64,7 @@ class DB_AirlineController extends Controller
             $user_where['airline_id'] = $airline->id;
 
             if (setting('pilots.hide_inactive')) {
-                $user_where['state'] = 1;
+                $user_where['state'] = UserState::ACTIVE;
             }
 
             $eager_users = ['rank', 'current_airport', 'home_airport', 'last_pirep'];
@@ -73,7 +75,7 @@ class DB_AirlineController extends Controller
             $pirep_where[] = ['state', '!=', PirepState::IN_PROGRESS];
 
             $eager_pireps = ['aircraft', 'airline', 'dpt_airport', 'arr_airport', 'user'];
-            $pireps = Pirep::with($eager_pireps)->where('airline_id', $airline->id)->where($pirep_where)->orderby('submitted_at', 'desc')->paginate(50);
+            $pireps = Pirep::with($eager_pireps)->where($pirep_where)->orderby('submitted_at', 'desc')->paginate(50);
 
             $StatSvc = app(DB_StatServices::class);
 

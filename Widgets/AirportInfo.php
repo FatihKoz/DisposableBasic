@@ -21,7 +21,7 @@ class AirportInfo extends Widget
             $where['hub'] = 0;
         }
 
-        $airports = DB::table('airports')->select('id', 'iata', 'name', 'location', 'country')->where($where)->orderBy('id')->get();
+        $airports = DB::table('airports')->whereNull('deleted_at')->select('id', 'iata', 'name', 'location', 'country')->where($where)->orderBy('id')->get();
 
         return view('DBasic::widgets.airport_info', [
             'airports'   => $airports,

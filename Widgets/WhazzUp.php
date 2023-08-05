@@ -8,6 +8,8 @@ use App\Models\Pirep;
 use App\Models\User;
 use App\Models\UserField;
 use App\Models\UserFieldValue;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\UserState;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Modules\DisposableBasic\Models\DB_WhazzUp;
@@ -26,7 +28,7 @@ class WhazzUp extends Widget
         $refresh_interval = (is_numeric($this->config['refresh']) && $this->config['refresh'] > 15) ? $this->config['refresh'] : 180;
 
         if (empty($this->config['field_name'])) {
-            $field_name = Theme::getSetting('gen_'.strtolower($network_selection).'_field');
+            $field_name = Theme::getSetting('gen_' . strtolower($network_selection) . '_field');
         }
 
         if (empty($field_name)) {
@@ -72,7 +74,9 @@ class WhazzUp extends Widget
 
                 // Skip online users not flying for the VA
                 // Airline check false and no live pireps
-                if (!$airline && !$pirep) { continue; }
+                if (!$airline && !$pirep) {
+                    continue;
+                }
 
                 $pilots[] = [
                     'user_id'      => isset($user) ? $user->id : null,
@@ -116,7 +120,7 @@ class WhazzUp extends Widget
 
     public function NetworkUsersArray($field_name = null)
     {
-        $inactive_users = User::where('state', '!=', 1)->pluck('id')->toArray();
+        $inactive_users = User::where('state', '!=', UserState::ACTIVE)->pluck('id')->toArray();
         $user_field_id = optional(UserField::select('id')->where('name', $field_name)->first())->id;
         $network_users = UserFieldValue::where('user_field_id', $user_field_id)->whereNotIn('user_id', $inactive_users)->whereNotNull('value')->pluck('value')->toArray();
 
@@ -130,6 +134,6 @@ class WhazzUp extends Widget
 
     public function FindActivePirep($user_id = null)
     {
-        return Pirep::with('aircraft', 'airline')->where(['user_id' => $user_id, 'state' => 0])->orderby('updated_at', 'desc')->first();
+        return Pirep::with('aircraft', 'airline')->where(['user_id' => $user_id, 'state' => PirepState::IN_PROGRESS])->orderby('updated_at', 'desc')->first();
     }
 }

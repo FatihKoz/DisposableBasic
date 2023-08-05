@@ -80,7 +80,7 @@ class DB_FleetServices
     public function AverageFuelBurn($aircraft_id)
     {
         $results = [];
-        $aircraft_icao = DB::table('aircraft')->where('id', $aircraft_id)->value('icao');
+        $aircraft_icao = DB::table('aircraft')->whereNull('deleted_at')->where('id', $aircraft_id)->value('icao');
         $result = DB_Tech::where('icao', $aircraft_icao)->value('avg_fuel');
 
         if ($result > 0) {
@@ -91,7 +91,7 @@ class DB_FleetServices
             return $results;
         }
 
-        $aircraft_array = DB::table('aircraft')->where('icao', $aircraft_icao)->pluck('id')->toArray();
+        $aircraft_array = DB::table('aircraft')->whereNull('deleted_at')->where('icao', $aircraft_icao)->pluck('id')->toArray();
 
         $where = [];
         $where['state'] = PirepState::ACCEPTED;
@@ -110,6 +110,7 @@ class DB_FleetServices
 
             $result = DB::table('pireps')
                 ->selectRaw('sum(fuel_used) as total_fuel, sum(flight_time) as total_time')
+                ->whereNull('deleted_at')
                 ->where($where)
                 ->when($count_while === 2, function ($query) use ($aircraft_array) {
                     return $query->whereIn('aircraft_id', $aircraft_array);

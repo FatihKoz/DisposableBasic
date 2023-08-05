@@ -15,7 +15,7 @@ class DB_Discord extends Model
 
     // Validation rules
     public static $rules = [
-        'server_id'  => 'nullable',
-        'rawdata' => 'nullable',
+        'server_id' => 'nullable',
+        'rawdata'   => 'nullable',
     ];
 }

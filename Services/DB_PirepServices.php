@@ -131,7 +131,7 @@ class DB_PirepServices
     // Return the result as an array (network name, callsign being used and check result)
     public function CheckNetwork($network_name, $network_server, $network_refresh, $network_field, $user_networkid)
     {
-        //Get WhazzUp Data from DB
+        // Get WhazzUp Data from DB
         $whazzup = DB_WhazzUp::where('network', $network_name)->orderby('updated_at', 'desc')->first();
 
         // Update If Necessary
