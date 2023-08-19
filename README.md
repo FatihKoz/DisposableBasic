@@ -3,7 +3,7 @@
 phpVMS v7 module for Basic VA features
 
 * Module supports **only** php8.1+ and laravel10
-* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+230801.e24df8` 
+* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+230818.7f346a` 
 * _php8.0 and laravel9 compatible latest version: v3.3.1_
 * _php7.4 and laravel8 compatible latest version: v3.0.19_
 
@@ -286,10 +286,10 @@ Shows pilots, aircraft or pireps of an airport.
 Shows all your airports in a dropdown and provides a link to visit their pages.
 
 ```php
-@widget('DBasic::AirportInfo', ['type' => 'nohubs'])
+@widget('DBasic::AirportInfo', ['type' => 'hubs'])
 ```
 
-* `'type'` can be `'all'` , `'hubs'` or `'nohubs'`
+* `'type'` can be `'all'` or `'hubs'`
 
 This widget is designed my @macofallico and slightly enhanced by me. Distributed in this pack with his permission.
 
@@ -558,6 +558,13 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+19.AUG.23
+
+* Added support for sortable pagination/results
+* Added support for airport search dropdowns (JumpSeat and AirportInfo widgets)
+* Updated Auto Reject (score will be checked only for acars pireps)  
+  _Warning: Both changes require latest dev as of 19.AUG.23_
 
 05.AUG.23
 

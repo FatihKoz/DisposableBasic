@@ -1,4 +1,5 @@
 @if($is_visible)
+  {{ Form::open() }}
   <div class="card mb-2">
     <div class="card-header p-1">
       <h5 class="m-1">
@@ -7,23 +8,16 @@
       </h5>
     </div>
     <div class="card-body p-1">
-      <select id="airport_selector" class="form-control select2" style="width: 100%;" onchange="Check_Airport_Selection()">
-        <option value="ZZZZ">@lang('DBasic::widgets.select_apt')</option>
-        @foreach($airports as $airport)
-          <option value="{{ $airport->id }}">
-            {{ $airport->id.' : '.$airport->name }} @if(filled($airport->location)) {{ '('.$airport->location.')' }} @endif
-          </option>
-        @endforeach
-      </select>
+      {{ Form::select('airport_selector', [], null , ['id' => 'airport_selector', 'class' => 'form-control '.$hubs_only.' airport_search', 'onchange' => 'Check_Airport_Selection()']) }}
     </div>
     <div class="card-footer p-1 text-end small">
       <span class="float-start pt-1">
         @if($config['type'] === 'hubs') @lang('DBasic::widgets.hubs_only') @endif
-        @if($config['type'] === 'nohubs') @lang('DBasic::widgets.nonhubs_only') @endif
       </span>
       <a id="airport_link" style="visibility: hidden;" href="{{ route($apt_route, '') }}" class="btn btn-sm bg-success p-0 px-2">@lang('DBasic::widgets.go')</a>
     </div>
   </div>
+  {{ Form::close() }}
 
   <script type="text/javascript">
     // Simple Selection With Dropdown Change
@@ -40,4 +34,6 @@
       document.getElementById('airport_link').href = oldlink.concat(newlink);
     }
   </script>
+
+  @include('DBasic::scripts.airport_search')
 @endif
