@@ -7,7 +7,7 @@
     <div class="col-lg-9">
       {{-- Navigation --}}
       <div class="nav nav-pills nav-justified mb-3" id="airline-nav" role="tablist">
-        @if($subfleets->count() > 0)
+        @if($aircraft->count() > 0)
           <button class="nav-link active mx-1 p-1" id="airline-fleet" data-bs-toggle="pill" data-bs-target="#al_fleet" type="button" role="tab" aria-controls="al_fleet" aria-selected="true">
             @lang('DBasic::common.fleet')
           </button>
@@ -25,7 +25,7 @@
       </div>
       {{-- Content --}}
       <div class="tab-content" id="airline-navContent">
-        @if($subfleets->count() > 0)
+        @if($aircraft->count() > 0)
           <div class="tab-pane fade show active" id="al_fleet" role="tabpanel" aria-labelledby="airline-fleet">
             @include('DBasic::airlines.show_fleet')
           </div>

@@ -37,7 +37,7 @@
             </h5>
           </div>
           <div class="card-body p-0 overflow-auto table-responsive" style="max-height: {{ $over_mh.'vh' }};">
-            @include('DBasic::fleet.table', ['compact_view' => true])
+            @include('DBasic::fleet.table_compact')
           </div>
           <div class="card-footer p-0 px-1 small text-end">
             <b>@lang('DBasic::common.total') {{ $aircraft->count() }}</b>
@@ -54,7 +54,7 @@
             </h5>
           </div>
           <div class="card-body p-0 overflow-auto table-responsive">
-            @include('DBasic::pireps.table', ['compact_view' => true])
+            @include('DBasic::pireps.table_compact')
           </div>
           <div class="card-footer p-0 px-1 small text-end">
             <b>@lang('DBasic::common.latest') {{ $pireps->count() }}</b>

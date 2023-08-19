@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
+use App\Models\Airline;
 use App\Models\Aircraft;
 use App\Models\Pirep;
 use App\Models\Subfleet;
@@ -34,9 +35,12 @@ class DB_FleetController extends Controller
         }];
         $with = ['airline', 'subfleet'];
 
+        $active_airlines = Airline::where('active', 1)->pluck('id')->toArray();
+        $active_subfleets = Subfleet::whereIn('airline_id', $active_airlines)->pluck('id')->toArray();
+
         $aircraft = Aircraft::withCount($withCount)->with($with)->when($display_option, function ($query) use ($user_based_fleet) {
             return $query->whereIn('subfleet_id', $user_based_fleet);
-        })->orderby('icao')->orderby('registration')->paginate(50);
+        })->whereIn('subfleet_id', $active_subfleets)->sortable('icao', 'registration')->paginate(50);
 
         return view('DBasic::fleet.index', [
             'aircraft' => $aircraft,
@@ -65,7 +69,7 @@ class DB_FleetController extends Controller
         }];
         $with_ac = ['airline', 'subfleet'];
 
-        $aircraft = Aircraft::withCount($withCount_ac)->with($with_ac)->where('subfleet_id', $subfleet->id)->orderby('registration')->get();
+        $aircraft = Aircraft::withCount($withCount_ac)->with($with_ac)->where('subfleet_id', $subfleet->id)->sortable('registration')->get();
 
         // Subfleet Pireps
         $where = ['state' => PirepState::ACCEPTED, 'status' => PirepStatus::ARRIVED];
@@ -114,8 +118,8 @@ class DB_FleetController extends Controller
         $units = $this->GetUnits();
 
         $withCount = ['simbriefs' => function ($query) {
-                $query->whereNull('pirep_id');
-            }];
+            $query->whereNull('pirep_id');
+        }];
         $with_aircraft = ['airline', 'airport', 'files', 'hub', 'subfleet.fares', 'subfleet.files', 'subfleet.hub', 'subfleet.typeratings'];
 
         $aircraft = Aircraft::withCount($withCount)->with($with_aircraft)->where('registration', $ac_reg)->first();

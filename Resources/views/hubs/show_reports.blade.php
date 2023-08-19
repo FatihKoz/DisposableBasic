@@ -8,7 +8,7 @@
         </h5>
       </div>
       <div class="card-body p-0 overflow-auto table-responsive">
-        @include('DBasic::pireps.table')
+        @include('DBasic::pireps.table_compact')
       </div>
       <div class="card-footer p-0 px-1 small fw-bold text-end">
         <span class="float-start">
@@ -19,5 +19,3 @@
     </div>
   </div>
 </div>
-
-{{-- $pireps->links('pagination.default') --}}
