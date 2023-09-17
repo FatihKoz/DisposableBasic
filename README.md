@@ -561,7 +561,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 17.SEP.23
 
-* FR translation fix (Thansk to @arthurpar06)
+* FR translation fix (Thanks to @arthurpar06)
 * License update (Another disallowed VA was added)
 
 19.AUG.23
