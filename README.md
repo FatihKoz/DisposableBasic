@@ -559,6 +559,11 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+17.SEP.23
+
+* FR translation fix (Thansk to @arthurtpar06)
+* License update (Another disallowed VA was added)
+
 19.AUG.23
 
 * Added support for sortable pagination/results
