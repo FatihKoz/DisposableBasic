@@ -559,6 +559,10 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+15.OCT.23
+
+* Added gate/stand display to FlightBoard widget and Aircraft details page
+
 17.SEP.23
 
 * FR translation fix (Thanks to @arthurpar06)
