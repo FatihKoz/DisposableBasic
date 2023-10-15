@@ -67,6 +67,9 @@
           <th>@lang('DBasic::common.location')</th>
           <td>
             <a href="{{ route('frontend.airports.show', [$aircraft->airport_id]) }}">{{ $aircraft->airport->full_name ?? $aircraft->airport_id }}</a>
+            @if(filled($stand))
+              <span class="float-end">{{ 'Stand : '.$stand }}</span>
+            @endif
           </td>
         </tr>
       @endif

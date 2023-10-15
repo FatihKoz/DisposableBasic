@@ -131,9 +131,15 @@ class DB_FleetController extends Controller
 
         // Latest Pireps
         $where = ['aircraft_id' => $aircraft->id, 'state' => PirepState::ACCEPTED, 'status' => PirepStatus::ARRIVED];
-        $with_pirep = ['dpt_airport', 'arr_airport', 'user', 'airline'];
+        $with_pirep = ['dpt_airport', 'arr_airport', 'user', 'airline', 'field_values'];
 
         $pireps = Pirep::with($with_pirep)->where($where)->orderby('submitted_at', 'desc')->take(5)->get();
+
+        if (filled($pireps)) {
+            $curr_airport = $aircraft->airport_id;
+            $last_airport = $pireps->first()->arr_airport_id;
+            $last_stand = ($curr_airport == $last_airport) ? $pireps->first()->field_values->where('slug', 'arrival-gate')->first()->value : null;
+        }
 
         // Aircraft or Subfleet Image
         $FleetSvc = app(DB_FleetServices::class);
@@ -156,14 +162,15 @@ class DB_FleetController extends Controller
         }
 
         return view('DBasic::fleet.aircraft', [
-            'aircraft'   => $aircraft,
-            'files'      => filled($files) ? $files : null,
-            'image'      => $image,
-            'maint'      => filled($maint) ? $maint : null,
-            'pireps'     => filled($pireps) ? $pireps : null,
-            'specs'      => $specs,
-            'stats'      => $stats,
-            'units'      => $units,
+            'aircraft' => $aircraft,
+            'files'    => filled($files) ? $files : null,
+            'image'    => $image,
+            'maint'    => filled($maint) ? $maint : null,
+            'pireps'   => filled($pireps) ? $pireps : null,
+            'specs'    => $specs,
+            'stand'    => isset($last_stand) ? $last_stand : null,
+            'stats'    => $stats,
+            'units'    => $units,
         ]);
     }
 
