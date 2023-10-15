@@ -13,7 +13,7 @@ class FlightBoard extends Widget
 
     public function run()
     {
-        $eager_load = ['aircraft', 'airline', 'arr_airport', 'dpt_airport', 'position', 'user'];
+        $eager_load = ['aircraft', 'airline', 'arr_airport', 'dpt_airport', 'field_values', 'position', 'user'];
         $flights = Pirep::with($eager_load)->where(['state' => PirepState::IN_PROGRESS, ['status', '!=', PirepStatus::INITIATED]])->orderby('updated_at', 'desc')->get();
 
         return view('DBasic::widgets.flight_board', [
