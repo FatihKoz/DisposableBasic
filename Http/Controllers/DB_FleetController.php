@@ -138,7 +138,7 @@ class DB_FleetController extends Controller
         if (filled($pireps)) {
             $curr_airport = $aircraft->airport_id;
             $last_airport = $pireps->first()->arr_airport_id;
-            $last_stand = ($curr_airport == $last_airport) ? $pireps->first()->field_values->where('slug', 'arrival-gate')->first()->value : null;
+            $last_stand = ($curr_airport == $last_airport) ? optional($pireps->first()->field_values->where('slug', 'arrival-gate')->first())->value : null;
         }
 
         // Aircraft or Subfleet Image

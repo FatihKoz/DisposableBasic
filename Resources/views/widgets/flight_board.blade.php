@@ -57,9 +57,9 @@
             <td>{{ optional($flight->position)->gs.' kts' }}</td>
             <td>
               @if($flight->status == 'BST')
-                {{ PirepStatus::label($flight->status).' | '.$flight->field_values->where('slug', 'departure-gate')->first()->value }}
+                {{ PirepStatus::label($flight->status).' | '.optional($flight->field_values->where('slug', 'departure-gate')->first())->value }}
               @elseif($flight->status == 'ARR' || $flight->status == 'ONB')
-                {{ PirepStatus::label($flight->status).' | '.$flight->field_values->where('slug', 'arrival-gate')->first()->value }}
+                {{ PirepStatus::label($flight->status).' | '.optional($flight->field_values->where('slug', 'arrival-gate')->first())->value }}
               @else
                 {{ PirepStatus::label($flight->status) }}
               @endif
