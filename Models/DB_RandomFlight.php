@@ -6,6 +6,7 @@ use App\Contracts\Model;
 use App\Models\Flight;
 use App\Models\Pirep;
 use App\Models\User;
+use App\Models\Enums\PirepState;
 
 class DB_RandomFlight extends Model
 {
@@ -34,7 +35,7 @@ class DB_RandomFlight extends Model
         $pirep = Pirep::where([
             'user_id'   => $this->user_id,
             'flight_id' => $this->flight_id,
-            'state'     => 2,
+            'state'     => PirepState::ACCEPTED,
         ])->whereDate('submitted_at', $this->assign_date)->first();
 
         return isset($pirep) ? true : false;
@@ -53,7 +54,7 @@ class DB_RandomFlight extends Model
 
     public function pirep()
     {
-        $where = ['user_id' => $this->user_id, 'state' => 2];
+        $where = ['user_id' => $this->user_id, 'state' => PirepState::ACCEPTED];
         return $this->hasOne(Pirep::class, 'flight_id', 'flight_id')->where($where)->whereDate('submitted_at', $this->assign_date);
     }
 }

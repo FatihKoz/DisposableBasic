@@ -62,7 +62,7 @@ class TransferAircraft extends Widget
             }
 
             if (isset($list)) {
-                $hubs_array = DB::table('airports')->where('hub', 1)->pluck('id')->toArray();
+                $hubs_array = DB::table('airports')->whereNull('deleted_at')->where('hub', 1)->pluck('id')->toArray();
             } else {
                 $hubs_array = null;
             }

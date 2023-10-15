@@ -53,7 +53,7 @@
             </h5>
           </div>
           <div class="card-body p-0 overflow-auto table-responsive">
-            @include('DBasic::pireps.table', ['ac_page' => true])
+            @include('DBasic::pireps.table_compact', ['ac_page' => true])
           </div>
           <div class="card-footer p-0 px-1 small text-end">
             <b>@lang('DBasic::common.latest') {{ $pireps->count() }}</b>

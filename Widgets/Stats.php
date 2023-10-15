@@ -21,7 +21,7 @@ class Stats extends Widget
             $icon = 'fa-plane';
             $stats = $StatSvc->PirepStats(null, $id);
 
-            $details = DB::table('aircraft')->select('registration', 'name')->where('id', $id)->first();
+            $details = DB::table('aircraft')->whereNull('deleted_at')->select('registration', 'name')->where('id', $id)->first();
             $main = 'registration';
         } elseif ($type === 'airline' && isset($id)) {
             $icon = 'fa-home';
@@ -29,7 +29,7 @@ class Stats extends Widget
             $pirep_stats = $StatSvc->PirepStats($id);
             $stats = array_merge($basic_stats, $pirep_stats);
 
-            $details = DB::table('airlines')->select('icao', 'name')->where('id', $id)->first();
+            $details = DB::table('airlines')->whereNull('deleted_at')->select('icao', 'name')->where('id', $id)->first();
             $main = 'icao';
         } elseif ($type === 'home') {
             $stats = $StatSvc->PirepStats();

@@ -60,7 +60,7 @@ class DB_StatServices
         } elseif ($period === 'currentm' || $period === 'lastm' || $period === 'prevm') { // Months
             $s_date = $b_date->startOfMonth();
             $e_date = $b_date->copy()->endOfMonth();
-            $personal['period_text'] = __('DBasic::dates.'.$b_date->format('m'));
+            $personal['period_text'] = __('DBasic::dates.' . $b_date->format('m'));
         } elseif (is_numeric($period)) { // Days
             $s_date = $b_date->copy()->startOfDay()->subdays($period);
             $e_date = $now->endOfDay();
@@ -86,6 +86,7 @@ class DB_StatServices
         $where = [];
         $where['user_id'] = $user_id;
         $where['state'] = PirepState::ACCEPTED;
+        $where['deleted_at'] = null;
 
         $table_name = 'pireps';
         $date_field = 'submitted_at';
@@ -123,24 +124,29 @@ class DB_StatServices
         } elseif ($type === 'fdm') {
             $select_raw = '(100 * sum(if(is_stable = 1, 1, 0))) / count(user_id)';
             unset($where['state']);
+            unset($where['deleted_at']);
             $table_name = 'disposable_sap_reports';
             $date_field = 'created_at';
             $personal['stat_name'] = __('DBasic::widgets.fdm');
         } elseif ($type === 'assignment') {
             $select_raw = '(100 * sum(if(pirep_id IS NOT NULL, 1, 0))) / count(user_id)';
             unset($where['state']);
+            unset($where['deleted_at']);
             $table_name = 'disposable_assignments';
             $date_field = 'updated_at';
             $personal['stat_name'] = __('DBasic::widgets.assignment');
         }
 
         // Execute
-        $result = cache()->remember($cache_key, $cache_until, function () use ($select_raw, $where, $period, $s_date, $e_date, $table_name, $date_field) {
-            return DB::table($table_name)->selectRaw($select_raw . ' as uresult')
-                ->where($where)
-                ->when(isset($period), function ($query) use ($s_date, $e_date, $date_field) {
-                    $query->whereBetween($date_field, [$s_date, $e_date]);
-                })->value('uresult');
+        $result = cache()->remember(
+            $cache_key,
+            $cache_until,
+            function () use ($select_raw, $where, $period, $s_date, $e_date, $table_name, $date_field) {
+                return DB::table($table_name)->selectRaw($select_raw . ' as uresult')
+                    ->where($where)
+                    ->when(isset($period), function ($query) use ($s_date, $e_date, $date_field) {
+                        $query->whereBetween($date_field, [$s_date, $e_date]);
+                    })->value('uresult');
             }
         );
 
@@ -165,7 +171,7 @@ class DB_StatServices
                 $personal['formatted'] = number_format($result) . ' lbs';
             }
         } elseif ($type === 'fdm' || $type === 'assignment') {
-            $personal['formatted'] = number_format($result).'%';
+            $personal['formatted'] = number_format($result) . '%';
         } else {
             $personal['formatted'] = round($result);
         }
@@ -221,7 +227,7 @@ class DB_StatServices
             }
 
             $user_states = [UserState::ACTIVE, UserState::ON_LEAVE];
-            $whereIn_array = DB::table('users')->where($user_where)->whereIn('state', $user_states)->pluck('id')->toArray();
+            $whereIn_array = DB::table('users')->whereNull('deleted_at')->where($user_where)->whereIn('state', $user_states)->pluck('id')->toArray();
         }
 
         // Period
@@ -277,21 +283,24 @@ class DB_StatServices
         }
 
         // Main Query
-        $results = cache()->remember($cache_key, $cache_until, function () use ($eager_load, $base, $select_Raw, $where, $is_period, $s_date, $e_date, $whereIn_array, $type, $count) {
-            return Pirep::with($eager_load)->selectRaw($base . ', ' . $select_Raw . ' as totals')
-            ->where($where)
-                ->when(isset($is_period), function ($query) use ($s_date, $e_date) {
-                    $query->whereBetween('created_at', [$s_date, $e_date]);
-                })
-                ->when(is_array($whereIn_array), function ($query) use ($base, $whereIn_array) {
-                    $query->whereIn($base, $whereIn_array);
-                })
-                ->when(($type != 'lrate_high'), function ($query) {
-                    $query->orderBy('totals', 'desc');
-                }, function ($query) {
-                    $query->orderBy('totals', 'asc');
-                })
-                ->groupBy($base)->take($count)->get();
+        $results = cache()->remember(
+            $cache_key,
+            $cache_until,
+            function () use ($eager_load, $base, $select_Raw, $where, $is_period, $s_date, $e_date, $whereIn_array, $type, $count) {
+                return Pirep::with($eager_load)->selectRaw($base . ', ' . $select_Raw . ' as totals')
+                    ->where($where)
+                    ->when(isset($is_period), function ($query) use ($s_date, $e_date) {
+                        $query->whereBetween('created_at', [$s_date, $e_date]);
+                    })
+                    ->when(is_array($whereIn_array), function ($query) use ($base, $whereIn_array) {
+                        $query->whereIn($base, $whereIn_array);
+                    })
+                    ->when(($type != 'lrate_high'), function ($query) {
+                        $query->orderBy('totals', 'desc');
+                    }, function ($query) {
+                        $query->orderBy('totals', 'asc');
+                    })
+                    ->groupBy($base)->take($count)->get();
             }
         );
 
@@ -323,7 +332,7 @@ class DB_StatServices
                 'icao'         => ($source === 'pilot') ? null : $item->$eager_load->icao,
                 'name'         => ($source === 'pilot') ? $item->user->name : $item->$eager_load->name,
                 'name_private' => ($source === 'pilot') ? $item->user->name_private : $item->$eager_load->name,
-                'pilot_ident'  => ($source === 'pilot') ? $item->user->ident.' - ' : null,
+                'pilot_ident'  => ($source === 'pilot') ? $item->user->ident . ' - ' : null,
                 'route'        => $route,
                 'totals'       => $item->totals,
             ];
@@ -342,16 +351,16 @@ class DB_StatServices
             $where['airline_id'] = $airline_id;
         }
 
-        $subfleets_array = DB::table('subfleets')->where($where)->pluck('id')->toArray();
+        $subfleets_array = DB::table('subfleets')->whereNull('deleted_at')->where($where)->pluck('id')->toArray();
 
         if (empty($airline_id)) {
-            $stats[__('DBasic::common.airlines')] = DB::table('airlines')->where('active', 1)->count();
+            $stats[__('DBasic::common.airlines')] = DB::table('airlines')->whereNull('deleted_at')->where('active', 1)->count();
         }
 
-        $stats[__('DBasic::common.pilots')] = DB::table('users')->where($where)->count();
+        $stats[__('DBasic::common.pilots')] = DB::table('users')->whereNull('deleted_at')->where($where)->count();
         $stats[__('DBasic::common.subfleets')] = count($subfleets_array);
-        $stats[__('DBasic::common.aircraft')] = DB::table('aircraft')->whereIn('subfleet_id', $subfleets_array)->count();
-        $stats[__('DBasic::common.flights')] = DB::table('flights')->where($where)->count();
+        $stats[__('DBasic::common.aircraft')] = DB::table('aircraft')->whereNull('deleted_at')->whereIn('subfleet_id', $subfleets_array)->count();
+        $stats[__('DBasic::common.flights')] = DB::table('flights')->whereNull('deleted_at')->where($where)->count();
 
         return $stats;
     }
@@ -374,11 +383,11 @@ class DB_StatServices
             $level = 10;
         }
 
-        $stats[__('DBasic::widgets.pireps_ack')] = DB::table('pireps')->where($where)->count();
+        $stats[__('DBasic::widgets.pireps_ack')] = DB::table('pireps')->whereNull('deleted_at')->where($where)->count();
 
-        // Return null if pirep count is zero, no need to work for the rest
+        // Return empty array if pirep count is zero, no need to work for the rest
         if ($stats[__('DBasic::widgets.pireps_ack')] === 0) {
-            return null;
+            return array();
         }
 
         /* Rejected Pirep counts, dashed out on purpose
@@ -392,34 +401,32 @@ class DB_StatServices
         */
 
         // Count carried PAX and CGO for fancy stats
-        $paxfares = DB::table('fares')->select('id')->where('type', 0)->pluck('id')->toArray();
-        $cgofares = DB::table('fares')->select('id')->where('type', 1)->pluck('id')->toArray();
-        $allpireps = DB::table('pireps')->select('id')->where($where)->pluck('id')->toArray();
+        $allpireps = DB::table('pireps')->whereNull('deleted_at')->select('id')->where($where)->pluck('id')->toArray();
 
-        $pax_amount = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $paxfares)->sum('count');
-        $pax_avg = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $paxfares)->avg('count');
-        $cgo_amount = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $cgofares)->sum('count');
-        $cgo_avg = DB::table('pirep_fares')->whereIn('pirep_id', $allpireps)->whereIn('fare_id', $cgofares)->avg('count');
+        $pax_amount = DB::table('pirep_fares')->where('type', 0)->whereIn('pirep_id', $allpireps)->sum('count');
+        $pax_avg = DB::table('pirep_fares')->where('type', 0)->whereIn('pirep_id', $allpireps)->avg('count');
+        $cgo_amount = DB::table('pirep_fares')->where('type', 1)->whereIn('pirep_id', $allpireps)->sum('count');
+        $cgo_avg = DB::table('pirep_fares')->where('type', 1)->whereIn('pirep_id', $allpireps)->avg('count');
 
         if ($pax_amount > 0) {
             $stats[__('DBasic::widgets.pireps_pax')] = number_format($pax_amount);
             $stats[__('DBasic::widgets.avg_pax')] = number_format($pax_avg);
         }
-        
+
         if ($cgo_amount > 0) {
             $stats[__('DBasic::widgets.pireps_cgo')] = number_format($cgo_amount) . ' ' . $unit_weight;
             $stats[__('DBasic::widgets.avg_cgo')] = number_format($cgo_avg) . ' ' . $unit_weight;
         }
 
         // Basic Pirep Statistics
-        $total_time = DB::table('pireps')->where($where)->sum('flight_time');
-        $total_dist = DB::table('pireps')->where($where)->sum('distance');
-        $total_fuel = DB::table('pireps')->where($where)->sum('fuel_used');
+        $total_time = DB::table('pireps')->whereNull('deleted_at')->where($where)->sum('flight_time');
+        $total_dist = DB::table('pireps')->whereNull('deleted_at')->where($where)->sum('distance');
+        $total_fuel = DB::table('pireps')->whereNull('deleted_at')->where($where)->sum('fuel_used');
 
         if ($level > 10) {
-            $average_time = DB::table('pireps')->where($where)->avg('flight_time');
-            $average_dist = DB::table('pireps')->where($where)->avg('distance');
-            $average_fuel = DB::table('pireps')->where($where)->avg('fuel_used');
+            $average_time = DB::table('pireps')->whereNull('deleted_at')->where($where)->avg('flight_time');
+            $average_dist = DB::table('pireps')->whereNull('deleted_at')->where($where)->avg('distance');
+            $average_fuel = DB::table('pireps')->whereNull('deleted_at')->where($where)->avg('fuel_used');
         }
 
         if ($unit_distance === 'km') {
@@ -468,11 +475,11 @@ class DB_StatServices
 
         $where['source'] = PirepSource::ACARS;
 
-        $average_lrate = DB::table('pireps')->where($where)->avg('landing_rate');
+        $average_lrate = DB::table('pireps')->whereNull('deleted_at')->where($where)->avg('landing_rate');
         $stats[__('DBasic::widgets.alrate')] = number_format(abs($average_lrate)) . ' ft/min';
 
         if ($level > 10) {
-            $average_score = DB::table('pireps')->where($where)->avg('score');
+            $average_score = DB::table('pireps')->whereNull('deleted_at')->where($where)->avg('score');
             $stats[__('DBasic::widgets.ascore')] = number_format($average_score);
         }
 
@@ -491,14 +498,13 @@ class DB_StatServices
 
         $overall = cache()->remember($cache_key, $cache_until, function () use ($journal_id) {
             return DB::table('journal_transactions')->where('journal_id', $journal_id)
-            ->selectRaw('sum(credit) as ov_credit, sum(debit) as ov_debit, sum(credit) - sum(debit) as ov_balance')
-            ->first();
+                ->selectRaw('sum(credit) as ov_credit, sum(debit) as ov_debit, sum(credit) - sum(debit) as ov_balance')
+                ->first();
         });
 
         $income = $overall->ov_credit ?? 0;
         $expense = $overall->ov_debit ?? 0;
         $balance = $overall->ov_balance ?? 0;
-        // $balance = $income - $expense;
 
         $color = ($balance < 0) ? 'darkred' : 'darkgreen';
 
@@ -534,7 +540,7 @@ class DB_StatServices
 
         $overall = cache()->remember($cache_overall, $cache_until, function () use ($network_array) {
             return DB::table('pirep_field_values')->selectRaw('value as network, count(value) as pireps')
-            ->where('slug', 'network-online')
+                ->where('slug', 'network-online')
                 ->whereIn('value', $network_array)
                 ->groupBy('value')->get();
         });
@@ -547,7 +553,7 @@ class DB_StatServices
 
         $last90days = cache()->remember($cache_last90, $cache_until, function () use ($network_array, $start90) {
             return DB::table('pirep_field_values')->selectRaw('value as network, count(value) as pireps')
-            ->where('slug', 'network-online')
+                ->where('slug', 'network-online')
                 ->where('created_at', '>', $start90)
                 ->whereIn('value', $network_array)
                 ->groupBy('value')->get();
@@ -561,7 +567,7 @@ class DB_StatServices
 
         $last180days = cache()->remember($cache_last180, $cache_until, function () use ($network_array, $start180) {
             return DB::table('pirep_field_values')->selectRaw('value as network, count(value) as pireps')
-            ->where('slug', 'network-online')
+                ->where('slug', 'network-online')
                 ->where('created_at', '>', $start180)
                 ->whereIn('value', $network_array)
                 ->groupBy('value')->get();

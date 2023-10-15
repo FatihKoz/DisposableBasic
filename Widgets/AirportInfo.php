@@ -3,7 +3,7 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 // Widget Designed By MacoFallico, slightly enhanced By FatihKoz
 class AirportInfo extends Widget
@@ -12,22 +12,18 @@ class AirportInfo extends Widget
 
     public function run()
     {
-        $where = [];
-
         if ($this->config['type'] === 'hubs') {
-            $where['hub'] = 1;
+            $hubs = true;
             $apt_route = 'DBasic.hub';
-        } elseif ($this->config['type'] === 'nohubs') {
-            $where['hub'] = 0;
+        } else {
+            $hubs = false;
         }
 
-        $airports = DB::table('airports')->select('id', 'iata', 'name', 'location', 'country')->where($where)->orderBy('id')->get();
-
         return view('DBasic::widgets.airport_info', [
-            'airports'   => $airports,
             'apt_route'  => isset($apt_route) ? $apt_route : 'frontend.airports.show',
             'config'     => $this->config,
-            'is_visible' => filled($airports) ? true : false,
+            'hubs_only'  => ($hubs === true) ? 'hubs_only': null,
+            'is_visible' => Auth::check(),
         ]);
     }
 }

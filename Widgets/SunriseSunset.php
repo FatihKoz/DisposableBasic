@@ -16,7 +16,7 @@ class SunriseSunset extends Widget
         $type = ($this->config['type'] === 'civil') ? 'civil' : 'nautical';
 
         $icon = 'fa-bomb';
-        $airport = DB::table('airports')->select('id', 'name', 'location', 'lat', 'lon')->where('id', $location)->first();
+        $airport = DB::table('airports')->whereNull('deleted_at')->select('id', 'name', 'location', 'lat', 'lon')->where('id', $location)->first();
 
         if (!$airport) {
             $error = 'Airport not found!';

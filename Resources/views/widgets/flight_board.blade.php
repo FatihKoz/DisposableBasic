@@ -55,7 +55,15 @@
             </td>
             <td>{{ optional($flight->position)->altitude.' ft' }}</td>
             <td>{{ optional($flight->position)->gs.' kts' }}</td>
-            <td>{{ PirepStatus::label($flight->status) }}</td>
+            <td>
+              @if($flight->status == 'BST')
+                {{ PirepStatus::label($flight->status).' | '.optional($flight->field_values->where('slug', 'departure-gate')->first())->value }}
+              @elseif($flight->status == 'ARR' || $flight->status == 'ONB')
+                {{ PirepStatus::label($flight->status).' | '.optional($flight->field_values->where('slug', 'arrival-gate')->first())->value }}
+              @else
+                {{ PirepStatus::label($flight->status) }}
+              @endif
+            </td>
             <td class="text-end">
               <a href="{{ route('frontend.profile.show', [$flight->user_id]) }}">
                 @if(Theme::getSetting('roster_ident'))

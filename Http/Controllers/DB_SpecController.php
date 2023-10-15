@@ -37,9 +37,9 @@ class DB_SpecController extends Controller
         }
 
         //Get SubFleet List
-        $icao_types = DB::table('aircraft')->select('icao')->whereNotNull('icao')->groupBy('icao')->orderby('icao')->pluck('icao')->toArray();
-        $subfleets = DB::table('subfleets')->select('id', 'name', 'type')->orderby('name')->get();
-        $aircraft = DB::table('aircraft')->select('id', 'name', 'registration', 'icao')->orderby('registration')->get();
+        $icao_types = DB::table('aircraft')->whereNull('deleted_at')->select('icao')->whereNotNull('icao')->groupBy('icao')->orderby('icao')->pluck('icao')->toArray();
+        $subfleets = DB::table('subfleets')->whereNull('deleted_at')->select('id', 'name', 'type')->orderby('name')->get();
+        $aircraft = DB::table('aircraft')->whereNull('deleted_at')->select('id', 'name', 'registration', 'icao')->orderby('registration')->get();
         $all_specs = DB_Spec::with('aircraft', 'subfleet')->orderBy('id')->get();
 
         return view('DBasic::admin.specs', [

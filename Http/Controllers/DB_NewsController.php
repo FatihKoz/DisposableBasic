@@ -13,7 +13,7 @@ class DB_NewsController extends Controller
         $allnews = News::with('user')->orderby('created_at', 'DESC')->paginate(20);
 
         return view('DBasic::news.index', [
-            'allnews'  => $allnews,
+            'allnews' => $allnews,
         ]);
     }
 }

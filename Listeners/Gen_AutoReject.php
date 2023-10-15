@@ -70,7 +70,7 @@ class Gen_AutoReject
         }
 
         // Reject By Score
-        if ($margin_score != 0 && $pirep->score < $margin_score) {
+        if ($acars_pirep && $margin_score != 0 && $pirep->score < $margin_score) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Pirep Score Below VA Approval Criteria']);
             $pirep_state = PirepState::REJECTED;
         }

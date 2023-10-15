@@ -34,7 +34,7 @@ class DB_FlightServices
             $allowed_flights = DB::table('flight_subfleet')->whereIn('subfleet_id', $allowed_subfleets)->groupBy('flight_id')->pluck('flight_id')->toArray();
         }
 
-        $flights = DB::table('flights')->select('id')->where($where)
+        $flights = DB::table('flights')->whereNull('deleted_at')->select('id')->where($where)
             ->when(is_array($allowed_flights), function ($query) use ($allowed_flights) {
                 $query->whereIn('id', $allowed_flights);
             })->pluck('id')->toArray();
@@ -45,7 +45,7 @@ class DB_FlightServices
         $where_pirep['dpt_airport_id'] = $orig;
         $where_pirep['state'] = PirepState::ACCEPTED;
 
-        $flown = DB::table('pireps')->where($where_pirep)->groupby('flight_id')->pluck('flight_id')->toArray();
+        $flown = DB::table('pireps')->whereNull('deleted_at')->where($where_pirep)->groupby('flight_id')->pluck('flight_id')->toArray();
 
         if (count($flights) > count($flown)) {
             $flights = array_diff($flights, $flown);

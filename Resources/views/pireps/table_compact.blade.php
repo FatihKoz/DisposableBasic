@@ -1,26 +1,16 @@
 <table class="table table-sm table-borderless table-striped text-center text-nowrap align-middle mb-0">
   <thead>
     <tr>
-      <th class="text-start">@sortablelink('flight_number', __('DBasic::common.flightno'))</th>
-      <th class="text-start">@sortablelink('dpt_airport_id', __('DBasic::common.orig'))</th>
-      <th class="text-start">@sortablelink('arr_airport_id', __('DBasic::common.dest'))</th>
+      <th class="text-start">@lang('DBasic::common.flightno')</th>
+      <th class="text-start">@lang('DBasic::common.orig')</th>
+      <th class="text-start">@lang('DBasic::common.dest')</th>
       @if(!isset($ac_page))
-        <th>@sortablelink('aircraft.registration', __('DBasic::common.aircraft'))</th>
+        <th>@lang('DBasic::common.aircraft')</th>
       @endif
-      <th>@sortablelink('flight_time', __('DBasic::common.btime'))</th>
-      <th>@sortablelink('fuel_used', __('DBasic::common.fuelused'))</th>
-      @ability('admin', 'admin-access')
-        <th>@sortablelink('score', __('DBasic::common.score'))</th>
-        <th>@sortablelink('landing_rate', __('DBasic::common.lrate'))</th>
-        @if(Theme::getSetting('gen_stable_approach'))
-          <th>FDM Result</th>
-        @endif
-      @endability
-      @if(DB_Setting('dbasic.networkcheck', false))
-        <th>Network</th>
-      @endif
-      <th class="text-end">@sortablelink('user.name', __('DBasic::common.pilot'))</th>
-      <th class="text-end">@sortablelink('submitted_at', __('DBasic::common.submitted'))</th>
+      <th>@lang('DBasic::common.btime')</th>
+      <th>@lang('DBasic::common.fuelused')</th>
+      <th class="text-end">@lang('DBasic::common.pilot')</th>
+      <th class="text-end">@lang('DBasic::common.submitted')</th>
     </tr>
   </thead>
   <tbody>
@@ -31,24 +21,12 @@
             <a href="{{ route('frontend.pireps.show', [$pirep->id]) }}"><i class="fas fa-info-circle me-1"></i></a>
           @endability
           {{ optional($pirep->airline)->code.' '.$pirep->flight_number }}
-          {{--}}
-          @ability('admin', 'admin-user')
-            @if($DSpecial && filled($pirep->route_code) && filled($pirep->route_leg))
-              <a href="{{ route('DSpecial.tour_remove', [$pirep->id]) }}">
-                <i class="fas fa-exclamation-circle text-danger mx-1"
-                  onclick="return confirm('Are you really sure ?\nRemoving tour details from the pirep is irreversible !!!')"
-                  title="Remove Tour details from Pirep !">
-                </i>
-              </a>
-            @endif
-          @endability
-          {{--}}
         </th>
         <td class="text-start">
           <a href="{{ route('frontend.airports.show', [$pirep->dpt_airport_id]) }}" title="{{ optional($pirep->dpt_airport)->name }}">
             @if(empty($compact_view))
               {{ optional($pirep->dpt_airport)->full_name ?? $pirep->dpt_airport_id }}</a>
-            @else 
+            @else
               {{ $pirep->dpt_airport_id }}
             @endif
         </td>
@@ -56,7 +34,7 @@
           <a href="{{ route('frontend.airports.show', [$pirep->arr_airport_id]) }}" title="{{ optional($pirep->arr_airport)->name }}">
             @if(empty($compact_view))
               {{ optional($pirep->arr_airport)->full_name ?? $pirep->arr_airport_id }}</a>
-            @else 
+            @else
               {{ $pirep->arr_airport_id }}
             @endif
         </td>
@@ -67,16 +45,6 @@
         @endif
         <td>{{ DB_ConvertMinutes($pirep->flight_time) }}</td>
         <td>{{ DB_ConvertWeight($pirep->fuel_used, $units['fuel']) }}</td>
-        @ability('admin', 'admin-access')
-          <td>{{ $pirep->score }}</td>
-          <td>@if($pirep->landing_rate) {{ $pirep->landing_rate.' ft/min' }} @endif</td>
-          @if(Theme::getSetting('gen_stable_approach'))
-            <td>@widget('DBasic::StableApproach', ['pirep' => $pirep])</td>
-          @endif
-        @endability
-        @if(DB_Setting('dbasic.networkcheck', false))
-          <td>{!! DB_NetworkPresence($pirep, 'badge') !!}</td>
-        @endif
         <td class="text-end">
           <a href="{{ route('frontend.users.show.public', [$pirep->user_id]) }}">
             @if(Theme::getSetting('roster_ident'))
