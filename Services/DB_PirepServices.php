@@ -131,6 +131,12 @@ class DB_PirepServices
     // Return the result as an array (network name, callsign being used and check result)
     public function CheckNetwork($network_name, $network_server, $network_refresh, $network_field, $user_networkid)
     {
+        // Prepare basic array to be returned
+        $result = [];
+        $result['network'] = $network_name;
+        $result['callsign'] = null;
+        $result['is_online'] = 0;
+
         // Get WhazzUp Data from DB
         $whazzup = DB_WhazzUp::where('network', $network_name)->orderby('updated_at', 'desc')->first();
 
@@ -141,22 +147,23 @@ class DB_PirepServices
             $whazzup = $OnlineSvc->DownloadWhazzUp($network_name, $network_server);
         }
 
+        // Failsafe for IVAO/VATSIM server issues
+        // return basic array, which will mark the check as negative
+        if (!$whazzup) {
+            return $result;
+        }
+
         // Search Pilot in Network Feed
         Log::debug('Disposable Basic | Searching ' . $user_networkid . ' in ' . $network_name . ' WhazzUp data (Presence Check)');
-        $online_pilots = collect(json_decode($whazzup->pilots));
+        $online_pilots = collect(json_decode($whazzup->pilots)); // Relies heavily on IVAO/VATSIM server data returns
         $online_pilots = $online_pilots->where($network_field, $user_networkid);
-
-        $result = [];
-        $result['network'] = $network_name;
-        $result['callsign'] = null;
-        $result['is_online'] = 0;
 
         if ($online_pilots && count($online_pilots) > 0) {
             $result['callsign'] = $online_pilots->first()->callsign;
             $result['is_online'] = 1;
         }
 
-        // Return array
+        // Return final array
         return $result;
     }
 
