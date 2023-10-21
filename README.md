@@ -154,7 +154,20 @@ If you want to display subfleet or aircraft images, just put images under public
 
 ## Auto Rejection of Pireps
 
-It is possible to auto reject pireps with Network Presence and Network Callsign checks, also module provides rejection by score, landing rate and flight time options. For the system work properly set your acars pireps to be auto approved, let phpvms handle acceptance and module to reject only when needed.
+It is possible to auto reject pireps with below checks;  
+
+* Network Presence (IVAO and VATSIM only, percentage)
+* Network Callsign (IVAO and VATSIM only, percentage)
+* Score (minimum score)
+* Landing Rate (maximum landing rate, ft/min)
+* Flight Time (minimum flight time, minutes)
+* Flight Time Difference (between planned time vs actual time, minutes)
+* Pause Time (maximum pause time allowed, minutes)
+* Landing Threshold Difference (between first touchdown and runway threshold, feet)
+* G-Force (maximum landing g-force)
+* Fuel Burn (minimum fuel burn, pounds - lbs)
+
+For the system to work properly set your acars pireps to be auto approved, let phpvms handle acceptance and module to reject only when needed. Be advised, while using scenery based checks like landing rate and threshold difference, you may get false positives. Also flight time difference is risky to use, you should get reports if long holdings and extra ordinary stuff happens during flights to identify false positives before correcting them.
 
 Auto Rejected pireps can be always accepted by admins/staff via phpvms admin section.
 
@@ -559,8 +572,9 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
-15.OCT.23
+21.OCT.23
 
+* Added two new options for Auto Reject (Flight Time Difference and Pause Time)
 * Added gate/stand display to FlightBoard widget and Aircraft details page
 
 17.SEP.23

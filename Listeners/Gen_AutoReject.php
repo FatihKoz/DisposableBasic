@@ -21,6 +21,8 @@ class Gen_AutoReject
         $margin_fburn = DB_Setting('dbasic.ar_marginfburn', 0);
         $margin_thrdist = DB_Setting('dbasic.ar_marginthrdist', 0);
         $margin_gforce = DB_Setting('dbasic.ar_margingforce', 0);
+        $margin_pause = DB_Setting('dbasic.ar_marginpause', 0);
+        $margin_tdiff = DB_Setting('dbasic.ar_margintdiff', 0);
         $margin_presence = DB_Setting('dbasic.networkcheck_margin', 80);
         $reject_presence = DB_Setting('dbasic.ar_presence', false);
         $reject_callsign = DB_Setting('dbasic.ar_callsign', false);
@@ -54,11 +56,36 @@ class Gen_AutoReject
             $network_callsign = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'network-callsign-check'])->value('value');
             $thr_dist = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'arrival-threshold-distance'])->value('value');
             $g_force = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'landing-g-force'])->value('value');
+            $pause_time = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'total-pause-time'])->value('value');
         } else {
             $network_presence = optional($pirep->fields->where('slug', 'network-presence-check')->first())->value;
             $network_callsign = optional($pirep->fields->where('slug', 'network-callsign-check')->first())->value;
             $thr_dist = optional($pirep->fields->where('slug', 'arrival-threshold-distance')->first())->value;
             $g_force = optional($pirep->fields->where('slug', 'landing-g-force')->first())->value;
+            $pause_time = optional($pirep->fields->where('slug', 'total-pause-time')->first())->value;
+        }
+
+        // Convert pirep sause time to minutes
+        // v7 latest field format is like "07h 34m 54s" or "00m 18s"
+        if ($margin_pause != 0 && $pause_time) {
+            $h = strpos($pause_time, 'h');
+            $hours = ($h != 0) ? substr($pause_time, $h - 2, 2) : 0;
+            $m = strpos($pause_time, 'm');
+            $minutes = ($m != 0) ? substr($pause_time, $m - 2, 2) : 0;
+            $s = strpos($pause_time, 's');
+            $seconds = ($s != 0) ? substr($pause_time, $s - 2, 2) : 0;
+
+            $pause_minutes = round(($hours * 60) + $minutes + ($seconds / 60), 2);
+        } else {
+            $pause_minutes = 0;
+        }
+
+        // Calculate flight time difference to somehow spot sandbaggers
+        // according to planned flight time if it is there
+        if ($margin_tdiff != 0 && $pirep->flight_time > 0 && $pirep->planned_flight_time > 0) {
+            $diff_minutes = $pirep->flight_time - $pirep->planned_flight_time;
+        } else {
+            $diff_minutes = 0;
         }
 
         $acars_pirep = ($pirep->source == PirepSource::ACARS) ? true : false;
@@ -72,6 +99,18 @@ class Gen_AutoReject
         // Reject By Score
         if ($acars_pirep && $margin_score != 0 && $pirep->score < $margin_score) {
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Pirep Score Below VA Approval Criteria']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Pause Time
+        if ($acars_pirep && $margin_pause != 0 && $pause_minutes > $margin_pause) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Pause Time Above VA Approval Criteria']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Flight Time Difference
+        if ($margin_tdiff != 0 && $diff_minutes > $margin_tdiff) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flight Time Difference Above VA Approval Criteria']);
             $pirep_state = PirepState::REJECTED;
         }
 
