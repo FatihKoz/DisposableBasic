@@ -65,8 +65,22 @@
             <a href="{{ route('DBasic.aircraft', [$pirep->aircraft->registration ?? '']) }}">{{ optional($pirep->aircraft)->ident }}</a>
           </td>
         @endif
-        <td>{{ DB_ConvertMinutes($pirep->flight_time) }}</td>
-        <td>{{ DB_ConvertWeight($pirep->fuel_used, $units['fuel']) }}</td>
+        <td>
+          {{ DB_ConvertMinutes($pirep->flight_time) }}
+          @ability('admin', 'admin-access')
+            @if(($pirep->flight_time - $pirep->planned_flight_time) > 20)
+              <i class="fas fa-clock text-danger mx-1" title="Check Flight Time"></i>
+            @endif
+          @endability
+        </td>
+        <td>
+          {{ DB_ConvertWeight($pirep->fuel_used, $units['fuel']) }}
+          @ability('admin', 'admin-access')
+            @if(filled($pirep->simbrief) && ($pirep->fuel_used->local() - ($pirep->simbrief->xml->fuel->enroute_burn + ($pirep->simbrief->xml->fuel->contingency * 1.15) + ($pirep->simbrief->xml->fuel->taxi * 2)) > 100))
+              <i class="fas fa-gas-pump text-danger mx-1" title="Check Fuel Used"></i>
+            @endif
+          @endability
+        </td>
         @ability('admin', 'admin-access')
           <td>{{ $pirep->score }}</td>
           <td>@if($pirep->landing_rate) {{ $pirep->landing_rate.' ft/min' }} @endif</td>
@@ -86,6 +100,11 @@
           </a>
         </td>
         <td class="text-end">
+          @ability('admin', 'admin-access')
+            @if($pirep->comments_count > 0 || filled($pirep->notes))
+              <i class="fas fa-file-alt text-secondary mx-1" title="Has Comments / Notes"></i>
+            @endif
+          @endability
           {{ $pirep->submitted_at->diffForHumans().' | '.$pirep->submitted_at->format('d.M') }}
         </td>
       </tr>
