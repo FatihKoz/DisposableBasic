@@ -572,10 +572,16 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+22.OCT.23
+
+* Added a failsafe for network presence checks (to reduce IVAO/VATSIM server related errors)
+* Improved statistics slightly (to eliminate migration based update errors)
+* Added pirep quick check icons for admins/staff (for flight time, fuel burn, comments) | _view/blade change_
+
 21.OCT.23
 
 * Added two new options for Auto Reject (Flight Time Difference and Pause Time)
-* Added gate/stand display to FlightBoard widget and Aircraft details page
+* Added gate/stand display to FlightBoard widget and Aircraft details page | _view/blade change_
 
 17.SEP.23
 
@@ -584,7 +590,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 19.AUG.23
 
-* Added support for sortable pagination/results
+* Added support for sortable pagination/results | _view/blade change_ 
 * Added support for airport search dropdowns (JumpSeat and AirportInfo widgets)
 * Updated Auto Reject (score will be checked only for acars pireps)  
   _Warning: Both changes require latest dev as of 19.AUG.23_
