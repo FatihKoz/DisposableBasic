@@ -21,11 +21,19 @@ class TransferAircraft extends Widget
         $landing_time_margin = is_numeric($this->config['landing']) ? $this->config['landing'] : null;
         $list = $this->config['list'];
         $price = $this->config['price'];
+
         if ($price != 'auto' && $price != 'free' && !is_numeric($price)) {
             $price = 'auto';
         }
+
         $rank_restriction = setting('pireps.restrict_aircraft_to_rank', true);
         $rate_restriction = setting('pireps.restrict_aircraft_to_typerating', false);
+
+        $today = Carbon::today()->format('dm');
+        $important_days = ['234', '195', '308', '2910', '1011'];
+        if (in_array($today, $important_days)) {
+            $price = 'free';
+        }
 
         $user = Auth::user();
 

@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class JumpSeat extends Widget
@@ -19,6 +20,12 @@ class JumpSeat extends Widget
 
         if ($price != 'auto' && $price != 'free' && !is_numeric($price)) {
             $price = 'auto';
+        }
+
+        $today = Carbon::today()->format('dm');
+        $important_days = ['234', '195', '308', '2910', '1011'];
+        if (in_array($today, $important_days)) {
+            $price = 'free';
         }
 
         $form_route = 'DBasic.jumpseat';
