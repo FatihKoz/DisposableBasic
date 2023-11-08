@@ -10,7 +10,7 @@ class DB_Session extends Model
     public $table = 'sessions';
 
     protected $casts = [
-        'last_activity' => 'datetime',
+        'last_activity' => 'datetime:timestamp',
     ];
 
     // Relationship
