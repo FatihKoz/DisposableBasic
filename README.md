@@ -572,6 +572,11 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+08.NOV.23
+
+* Fix ActiveUsers widget
+* License update (Another disallowed VA was added)
+
 22.OCT.23
 
 * Added a failsafe for network presence checks (to reduce IVAO/VATSIM server related errors)
