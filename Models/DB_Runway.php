@@ -15,7 +15,7 @@ class DB_Runway extends Model
         'lat',
         'lon',
         'heading',
-        'lenght',
+        'length',
         'ils_freq',
         'loc_course',
         'airac',
@@ -28,10 +28,16 @@ class DB_Runway extends Model
         'lat'          => 'required',
         'lon'          => 'required',
         'heading'      => 'required',
-        'lenght'       => 'required',
+        'length'       => 'required',
         'ils_freq'     => 'nullable',
         'loc_course'   => 'nullable',
         'airac'        => 'nullable',
+    ];
+
+    protected $appends = [
+        'ident',
+        'imperial',
+        'metric',
     ];
 
     // Attributes
@@ -39,9 +45,10 @@ class DB_Runway extends Model
     {
         $runway_data = $this->runway_ident;
 
-        if ($this->lenght) {
+        if ($this->length) {
             $unit = (setting('units.distance') === 'km') ? 'm' : 'ft';
-            $runway_data = $this->runway_ident . ' | ' . ltrim($this->lenght, '0').$unit;
+            $length = (setting('units.distance') === 'km') ? ltrim($this->length, '0') : round(intval($this->length) * 3.28084);
+            $runway_data = $this->runway_ident . ' | ' . $length . $unit;
         }
 
         if ($this->ils_freq && $this->loc_course) {
@@ -49,6 +56,16 @@ class DB_Runway extends Model
         }
 
         return $runway_data;
+    }
+
+    public function GetImperialAttribute()
+    {
+        return round(intval($this->length) * 3.28084);
+    }
+
+    public function GetMetricAttribute()
+    {
+        return intval($this->length);
     }
 
     // Relationships

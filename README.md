@@ -148,7 +148,7 @@ As additional features, you can define addon based specifications for your fleet
 
 If you are not developing your own pirep checks and/or not using Disposable Special/Extended module solutions you can simply skip using Maintenance periods etc. They are here just for backward compatibility and some va's already based their custom code on them.
 
-For runways, simply check `Support Files` folder. There is a world runways database shipped with the module, it is quite old (from the end of 2020, Airac 2020/14) but still usefull for most airports. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions.
+For runways, simply check `Support Files` folder. There is a world runways database shipped with the module. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions. Default length for runways is meters, module provides automated conversion for runway details, also imperial and metric attributes are provided.
 
 If you want to display subfleet or aircraft images, just put images under public/image/aircraft or public/image/subfleet folders. Files should be in all lowercase including the extension (like tc-grd.jpg). Aircraft images use registration, subfleet images use subfleet type code. (Disposable Theme offers some examples)
 
@@ -571,6 +571,10 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+18.NOV.23
+
+* Update Disposable Runways (current worldwide data included in release)
 
 08.NOV.23
 

@@ -21,8 +21,8 @@
     <input name="heading" type="number" class="form-control" placeholder="358" min="0" max="360" value="{{ $runway->heading ?? '' }}">
   </div>
   <div class="col-sm-1">
-    <label class="pl-1 mb-1" for="lenght">Lenght</label>
-    <input name="lenght" type="number" class="form-control" placeholder="3200" min="0" max="99999" value="{{ ltrim($runway->lenght ?? '', '0') }}">
+    <label class="pl-1 mb-1" for="lenght">Length (meters)</label>
+    <input name="length" type="number" class="form-control" placeholder="3200" min="0" max="99999" value="{{ ltrim($runway->length ?? '', '0') }}">
   </div>
   <div class="col-sm-2">
     <label class="pl-1 mb-1" for="ils_freq">ILS/LOC Frequency</label>
