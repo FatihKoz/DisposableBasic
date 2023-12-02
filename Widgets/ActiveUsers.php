@@ -15,7 +15,7 @@ class ActiveUsers extends Widget
     public function run()
     {
         $margin = is_numeric($this->config['margin']) ? $this->config['margin'] : 5;
-        $inactive_time = Carbon::now()->addMinutes($margin);
+        $inactive_time = Carbon::now()->subMinutes($margin)->timestamp;
 
         $active_users = DB_Session::with('user')->select('user_id', 'last_activity')
             ->whereNotNull('user_id')->where('last_activity', '>', $inactive_time)
