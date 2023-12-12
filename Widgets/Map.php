@@ -15,6 +15,7 @@ use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Map extends Widget
 {
@@ -222,11 +223,16 @@ class Map extends Widget
             $citypairs = [];
             $airports_pack = collect();
             foreach ($mapflights as $mf) {
+                if (blank($mf->dpt_airport) || blank($mf->arr_airport)) {
+                    Log::error('Disposable Basic | Map Widget, Flight=' . $mf->id . ' Dep=' . $mf->dpt_airport_id . ' Arr=' . $mf->arr_airport_id . ' has errors and skipped!');
+                    continue; // Skip if the airport model is empty
+                }
+
                 $airports_pack->push($mf->dpt_airport);
                 $airports_pack->push($mf->arr_airport);
                 $reverse = $mf->arr_airport_id . $mf->dpt_airport_id;
                 if (DB_InArray_MD($reverse, $citypairs)) {
-                    continue;
+                    continue; // Skip if the reverse of this city pair is already in the array
                 }
 
                 $citypairs[] = array(
