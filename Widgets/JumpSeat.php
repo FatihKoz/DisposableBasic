@@ -3,11 +3,12 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class JumpSeat extends Widget
 {
-    protected $config = ['base' => null, 'dest' => null, 'hubs' => null, 'price' => 'auto'];
+    protected $config = ['base' => null, 'dest' => null, 'hubs' => null, 'price' => 'auto', 'fdates' => []];
 
     public function run()
     {
@@ -19,6 +20,10 @@ class JumpSeat extends Widget
 
         if ($price != 'auto' && $price != 'free' && !is_numeric($price)) {
             $price = 'auto';
+        }
+
+        if (in_array(Carbon::now()->format('md'), $this->config['fdates'])) {
+            $price = 'free';
         }
 
         $form_route = 'DBasic.jumpseat';
@@ -37,7 +42,7 @@ class JumpSeat extends Widget
             'base_price'  => $base_price,
             'fixed_dest'  => $fixed_dest,
             'form_route'  => $form_route,
-            'hubs_only'   => ($hubs === true) ? 'hubs_only': null,
+            'hubs_only'   => ($hubs === true) ? 'hubs_only' : null,
             'icon_color'  => $icon_color,
             'icon_title'  => $icon_title,
             'is_possible' => $is_possible,

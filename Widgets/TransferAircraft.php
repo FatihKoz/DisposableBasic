@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransferAircraft extends Widget
 {
-    protected $config = ['aircraft' => null, 'landing' => null, 'list' => null, 'price' => 'auto'];
+    protected $config = ['aircraft' => null, 'landing' => null, 'list' => null, 'price' => 'auto', 'fdates' => []];
 
     public function run()
     {
@@ -21,9 +21,15 @@ class TransferAircraft extends Widget
         $landing_time_margin = is_numeric($this->config['landing']) ? $this->config['landing'] : null;
         $list = $this->config['list'];
         $price = $this->config['price'];
+
         if ($price != 'auto' && $price != 'free' && !is_numeric($price)) {
             $price = 'auto';
         }
+
+        if (in_array(Carbon::now()->format('md'), $this->config['fdates'])) {
+            $price = 'free';
+        }
+
         $rank_restriction = setting('pireps.restrict_aircraft_to_rank', true);
         $rate_restriction = setting('pireps.restrict_aircraft_to_typerating', false);
 

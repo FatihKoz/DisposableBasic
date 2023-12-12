@@ -11,7 +11,7 @@ use Modules\DisposableBasic\Models\DB_RandomFlight;
 class DB_FlightServices
 {
     // Random Flight Picker
-    public function PickRandomFlights($user, $orig, $count, $whereRF = null, $eager_load = null)
+    public function PickRandomFlights($user, $orig, $count, $whereRF = null, $eager_load = null, $ftime = null)
     {
         $today = Carbon::today();
 
@@ -35,7 +35,9 @@ class DB_FlightServices
         }
 
         $flights = DB::table('flights')->whereNull('deleted_at')->select('id')->where($where)
-            ->when(is_array($allowed_flights), function ($query) use ($allowed_flights) {
+            ->when($ftime > 0, function ($query) use ($ftime) {
+                $query->where('flight_time', '<=', $ftime);
+            })->when(is_array($allowed_flights), function ($query) use ($allowed_flights) {
                 $query->whereIn('id', $allowed_flights);
             })->pluck('id')->toArray();
 

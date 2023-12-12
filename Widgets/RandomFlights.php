@@ -10,17 +10,17 @@ use Modules\DisposableBasic\Services\DB_FlightServices;
 
 class RandomFlights extends Widget
 {
-    protected $config = ['count' => null, 'daily' => false, 'hub' => false, 'user' => null];
+    protected $config = ['count' => null, 'daily' => false, 'hub' => false, 'user' => null, 'ftime' => null];
 
     public function run()
     {
         $count = (is_numeric($this->config['count']) && $this->config['count'] > 0) ? $this->config['count'] : 1;
         $daily = $this->config['daily'];
+        $ftime = (is_numeric($this->config['ftime']) && $this->config['ftime'] > 0) ? $this->config['ftime'] : 0;
         $today = Carbon::today();
         $user = Auth::user();
 
         if (!$user) {
-
             return view('DBasic::widgets.random_flights', [
                 'is_visible' => false,
             ]);
@@ -46,7 +46,7 @@ class RandomFlights extends Widget
 
         if ($rfs->isEmpty()) {
             $FlightSvc = app(DB_FlightServices::class);
-            $rfs = $FlightSvc->PickRandomFlights($user, $orig, $count, $whereRF, $eager_load);
+            $rfs = $FlightSvc->PickRandomFlights($user, $orig, $count, $whereRF, $eager_load, $ftime);
         }
 
         return view('DBasic::widgets.random_flights', [

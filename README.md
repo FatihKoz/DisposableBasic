@@ -394,6 +394,9 @@ Adds frontend pilot self transfer capability to phpVMS v7.
 * `'price'` can be `'free'` , `'auto'` or a fixed numeric value like `250`. Currency is based on your phpvms v7 setttings  
 * `'hubs'` can be `true` or `false` only and limits the destinations to hubs.
 * `'dest'` can be a fixed airport ICAO code (like `'LTFG'` or `$flight->dpt_airport_id`) and removes the selection dropdown. Provides direct travel to that destination
+* `'fdates'` must be an array of months and days (like ['0101', '0423', '0501', '0519']) in which the transfer will be free
+
+For "Free Dates" logic, month and day numbers should have leading zero's, for example for 1st of May, you should use '0501'.
 
 ### Leader Board
 
@@ -471,10 +474,11 @@ Picks up some random flights by following your phpVms settings and config option
 * `'count'` can be any number you wish like `3` (except 0 of course)
 * `'daily'` can be `true` or `false`. Which will force widget to pick random flights once per day
 * `'hub'` can be `true` or `false`. It will force the widget to pick up random flights departing from user's own hub/home airport
+* `'ftime'` can be any number you wish like `90` (except 0 of course), maximum flight time (in minutes) to have a more defined filter
 
 Above example will pick 3 random flights departing from that user's hub/home airport for that day.
 
-In any config, random flights will be refreshed each day.
+In any config, random flights will be refreshed each day. Be careful when using flight time limitations, you may end up getting no random flights and this is not something running with conditions to revert the logic.
 
 ### Stable Approach
 
@@ -525,6 +529,9 @@ Adds frontend pilot self aircraft transfer capability to phpVms v7.
 * `'list'` can be `'hub'` (ac parked at its hub), `'hubs'` (ac parked at any hub), `'nohubs'` (ac parked at non hub locations)
 * `'aircraft'` can be an aircraft's id (like `$aircraft->id`) which removes the selection dropdown and transfers provided aircraft
 * `'landing'` can be any number hours like `24` which blocks transfer of recently used/landed aircraft
+* `'fdates'` must be an array of months and days (like ['0101', '0423', '0501', '0519']) in which the transfer will be free
+
+For "Free Dates" logic, month and day numbers should have leading zero's, for example for 1st of May, you should use '0501'.
 
 Above example will calculate automatic transfer price according to great circle distance between airports and will allow only transfer of aircraft which are landed at least 6 hours from that time.
 There is no `base` price definition for this widget. It uses airport fuel prices, that aircraft's average fuel consumption and ground handling costs.
@@ -571,6 +578,11 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+12.DEC.23
+
+* Added flight time filtering/limiting option to Random Flights widget
+* Added automated free dates option to JumpSeat and Aircraft Transfer widget
 
 18.NOV.23
 
