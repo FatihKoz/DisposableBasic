@@ -583,6 +583,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 * Added flight time filtering/limiting option to Random Flights widget
 * Added automated free dates option to JumpSeat and Aircraft Transfer widget
+* Added a failsafe to Map Widget to skip faulty flight records
 
 18.NOV.23
 
