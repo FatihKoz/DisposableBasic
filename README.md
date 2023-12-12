@@ -444,6 +444,8 @@ Additionally;
 
 *For "Assignment" source type, Disposable Special/Extended module needs to be installed and active*  
 
+*If you have less flights/pireps than expected displayed on map, check your laravel log for errors, widget simply skips records with faulty data and logs their details*  
+
 ### Personal Stats
 
 Provides personal pirep statistics per pilot according to config options defined.
