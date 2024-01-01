@@ -25,5 +25,5 @@
     </div>
   </div>
 
-  {{ $users->links('pagination.default') }}
+  {{ $users->withQueryString()->links('pagination.default') }}
 @endsection

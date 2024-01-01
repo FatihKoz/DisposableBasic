@@ -19,7 +19,8 @@ class DB_AirlineController extends Controller
     // Airlines
     public function index()
     {
-        $airlines = Airline::withCount('aircraft', 'pireps', 'subfleets', 'users')->where('airlines.active', ActiveState::ACTIVE)->sortable('name')->get();
+        $withCount = ['aircraft', 'flights', 'pireps', 'subfleets', 'users'];
+        $airlines = Airline::withCount($withCount)->where('airlines.active', ActiveState::ACTIVE)->sortable('name')->get();
 
         if (!$airlines) {
             flash()->error('No active airline found !');

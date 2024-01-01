@@ -581,6 +581,15 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+01.JAN.24
+
+* Fixed sortable columns pagination bug for fleet page **(blade change)**
+* Added sortable columns to roster page **(blade change)** and skipped deleted users 
+  _(pending, active, on leave, suspended and rejected will be shown only)_
+* Updated airlines index page, now some basic counts on index is visible like (aircraft, flights, pireps) **(blade change)**
+* Updated world runways database with latest airac 2313, fixed magnetic heading error in old data (was using airac 2311)
+  _(truncate the table and import, if you do not have any custom runways)_
+
 12.DEC.23
 
 * Added flight time filtering/limiting option to Random Flights widget

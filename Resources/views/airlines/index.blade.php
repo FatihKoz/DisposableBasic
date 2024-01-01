@@ -33,6 +33,24 @@
               </tr>
             </table>
           </div>
+          <div class="card-footer table-responsive p-0">
+            <table class="table table-sm table-borderless table-striped text-center small align-middle mb-0">
+              <tr>
+                <th>@lang('DBasic::common.flights')</th>
+                <th>@lang('DBasic::common.subfleets')</th>
+                <th>@lang('DBasic::common.aircraft')</th>
+                <th>@lang('DBasic::common.pilots')</th>
+                <th>@lang('DBasic::common.pireps')</th>
+              </tr>
+              <tr>
+                <td>{{ $airline->flights_count }}</td>
+                <td>{{ $airline->subfleets_count }}</td>
+                <td>{{ $airline->aircraft_count }}</td>
+                <td>{{ $airline->users_count }}</td>
+                <td>{{ $airline->pireps_count }}</td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     @endforeach

@@ -1,23 +1,23 @@
 <table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0 align-middle">
   <tr>
-    <th>@lang('common.name')</th>
-    <th>@lang('DBasic::common.rank')</th>
+    <th>@sortablelink('name', __('common.name'))</th>
+    <th>@sortablelink('rank.name', __('DBasic::common.rank'))</th>
     @if(empty($airline_view))
-      <th>@lang('DBasic::common.airline')</th>
+      <th>@sortablelink('airline.name', __('DBasic::common.airline'))</th>
     @endif
     @if(!isset($type) || isset($type) && $type != 'hub')
-      <th>@lang('DBasic::common.base')</th>
+      <th>@sortablelink('home_airport_id', __('DBasic::common.base'))</th>
     @endif
     @if(!isset($type) || isset($type) && $type != 'visitor')
-      <th>@lang('DBasic::common.location')</th>
+      <th>@sortablelink('curr_airport_id', __('DBasic::common.location'))</th>
     @endif
     @if(!isset($type))
       <th class="text-center">@lang('DBasic::common.awards')</th>
     @endif
-    <th class="text-center">@lang('DBasic::common.flights')</th>
-    <th class="text-center">@lang('DBasic::common.ftime')</th>
+    <th class="text-center">@sortablelink('flights', __('DBasic::common.flights'))</th>
+    <th class="text-center">@sortablelink('flight_time', __('DBasic::common.ftime'))</th>
     @if(isset($state_badge))
-      <th class="text-center">@lang('DBasic::common.state')</th>
+      <th class="text-center">@sortablelink('state', __('DBasic::common.state'))</th>
     @endif
     @if(!isset($type))
       <th class="text-end">@lang('DBasic::common.last_flt')</td>
