@@ -54,7 +54,7 @@ class DB_RunwayController extends Controller
             $error = 'Airport ICAO code is required !';
         }
 
-        if (!$request->runway_ident || !$request->lat || !$request->lon || !$request->heading || !$request->lenght) {
+        if (!$request->runway_ident || !$request->lat || !$request->lon || !$request->heading || !$request->length) {
             $error = 'Runway details are required';
         }
 
@@ -73,7 +73,7 @@ class DB_RunwayController extends Controller
                 'lat'          => $request->lat,
                 'lon'          => $request->lon,
                 'heading'      => $request->heading,
-                'lenght'       => $request->lenght,
+                'length'       => $request->length,
                 'ils_freq'     => $request->ils_freq,
                 'loc_course'   => $request->loc_course,
                 'airac'        => $request->airac,
