@@ -584,7 +584,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 05.JAN.24
 
 * Fixed a typo in Disposable Runways (preventing update/edit)
-* License update (Two new dissalowed VA's are added)
+* License update (Two new disallowed VA's are added)
 
 01.JAN.24
 
