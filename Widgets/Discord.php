@@ -16,8 +16,8 @@ class Discord extends Widget
     protected $config = ['server' => null, 'bots' => false, 'bot' => ' Bot', 'gdpr' => false, 'icao' => null];
 
     public function __construct(
-        array $config = [],
-        GuzzleClient $httpClient
+        GuzzleClient $httpClient,
+        array $config = []
     ) {
         parent::__construct($config);
         $this->httpClient = $httpClient;
