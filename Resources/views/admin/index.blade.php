@@ -107,6 +107,13 @@
           @include('DBasic::admin.settings_table', ['group' => 'Network Checks'])
           <span class="text-info">"User Field Name" MUST MATCH your custom user field holding network id numbers</span>
         </div>
+        {{-- API Service Key Group --}}
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>API Services</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'API Service'])
+          <span class="text-info">Service Key is needed to authorize API requests for DispoBasic Features (like roster, pireps, stats etc at landing pages)</span>
+        </div>
       </div>
       <div class="col-sm-5">
         {{-- Aircraft Group --}}

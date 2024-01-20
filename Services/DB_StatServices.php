@@ -4,6 +4,7 @@ namespace Modules\DisposableBasic\Services;
 
 use App\Models\Aircraft;
 use App\Models\Airline;
+use App\Models\Airport;
 use App\Models\Flight;
 use App\Models\JournalTransaction;
 use App\Models\Pirep;
@@ -11,6 +12,7 @@ use App\Models\PirepFare;
 use App\Models\PirepFieldValue;
 use App\Models\Subfleet;
 use App\Models\User;
+use App\Models\Enums\AircraftStatus;
 use App\Models\Enums\FareType;
 use App\Models\Enums\PirepSource;
 use App\Models\Enums\PirepState;
@@ -596,5 +598,104 @@ class DB_StatServices
         ksort($nwstats, SORT_NATURAL);
 
         return $nwstats;
+    }
+
+    // Api Basic Statistics
+    // No formatting or text on values only convert to local units per settings    
+    public function ApiBasicStats()
+    {
+        $user_states = [UserState::PENDING, UserState::ACTIVE, UserState::ON_LEAVE];
+        $aircraft_status = [AircraftStatus::ACTIVE, AircraftStatus::MAINTENANCE, AircraftStatus::STORED];
+        $stats = [];
+
+        $stats['basic_airlines'] = Airline::where('active', 1)->count();
+        $stats['basic_users'] = User::whereIn('state', $user_states)->count();
+        $stats['basic_subfleets'] = Subfleet::count();
+        $stats['basic_aircraft'] = Aircraft::whereIn('state', $aircraft_status)->count();
+        $stats['basic_flights'] = Flight::where('active', 1)->count();
+        $stats['basic_airports'] = Airport::count();
+        $stats['basic_hubs'] = Airport::where('hub', 1)->count();
+
+        return $stats;
+    }
+
+    // Api Pirep Statistics for API usage
+    // No formatting or text on values only convert to local units per settings
+    public function ApiPirepStats()
+    {
+        $stats = [];
+        $unit_distance = setting('units.distance');
+        $unit_weight = setting('units.weight');
+        $unit_fuel = setting('units.fuel');
+
+        $where = [];
+        $where['state'] = PirepState::ACCEPTED;
+
+        // Pirep Count
+        $stats['pireps_count'] = Pirep::where($where)->count();
+
+        if ($stats['pireps_count'] === 0) {
+            return [];
+        }
+
+        // Pirep carried PAX and CGO
+        $allpireps = Pirep::where($where)->pluck('id')->toArray();
+
+        if (count($allpireps) < 65500) {
+            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereIn('pirep_id', $allpireps)->sum('count');
+            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereIn('pirep_id', $allpireps)->avg('count');
+            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereIn('pirep_id', $allpireps)->sum('count');
+            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereIn('pirep_id', $allpireps)->avg('count');
+        } else {
+            $pax_amount = 0;
+            $cgo_amount = 0;
+        }
+
+        if ($pax_amount > 0) {
+            $stats['pireps_pax_ttl'] = round($pax_amount, 0);
+            $stats['pireps_pax_avg'] = round($pax_avg, 0);
+        }
+
+        if ($cgo_amount > 0) {
+            $stats['pireps_cgo_ttl'] = round($cgo_amount, 0);
+            $stats['pireps_cgo_avg'] = round($cgo_avg, 0);
+            $stats['pireps_cgo_unt'] = $unit_weight;
+        }
+
+        // Pirep Times
+        $stats['pireps_time_ttl'] = round(Pirep::where($where)->sum('flight_time'), 0);
+        $stats['pireps_time_avg'] = round(Pirep::where($where)->avg('flight_time'), 0);
+        $stats['pireps_time_unt'] = "min";
+
+        // Pirep Distance
+        $total_dist = Pirep::where($where)->sum('distance');
+        $average_dist = Pirep::where($where)->avg('distance');
+
+        if ($unit_distance === 'km') {
+            $total_dist = $total_dist * 1.852;
+            $average_dist = $average_dist * 1.852;
+        } elseif ($unit_distance === 'mi') {
+            $total_dist = $total_dist * 1.15078;
+            $average_dist = $average_dist * 1.15078;
+        }
+
+        $stats['pireps_dist_ttl'] = round($total_dist, 0);
+        $stats['pireps_dist_avg'] = round($average_dist, 0);
+        $stats['pireps_dist_unt'] = $unit_distance;
+
+        // Pirep Fuel
+        $total_fuel = Pirep::where($where)->sum('fuel_used');
+        $average_fuel = Pirep::where($where)->avg('fuel_used');
+
+        if ($unit_fuel === 'kg') {
+            $total_fuel = $total_fuel / 2.20462262185;
+            $average_fuel = $average_fuel / 2.20462262185;
+        }
+
+        $stats['pireps_fuel_ttl'] = round($total_fuel, 0);
+        $stats['pireps_fuel_avg'] = round($average_fuel, 0);
+        $stats['pireps_fuel_unt'] = $unit_fuel;
+
+        return $stats;
     }
 }

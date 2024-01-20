@@ -105,6 +105,12 @@ class DB_ServiceProvider extends ServiceProvider
         ], function () {
             // Stable Approach Plugin Report
             Route::post('dstable/new', 'DB_StableApproachController@store');
+            // Service Key Protected Routes
+            Route::get('dbapi/events', 'DB_ApiController@events');
+            Route::get('dbapi/modules', 'DB_ApiController@modules');
+            Route::get('dbapi/pireps', 'DB_ApiController@pireps');
+            Route::get('dbapi/roster', 'DB_ApiController@roster');
+            Route::get('dbapi/stats', 'DB_ApiController@stats');
         });
 
         // Admin
