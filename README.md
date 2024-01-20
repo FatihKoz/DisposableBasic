@@ -152,6 +152,83 @@ For runways, simply check `Support Files` folder. There is a world runways datab
 
 If you want to display subfleet or aircraft images, just put images under public/image/aircraft or public/image/subfleet folders. Files should be in all lowercase including the extension (like tc-grd.jpg). Aircraft images use registration, subfleet images use subfleet type code. (Disposable Theme offers some examples)
 
+## API Endpoints
+
+Module offers below endpoints for API Access with authorization, so data can be placed on landing pages easily.
+
+### Endpoints
+
+```php
+/dbapi/events  // Events (both Upcoming and Current)
+/dbapi/pireps  // Latest Accepted Pireps and Ongoing Live Flights
+/dbapi/roster  // Pilot Roster
+/dbapi/stats   // Statistics
+```
+### Header Options and Example Request
+
+```json
+Content-Type:application/json
+x-service-key:{your service key}
+x-roster-type:full // by default api follows your v7 settings, if you want to keep v7 roster with active pilots only but see the full list with api then use this.
+x-pirep-type:live // by default api return accepted pireps, if you want to see live flights then use this
+x-pirep-count:10 // only used when accepted pireps are being shown, default value is 25
+```
+
+```php
+// Example CURL Request for Roster
+$service_key = 'YOUR SERVICE KEY';
+$url = "https://your-phpvms-v7-site.com/dbapi/roster";
+// This will give you the roster by following your v7 settings, no additional headers are being used
+$headers = [
+    'Content-Type:application/json',
+    'x-service-key:' . $service_key,
+];
+
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL,$url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+$json = curl_exec($ch);
+if (!$json) {
+    echo curl_error($ch);
+}
+
+curl_close($ch);
+$roster = json_decode($json, true);
+
+echo $roster;
+```
+
+```php
+// Example CURL Request for Live Pireps
+$service_key = 'YOUR SERVICE KEY';
+$url = "https://your-phpvms-v7-site.com/dbapi/pireps";
+// This will give you only LIVE FLIGHTS
+$headers = [
+    'Content-Type:application/json',
+    'x-service-key:' . $service_key,
+    'x-pirep-type:live',
+];
+
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL,$url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+$json = curl_exec($ch);
+if (!$json) {
+    echo curl_error($ch);
+}
+
+curl_close($ch);
+$live_flights = json_decode($json, true);
+
+echo $live_flights;
+```
+
 ## Auto Rejection of Pireps
 
 It is possible to auto reject pireps with below checks;  
@@ -245,6 +322,7 @@ When needed, you can use below widgets to enhance the data provided by your page
 @widget('DBasic::AirportAssets')
 @widget('DBasic::AirportInfo')
 @widget('DBasic::Discord')
+@widget('DBasic::Events')
 @widget('DBasic::FleetOverview')
 @widget('DBasic::FlightBoard')
 @widget('DBasic::FlightTimeMultiplier')
@@ -323,6 +401,17 @@ Shows real time data from your Discord Server. Be advised, you should enable wid
 If you are forcing (or manually renaming) your Discord members to use something like DSP978 - Name Surname etc, then you can use `'icao' => 'DSP'` within the option set. Widget will only show users whose names are starting with DSP.
 
 In a similar manner, setting `'gdpr' => true` will result nicknames to be displayed like `DSP978 - Name S` by the widget.
+
+### Events
+
+Displays event flights. Flights must have start and end dates, also a departure time for both API endpoints and Widget to work properly. Event flight `route_code` can be defined from module admin page, you can set `EVN` or `E` or anything you wish (max 5 chars). Be sure to set your flight's route_code properly when defining or importing them otherwise neither widget, not the api endpoint will list them. Also flights can be not active and not visible (if you are running schedules with cron and want to hide event flights from being displayed during searches until the day they need to be flown)
+
+```php
+@widget('DBasic::Events', ['type' => 'upcoming'])
+```
+
+* `'type'` can be `'upcoming'` or left empty to get current (today's) event.
+
 
 ### Fleet Overview
 
@@ -580,6 +669,11 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+21.JAN.24
+
+* Added API endpoints to support data display at landing pages
+* Added Events Widget
 
 05.JAN.24
 
