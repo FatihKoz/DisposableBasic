@@ -7,6 +7,7 @@ use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
 use App\Models\Enums\UserState;
 use App\Models\Flight;
+use App\Models\News;
 use App\Models\Pirep;
 use App\Models\User;
 use Carbon\Carbon;
@@ -16,6 +17,34 @@ use Nwidart\Modules\Facades\Module;
 
 class DB_ApiController extends Controller
 {
+    // News
+    public function news(Request $request)
+    {
+        if (!$this->AuthCheck($request->header('x-service-key'))) {
+            return response(['error' => ['code' => '401', 'http_code' => 'Unauthorized', 'message' => 'Check Service Key!']], 401);
+        };
+
+        $count = (is_numeric($request->header('x-news-count'))) ? $request->header('x-news-count') : 3;
+        $allnews = News::with('user')->orderby('created_at', 'DESC')->take($count)->get();
+
+        $news = [];
+
+        foreach ($allnews as $n) {
+            $news[] = [
+                'id'            => $n->id,
+                'subject'       => $n->subject,
+                'message'       => $n->body,
+                'author_name'   => optional($n->user)->name_private,
+                'author_ident'  => optional($n->user)->ident,
+                'author_avatar' => optional(optional($n->user)->avatar)->url,
+                'created_at'    => $n->created_at->format('d.M.Y H:i'),
+                'updated_at'    => $n->updated_at->format('d.M.Y H:i'),
+            ];
+        }
+
+        return response()->json($news);
+    }
+
     // Roster
     public function roster(Request $request)
     {

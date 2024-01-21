@@ -160,6 +160,7 @@ Module offers below endpoints for API Access with authorization, so data can be 
 
 ```php
 /dbapi/events  // Events (both Upcoming and Current)
+/dbapi/news    // News
 /dbapi/pireps  // Latest Accepted Pireps and Ongoing Live Flights
 /dbapi/roster  // Pilot Roster
 /dbapi/stats   // Statistics
@@ -172,6 +173,7 @@ x-service-key:{your service key}
 x-roster-type:full // by default api follows your v7 settings, if you want to keep v7 roster with active pilots only but see the full list with api then use this.
 x-pirep-type:live // by default api return accepted pireps, if you want to see live flights then use this
 x-pirep-count:10 // only used when accepted pireps are being shown, default value is 25
+x-news-count:5 // can be used to define the news items being pulled, default is 3
 ```
 
 ```php
@@ -671,6 +673,10 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+XX.JAN.24
+
+* Added API endpoint for News
 
 21.JAN.24
 

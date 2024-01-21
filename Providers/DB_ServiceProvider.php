@@ -108,6 +108,7 @@ class DB_ServiceProvider extends ServiceProvider
             // Service Key Protected Routes
             Route::get('dbapi/events', 'DB_ApiController@events');
             Route::get('dbapi/modules', 'DB_ApiController@modules');
+            Route::get('dbapi/news', 'DB_ApiController@news');
             Route::get('dbapi/pireps', 'DB_ApiController@pireps');
             Route::get('dbapi/roster', 'DB_ApiController@roster');
             Route::get('dbapi/stats', 'DB_ApiController@stats');
