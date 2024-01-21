@@ -60,6 +60,8 @@ class DB_ApiController extends Controller
 
         if ($request->header('x-roster-type') === 'full' && setting('pilots.hide_inactive')) {
             unset($where['state']);
+            $where[] = ['state', '!=', UserState::REJECTED];
+            $where[] = ['state', '!=', UserState::DELETED];
         }
 
         $roster = array();
@@ -122,7 +124,7 @@ class DB_ApiController extends Controller
         }
 
         $pireps = [];
-        $eager_load = ['airline', 'aircraft', 'user.fields', 'dpt_airport', 'arr_airport'];
+        $eager_load = ['airline', 'aircraft', 'arr_airport', 'dpt_airport', 'field_values', 'user.fields'];
         $vms_pireps = Pirep::with($eager_load)->where($where)->when(isset($count), function ($query) use ($count) {
             return $query->take($count)->orderby('submitted_at', 'desc');
         })->when(!isset($count), function ($query) {
@@ -148,9 +150,10 @@ class DB_ApiController extends Controller
                 'aircraft_reg'  => optional($pirep->aircraft)->registration,
                 'aircraft_iata' => optional($pirep->aircraft)->iata,
                 'aircraft_icao' => optional($pirep->aircraft)->icao,
-                'pilot_atc'     => optional($pirep->user)->atc,
-                'pilot_ident'   => optional($pirep->user)->ident,
+                'pilot_id'      => optional($pirep->user)->id,
                 'pilot_name'    => optional($pirep->user)->name_private,
+                'pilot_ident'   => optional($pirep->user)->ident,
+                'pilot_atc'     => optional($pirep->user)->atc,
                 'pilot_ivao'    => optional($pirep->user->fields->firstWhere('name', DB_Setting('dbasic.networkcheck_fieldname_ivao', 'IVAO ID')))->value,
                 'pilot_vatsim'  => optional($pirep->user->fields->firstWhere('name', DB_Setting('dbasic.networkcheck_fieldname_vatsim', 'VATSIM ID')))->value,
                 'pirep_score'   => $pirep->score,
@@ -158,6 +161,8 @@ class DB_ApiController extends Controller
                 'pirep_time'    => $pirep->flight_time,
                 'pirep_timep'   => $pirep->planned_flight_time,
                 'pirep_timeu'   => "min",
+                'formatted_ft'  => DB_ConvertMinutes($pirep->flight_time),
+                'formatted_pft' => DB_ConvertMinutes($pirep->planned_flight_time),
                 'pirep_dist'    => $pirep->distance->local(0),
                 'pirep_distp'   => $pirep->planned_distance->local(0),
                 'pirep_distr'   => (filled($pirep->distance->local(0) && $pirep->planned_distance->local(0))) ? round((100 * $pirep->distance->local(0)) / $pirep->planned_distance->local(0), 0) : null,
@@ -166,6 +171,12 @@ class DB_ApiController extends Controller
                 'pirep_fuelu'   => setting('units.fuel'),
                 'pirep_status'  => PirepStatus::label($pirep->status),
                 'pirep_state'   => PirepState::label($pirep->state),
+                'network_name'  => optional($pirep->field_values)->firstWhere('slug', 'network-online')->value,
+                'network_ratio' => optional($pirep->field_values)->firstWhere('slug', 'network-presence-check')->value,
+                'network_csign' => optional($pirep->field_values)->firstWhere('slug', 'network-callsign-check')->value,
+                'submitted_at'  => (filled($pirep->submitted_at)) ? $pirep->submitted_at->format('d.m.Y H:i') : null,
+                'created_at'    => (filled($pirep->created_at)) ? $pirep->created_at->format('d.m.Y H:i') : null,
+                'updated_at'    => (filled($pirep->updated_at)) ? $pirep->updated_at->format('d.m.Y H:i') : null,
             ];
         }
 
