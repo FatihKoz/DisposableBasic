@@ -154,7 +154,7 @@ If you want to display subfleet or aircraft images, just put images under public
 
 ## API Endpoints
 
-Module offers below endpoints for API Access with authorization, so data can be placed on landing pages easily.
+Module offers below endpoints for API Access with authorization, so data can be placed on landing pages easily. Check module admin page to define your service key, which is needed for authorization.
 
 ### Endpoints
 
@@ -677,6 +677,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 XX.JAN.24
 
 * Added API endpoint for News
+* Improved Pirep and User endpoints with more usable/needed data
 
 21.JAN.24
 
