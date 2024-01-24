@@ -115,11 +115,17 @@ class DB_ApiController extends Controller
             return response(['error' => ['code' => '401', 'http_code' => 'Unauthorized', 'message' => 'Check Service Key!']], 401);
         };
 
-        if ($request->header('x-pirep-type') !== 'live') {
+        if ($request->header('x-pirep-type') != 'live') {
             $count = (is_numeric($request->header('x-pirep-count'))) ? $request->header('x-pirep-count') : 25;
             $where = ['state' => PirepState::ACCEPTED];
         } else {
-            $where = ['state' => PirepState::IN_PROGRESS, ['status', '!=', PirepStatus::PAUSED]];
+            $where = [
+                [
+                    'state', '==', PirepState::IN_PROGRESS
+                ], [
+                    'status', '!=', PirepStatus::PAUSED
+                ]
+            ];
             $count = null;
         }
 
@@ -171,9 +177,9 @@ class DB_ApiController extends Controller
                 'pirep_fuelu'   => setting('units.fuel'),
                 'pirep_status'  => PirepStatus::label($pirep->status),
                 'pirep_state'   => PirepState::label($pirep->state),
-                'network_name'  => optional($pirep->field_values)->firstWhere('slug', 'network-online')->value,
-                'network_ratio' => optional($pirep->field_values)->firstWhere('slug', 'network-presence-check')->value,
-                'network_csign' => optional($pirep->field_values)->firstWhere('slug', 'network-callsign-check')->value,
+                'network_name'  => optional($pirep->field_values->firstWhere('slug', 'network-online'))->value,
+                'network_ratio' => optional($pirep->field_values->firstWhere('slug', 'network-presence-check'))->value,
+                'network_csign' => optional($pirep->field_values->firstWhere('slug', 'network-callsign-check'))->value,
                 'submitted_at'  => (filled($pirep->submitted_at)) ? $pirep->submitted_at->format('d.m.Y H:i') : null,
                 'created_at'    => (filled($pirep->created_at)) ? $pirep->created_at->format('d.m.Y H:i') : null,
                 'updated_at'    => (filled($pirep->updated_at)) ? $pirep->updated_at->format('d.m.Y H:i') : null,
