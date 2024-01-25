@@ -27,6 +27,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Pirep Auto Rejecting capabilities,
 * Some widgets to enhance any page/layout as per virtual airline needs
 * Database checks (to identify errors easily when needed)
+* API endpoints to support data display at landing pages (for roster, live flights, latest pireps, news, stats)
 
 ## Compatibility with other addons
 
@@ -171,7 +172,7 @@ Module offers below endpoints for API Access with authorization, so data can be 
 Content-Type:application/json
 x-service-key:{your service key}
 x-roster-type:full // by default api follows your v7 settings, if you want to keep v7 roster with active pilots only but see the full list with api then use this.
-x-pirep-type:live // by default api return accepted pireps, if you want to see live flights then use this
+x-pirep-type:live // by default api returns latest accepted pireps, if you want to see live flights then use this
 x-pirep-count:10 // only used when accepted pireps are being shown, default value is 25
 x-news-count:5 // can be used to define the news items being pulled, default is 3
 ```
@@ -674,7 +675,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
-XX.JAN.24
+25.JAN.24
 
 * Added API endpoint for News
 * Improved Pirep and User endpoints with more usable/needed data
