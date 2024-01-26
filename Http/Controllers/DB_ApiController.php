@@ -171,7 +171,7 @@ class DB_ApiController extends Controller
                 'formatted_pft' => DB_ConvertMinutes($pirep->planned_flight_time),
                 'pirep_dist'    => $pirep->distance->local(0),
                 'pirep_distp'   => $pirep->planned_distance->local(0),
-                'pirep_distr'   => (filled($pirep->distance->local(0) && $pirep->planned_distance->local(0))) ? round((100 * $pirep->distance->local(0)) / $pirep->planned_distance->local(0), 0) : null,
+                'pirep_distr'   => ($pirep->distance->local(0) > 0 && $pirep->planned_distance->local(0) > 0) ? round((100 * $pirep->distance->local(0)) / $pirep->planned_distance->local(0), 0) : null,
                 'pirep_distu'   => setting('units.distance'),
                 'pirep_fuel'    => $pirep->fuel_used->local(0),
                 'pirep_fuelu'   => setting('units.fuel'),
