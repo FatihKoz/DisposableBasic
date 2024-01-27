@@ -2,14 +2,16 @@
 
 namespace Modules\DisposableBasic\Providers;
 
+use App\Events\NewsAdded;
 use App\Events\PirepCancelled;
 use App\Events\PirepFiled;
 use App\Events\PirepPrefiled;
 use App\Events\PirepStatusChange;
 use App\Events\PirepUpdated;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\DisposableBasic\Listeners\Gen_Cron;
 use Modules\DisposableBasic\Listeners\Gen_AutoReject;
+use Modules\DisposableBasic\Listeners\Gen_Cron;
+use Modules\DisposableBasic\Listeners\Gen_News;
 use Modules\DisposableBasic\Listeners\Pirep_Cancelled;
 use Modules\DisposableBasic\Listeners\Pirep_Filed;
 use Modules\DisposableBasic\Listeners\Pirep_Prefiled;
@@ -21,6 +23,10 @@ class DB_EventProvider extends ServiceProvider
     // Listen Below Events
     protected $listen =
     [
+        NewsAdded::class => [
+            Gen_News::class,
+        ],
+
         PirepCancelled::class => [
             Pirep_Cancelled::class,
         ],

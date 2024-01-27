@@ -20,7 +20,7 @@ class Pirep_Filed
         if (DB_Setting('dbasic.discord_pirepmsg')) {
             // Send Discord Notification
             $NotificationSvc = app(DB_NotificationServices::class);
-            $NotificationSvc->PirepMessage($pirep, 'New flight report received');
+            $NotificationSvc->PirepMessage($pirep);
         }
 
         if (DB_Setting('dbasic.acstate_control') && $pirep->aircraft) {

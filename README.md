@@ -28,6 +28,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Some widgets to enhance any page/layout as per virtual airline needs
 * Database checks (to identify errors easily when needed)
 * API endpoints to support data display at landing pages (for roster, live flights, latest pireps, news, stats)
+* Discord Notifications (separate from v7's core feature, can be customized to use different webhooks etc.)
 
 ## Compatibility with other addons
 
@@ -674,6 +675,11 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+27.JAN.24
+
+* Added Discord News posting feature (separate from v7's internal logic)
+* Fixed a possible _division by zero_ error in API endpoint (Pirep display)
 
 25.JAN.24
 
