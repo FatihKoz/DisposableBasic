@@ -611,7 +611,7 @@ class DB_StatServices
         $stats['basic_airlines'] = Airline::where('active', 1)->count();
         $stats['basic_users'] = User::whereIn('state', $user_states)->count();
         $stats['basic_subfleets'] = Subfleet::count();
-        $stats['basic_aircraft'] = Aircraft::whereIn('state', $aircraft_status)->count();
+        $stats['basic_aircraft'] = Aircraft::whereIn('status', $aircraft_status)->count();
         $stats['basic_flights'] = Flight::where('active', 1)->count();
         $stats['basic_airports'] = Airport::count();
         $stats['basic_hubs'] = Airport::where('hub', 1)->count();
