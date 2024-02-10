@@ -1,5 +1,6 @@
 @if($is_visible)
-  {{ Form::open(array('route' => $form_route, 'method' => 'post')) }}
+  <form class="form" method="post" action="{{ $form_route }}">
+    @csrf
     @if(empty($fixed_dest))
       <div class="card mb-2">
         <div class="card-header p-1">
@@ -9,7 +10,7 @@
           </h5>
         </div>
         <div class="card-body p-1">
-          {{ Form::select('newloc', [], null , ['class' => 'form-control '.$hubs_only.' airport_search']) }}
+          <select class="form-control airport_search {{ $hubs_only }}" name="newloc" id="newloc"></select>
         </div>
         <div class="card-footer p-1 text-end">
           <i class="fas fa-money-bill-wave text-{{ $icon_color }} float-start m-1" title="{{ $icon_title }}"></i>
@@ -26,7 +27,6 @@
     <input type="hidden" name="price" value="{{ $price }}">
     <input type="hidden" name="basep" value="{{ $base_price }}">
     <input type="hidden" name="croute" value="{{ url()->current() }}">
-  {{ Form::close() }}
-
+  </form>
   @include('DBasic::scripts.airport_search')
 @endif

@@ -12,16 +12,14 @@
       <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>
   </div>
-
   <div class="row text-center" style="margin:10px;">
     <h4 style="margin: 5px; padding:0px;"><b>ICAO Type, Subfleet or Aircraft Specifications</b></h4>
   </div>
-
   <div class="row" style="margin-left:5px; margin-right:5px;">
     <div class="card border-blue-bottom" style="padding:10px;">
-      {{ Form::open(array('route' => 'DBasic.specs_store', 'method' => 'post')) }}
+      <form class="form" method="post" action="{{ route('DBasic.specs_store') }}">
+        @csrf
         <input type="hidden" name="id" value="{{ $spec->id ?? '' }}">
-
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-4">
             <label class="pl-1 mb-1" for="subfleet_id">Select Pre-Recorded Specifications for Editing</label>
@@ -38,16 +36,13 @@
               @endforeach
             </select>
           </div>
-
           <div class="col-sm-4 text-left align-middle"><br>
             <a id="edit_link" style="visibility: hidden" href="{{ route('DBasic.specs') }}" class="btn btn-primary pl-1 mb-1">Load Selected Record For Edit</a>
           </div>
-
           <div class="col-sm-4 text-left align-middle"><br>
             <a id="delete_link" style="visibility: hidden" href="{{ route('DBasic.specs') }}" class="btn btn-danger pl-1 mb-1">Delete !</a>
           </div>
         </div>
-
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-2">
             <label class="pl-1 mb-1" for="icao_id">ICAO Type</label>
@@ -234,10 +229,9 @@
             <button class="btn btn-primary pl-1 mb-1" type="submit">@if($spec && $spec->id) Update @else Save @endif</button>
           </div>
         </div>
-      {{ Form::close() }}
+      </form>
     </div>
   </div>
-
   {{-- Custom Colored Placeholders --}}
   <style>
     ::placeholder { color: indianred !important; opacity: 0.6 !important; }

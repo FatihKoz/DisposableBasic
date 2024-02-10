@@ -1,5 +1,6 @@
 @if($is_visible)
-  {{ Form::open(array('route' => $form_route, 'method' => 'post')) }}
+  <form class="form" method="post" action="{{ $form_route }}">
+    @csrf
     @if(empty($fixed_ac) && filled($ts_aircraft))
       <div class="card mb-2">
         <div class="card-header p-1">
@@ -34,5 +35,5 @@
     @endif
     <input type="hidden" name="price" value="{{ $price }}">
     <input type="hidden" name="croute" value="{{ url()->current() }}">
-  {{ Form::close() }}
+  </form>
 @endif

@@ -1,5 +1,6 @@
 <div style="margin-bottom: 5px;">
-  {{ Form::open(['route' => 'DBasic.manual_payment', 'method' => 'post']) }}
+  <form class="form" method="post" action="{{ route(DBasic.manual_payment) }}">
+    @csrf
     <table class="table table-striped text-left" style="margin-bottom: 2px;">
       <tr>
         <td style="width: 30%; max-width: 30%;">User</td>
@@ -20,5 +21,5 @@
       </tr>
     </table>
     <input class="button" type="submit" value="Transfer Money to User">
-  {{ Form::close() }}
+  </form>
 </div>

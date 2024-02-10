@@ -77,12 +77,13 @@
                 <tr>
                   <th>Admin Functions</th>
                   <td>
-                    {{ Form::open(['route' => 'DBasic.stable_update', 'method' => 'post']) }}
-                      {{ Form::hidden('report_id', $sap->id) }}
-                      {{ Form::hidden('current_page', url()->current()) }}
-                      {{ Form::button('Approve as Stable', ['type' => 'submit', 'name' => 'operation', 'value' => 'update', 'class' => 'btn btn-success btn-sm m-0 mx-1 p-0 px-1', 'onclick' => "return confirm('Do you really want to accept this report as STABLE ?')"]) }}
-                      {{ Form::button('Delete', ['type' => 'submit', 'name' => 'operation', 'value' => 'delete', 'class' => 'btn btn-danger btn-sm m-0 mx-1 p-0 px-1', 'onclick' => "return confirm('Do you really want to DELETE this report ?')"]) }}
-                    {{ Form::close() }}
+                    <form class="form" method="post" action="{{ route('DBasic.stable_update') }}">
+                      @csrf
+                      <input type="hidden" name="report_id" value="{{ $sap->id }}" />
+                      <input type="hidden" name="current_page" value="{{ url()->current() }}" />
+                      <button class="btn btn-sm btn-success m-0 mx-1 p-0 px-1" type="submit" name="operation" value="update" onclick="return confirm('Do you really want to accept this report as STABLE ?')">Approve as Stable</button>
+                      <button class="btn btn-sm btn-danger m-0 mx-1 p-0 px-1" type="submit" name="operation" value="delete" onclick="return confirm('Do you really want to DELETE this report ?')">Delete</button>
+                    </form>
                   </td>
                 </tr>
               @endif

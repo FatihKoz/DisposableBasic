@@ -16,11 +16,12 @@
 
   <div class="row" style="margin-left:5px; margin-right:5px;">
     <div class="card border-blue-bottom" style="padding:10px;">
-      {{ Form::open(array('route' => 'DBasic.tech_store', 'method' => 'post')) }}
-      @if($tech && filled($tech->id))
-        <input type="hidden" name="id" value="{{ $tech->id }}">
-        <input type="hidden" name="icao" value="{{ $tech->icao ?? '' }}">
-      @endif
+      <form class="form" method="post" action="{{ route('DBasic.tech_store') }}">
+        @csrf
+        @if($tech && filled($tech->id))
+          <input type="hidden" name="id" value="{{ $tech->id }}">
+          <input type="hidden" name="icao" value="{{ $tech->icao ?? '' }}">
+        @endif
         <div class="row" style="margin-bottom: 10px;">
           <div class="col-sm-3">
             <label class="pl-1 mb-1" for="subfleet_id">Select a record for Editing</label>
@@ -225,10 +226,9 @@
             <button class="btn btn-primary pl-1 mb-1" type="submit">@if($tech && $tech->id) Update @else Save @endif</button>
           </div>
         </div>
-      {{ Form::close() }}
+      </form>
     </div>
   </div>
-
   {{-- Custom placeholder colors --}}
   <style>
     ::placeholder { color: indianred !important; opacity: 0.6 !important; }

@@ -1,6 +1,7 @@
 @if($settings)
   <div style="margin-bottom: 5px;">
-    {{ Form::open(['route' => 'DBasic.settings_update', 'method' => 'post']) }}
+    <form class="form" method="post" action="{{ route('DBasic.settings_update') }}">
+      @csrf
       <table class="table table-striped text-left" style="margin-bottom: 2px;">
         @foreach($settings->where('group', $group)->sortBy('order') as $st)
           <tr>
@@ -34,9 +35,8 @@
       </table>
       <input type="hidden" name="group" value="{{ $group }}">
       <input class="button" type="submit" value="Save Section Settings">
-    {{ Form::close() }}
+    </form>
   </div>
-
   {{-- Custom placeholder coloring --}}
   <style>
     ::placeholder { color: indianred !important; opacity: 0.6 !important; }
