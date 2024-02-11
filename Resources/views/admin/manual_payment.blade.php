@@ -1,5 +1,5 @@
 <div style="margin-bottom: 5px;">
-  <form class="form" method="post" action="{{ route(DBasic.manual_payment) }}">
+  <form class="form" method="post" action="{{ route('DBasic.manual_payment') }}">
     @csrf
     <table class="table table-striped text-left" style="margin-bottom: 2px;">
       <tr>
