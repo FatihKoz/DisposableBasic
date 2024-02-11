@@ -1,5 +1,5 @@
 @if($is_visible)
-  <form class="form" method="post" action="{{ $form_route }}">
+  <form class="form" method="post" action="{{ route($form_route) }}">
     @csrf
     @if(empty($fixed_dest))
       <div class="card mb-2">
