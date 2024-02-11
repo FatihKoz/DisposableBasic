@@ -676,6 +676,12 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+11.FEB.24
+
+* Removed `laravelcollective/html` package features/usage
+  **WARNING: Code Breaking Changes Present, update your duplicated blades**
+* Fixed API Stats (aircraft count)
+
 27.JAN.24
 
 * Added Discord News posting feature (separate from v7's internal logic)
