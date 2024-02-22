@@ -676,6 +676,11 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+22.FEB.24
+
+* Fixed Jumpseat Travel and Aircraft Transfer widget blades (form actions)
+* Fixed admin manual awarding (form action)
+
 11.FEB.24
 
 * Removed `laravelcollective/html` package features/usage
