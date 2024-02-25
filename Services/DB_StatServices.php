@@ -534,6 +534,10 @@ class DB_StatServices
     // Network Stats for IVAO/VATSIM (uses cache)
     public function NetworkStats($network = 'BOTH')
     {
+
+        // $pireps = Pirep::where('state', PirepState::ACCEPTED)->pluck('id')->toArray();
+        $pireps = Pirep::onlyTrashed()->pluck('id')->toArray();
+
         if ($network === 'IVAO') {
             $network_array = ['IVAO'];
         } elseif ($network === 'VATSIM') {
@@ -554,10 +558,11 @@ class DB_StatServices
         $start90 = Carbon::now()->subDays(90);
         $start180 = Carbon::now()->subDays(180);
 
-        $overall = cache()->remember($cache_overall, $cache_until, function () use ($network_array) {
+        $overall = cache()->remember($cache_overall, $cache_until, function () use ($network_array, $pireps) {
             return PirepFieldValue::selectRaw('value as network, count(value) as pireps')
                 ->where('slug', 'network-online')
                 ->whereIn('value', $network_array)
+                ->whereNotIn('pirep_id', $pireps)
                 ->groupBy('value')->get();
         });
 
@@ -567,11 +572,12 @@ class DB_StatServices
             }
         }
 
-        $last90days = cache()->remember($cache_last90, $cache_until, function () use ($network_array, $start90) {
+        $last90days = cache()->remember($cache_last90, $cache_until, function () use ($network_array, $pireps, $start90) {
             return PirepFieldValue::selectRaw('value as network, count(value) as pireps')
                 ->where('slug', 'network-online')
                 ->where('created_at', '>', $start90)
                 ->whereIn('value', $network_array)
+                ->whereNotIn('pirep_id', $pireps)
                 ->groupBy('value')->get();
         });
 
@@ -581,11 +587,12 @@ class DB_StatServices
             }
         }
 
-        $last180days = cache()->remember($cache_last180, $cache_until, function () use ($network_array, $start180) {
+        $last180days = cache()->remember($cache_last180, $cache_until, function () use ($network_array, $pireps, $start180) {
             return PirepFieldValue::selectRaw('value as network, count(value) as pireps')
                 ->where('slug', 'network-online')
                 ->where('created_at', '>', $start180)
                 ->whereIn('value', $network_array)
+                ->whereNotIn('pirep_id', $pireps)
                 ->groupBy('value')->get();
         });
 
