@@ -676,6 +676,11 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+09.MAR.24
+
+* Fixed a width resolving issue on Jumpseat Travel and Airport Info widgets (select2 dropdown)
+* Not considering softdeleted pireps for network statistics
+
 22.FEB.24
 
 * Fixed Jumpseat Travel and Aircraft Transfer widget blades (form actions)
