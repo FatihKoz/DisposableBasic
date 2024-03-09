@@ -9,7 +9,7 @@
         </h5>
       </div>
       <div class="card-body p-1">
-        <select class="form-control airport_search {{ $hubs_only }}" name="airport_selector" id="airport_selector" onchange="Check_Airport_Selection()"></select>
+        <select style="width: 100%;" class="form-control airport_search {{ $hubs_only }}" name="airport_selector" id="airport_selector" onchange="Check_Airport_Selection()"></select>
       </div>
       <div class="card-footer p-1 text-end small">
         <span class="float-start pt-1">

@@ -10,7 +10,7 @@
           </h5>
         </div>
         <div class="card-body p-1">
-          <select class="form-control airport_search {{ $hubs_only }}" name="newloc" id="newloc"></select>
+          <select style="width: 100%;" class="form-control airport_search {{ $hubs_only }}" name="newloc" id="newloc"></select>
         </div>
         <div class="card-footer p-1 text-end">
           <i class="fas fa-money-bill-wave text-{{ $icon_color }} float-start m-1" title="{{ $icon_title }}"></i>
