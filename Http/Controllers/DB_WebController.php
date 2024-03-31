@@ -32,7 +32,7 @@ class DB_WebController extends Controller
             'users'    => $users,
             'country'  => new ISO3166(),
             'DBasic'   => true,
-            'DSpecial' => DB_CheckModule('DisposableSpecial'),
+            'DSpecial' => check_module('DisposableSpecial'),
         ]);
     }
 
@@ -52,7 +52,7 @@ class DB_WebController extends Controller
             'pireps'   => $pireps,
             'units'    => DB_GetUnits(),
             'DBasic'   => true,
-            'DSpecial' => DB_CheckModule('DisposableSpecial'),
+            'DSpecial' => check_module('DisposableSpecial'),
         ]);
     }
 
@@ -75,7 +75,7 @@ class DB_WebController extends Controller
             'stats_basic'   => $stats_basic,
             'stats_pirep'   => $stats_pirep,
             'DBasic'        => true,
-            'DSpecial'      => DB_CheckModule('DisposableSpecial'),
+            'DSpecial'      => check_module('DisposableSpecial'),
         ]);
     }
 
@@ -84,7 +84,7 @@ class DB_WebController extends Controller
     {
         return view('DBasic::web.blank', [
             'DBasic'   => true,
-            'DSpecial' => DB_CheckModule('DisposableSpecial'),
+            'DSpecial' => check_module('DisposableSpecial'),
         ]);
     }
 }

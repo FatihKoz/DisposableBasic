@@ -50,9 +50,15 @@ if (!function_exists('DB_GetRunways')) {
 // Get detailed addon specifications for an Aircraft 
 // Start from Aircraft level, then check Subfleet and ICAO Type (with $deep_check = true)
 if (!function_exists('DB_GetSpecs')) {
-    function DB_GetSpecs($aircraft, $deep_check = false)
+    function DB_GetSpecs($aircraft, $deep_check = false, $with_icao = false)
     {
         $specs = DB_Spec::where(['aircraft_id' => $aircraft->id, 'active' => true])->orderby('saircraft')->get();
+
+        if ($with_icao && filled($specs)) {
+            // Get ICAO Specs and combine with any aircraft specs provided
+            $specs_icao = DB_GetSpecs_ICAO($aircraft->icao);
+            $specs = $specs->merge($specs_icao);
+        }
 
         if ($deep_check && blank($specs) && filled($aircraft->subfleet)) {
             $specs = DB_GetSpecs_SF($aircraft->subfleet);

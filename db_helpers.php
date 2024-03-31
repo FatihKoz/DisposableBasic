@@ -94,16 +94,6 @@ if (!function_exists('DB_CheckDuplicateCustom')) {
     }
 }
 
-// Check phpVMS Module
-// Return boolean
-if (!function_exists('DB_CheckModule')) {
-    function DB_CheckModule($module_name)
-    {
-        $phpvms_module = Module::find($module_name);
-        return isset($phpvms_module) ? $phpvms_module->isEnabled() : false;
-    }
-}
-
 if (!function_exists('DB_CheckPilotIdent')) {
     function DB_CheckPilotIdent($field, $user)
     {

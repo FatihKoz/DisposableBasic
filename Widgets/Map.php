@@ -148,7 +148,7 @@ class Map extends Widget
             $latest_assignments = null;
             // Get Current User's latest assignments and build the flights array
             // Needs Disposable Special Module
-            if (DB_CheckModule('DisposableSpecial')) {
+            if (check_module('DisposableSpecial')) {
                 $now = Carbon::now();
                 $asg_where = [];
                 $asg_where['assignment_year'] = $now->year;

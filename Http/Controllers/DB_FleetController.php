@@ -149,7 +149,7 @@ class DB_FleetController extends Controller
         $specs = DB_GetSpecs($aircraft, true);
 
         // Maintenance Status
-        $maint = DB_CheckModule('DisposableSpecial') ? DS_Maintenance::where('aircraft_id', $aircraft->id)->first() : null;
+        $maint = check_module('DisposableSpecial') ? DS_Maintenance::where('aircraft_id', $aircraft->id)->first() : null;
 
         // Stats
         $StatSvc = app(DB_StatServices::class);
