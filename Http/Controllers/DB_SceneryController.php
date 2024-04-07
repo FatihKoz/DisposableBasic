@@ -37,7 +37,7 @@ class DB_SceneryController extends Controller
         $filter_region = filled($request->input('region')) ? true : false;
         $filter_sim = filled($request->input('sim')) ? true : false;
 
-        $sceneries = DB_Scenery::withCount(['departures', 'arrivals'])->with(['airport'])->when($filter_region, function ($query) use ($request) {
+        $sceneries = DB_Scenery::withCount(['departures', 'arrivals'])->with(['airport'])->where('user_id', $user->id)->when($filter_region, function ($query) use ($request) {
             return $query->where('region', $request->input('region'));
         })->when($filter_sim, function ($query) use ($request) {
             return $query->where('simulator', $request->input('sim'));
