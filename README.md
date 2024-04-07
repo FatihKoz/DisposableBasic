@@ -278,7 +278,7 @@ By default, ground checks are done on status change (like from BOARDING to PUSHB
 
 Presence checks has an AUTO option (default), this enables checking both networks initially and continues on the one which the pilot is online. If you are operating only on one network, selecting it from settings is still the best choice (to reduce server load and unnecessary traffic) but if you allow both then leave the setting at AUTO and provide two custom profile fields for your pilots to fill in their network ID's. System is designed to check ID's existence too to reduce traffic and server load.
 
-System will save individual checks in a separate table which is cleaned up periodically and saves the results as new pirep field values. `network-online` (identified/selected network), `network-presence` (ratio of presence), `network-callsign` (ratio of callsign usage) are the slugs used for those pirep fields.
+System will save individual checks in a separate table which is cleaned up periodically and saves the results as new pirep field values. `network-online` (identified/selected network), `network-presence-check` (ratio of presence), `network-callsign-check` (ratio of callsign usage), `network-callsign-used` (used callsign or callsigns during flight) are the slugs used for those pirep fields.
 
 ## Stable Approach Plugin Support
 
@@ -682,6 +682,7 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 * Added My Sceneries feature
 * Updated Map Widget to support new scenery feature (**Check your duplicated blades**)
+* Updated Network Presence checks, added used callsign(s) to pirep field values
 
 31.MAR.24
 

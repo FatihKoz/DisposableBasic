@@ -87,7 +87,15 @@ class Pirep_Filed
                 );
             }
 
-            // $pirep->save();
+            // Record the callsigns used during flight
+            if ($check_result > 0) {
+                $used_callsigns = DB_WhazzUpCheck::where('pirep_id', $pirep->id)->whereNotNull('callsign')->groupBy('callsign')->pluck('callsign')->toArray();
+
+                PirepFieldValue::updateOrCreate(
+                    ['pirep_id' => $pirep->id, 'slug' => 'network-callsign-used'],
+                    ['name' => 'Network Callsign Used', 'value' => implode(', ', $used_callsigns), 'source' => PirepSource::ACARS]
+                );
+            }
         }
     }
 }
