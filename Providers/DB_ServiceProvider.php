@@ -70,6 +70,10 @@ class DB_ServiceProvider extends ServiceProvider
             Route::get('dlivewx', 'DB_PageController@livewx')->name('livewx');
             // Pireps
             Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
+            // Scenery List
+            Route::get('dscenery', 'DB_SceneryController@index')->name('scenery');
+            Route::post('dscenery/store', 'DB_SceneryController@store')->name('scenery.store');
+            Route::post('dscenery/delete', 'DB_SceneryController@delete')->name('scenery.delete');
             // Stable Approach
             Route::get('dstable', 'DB_StableApproachController@index')->name('stable');
             // Statistics

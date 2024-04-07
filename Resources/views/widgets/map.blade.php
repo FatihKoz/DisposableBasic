@@ -1,4 +1,4 @@
-@if(isset($flights) && $flights > 0 || !isset($flights) && count($mapAirports) > 0 || !isset($flights) && count($mapHubs) > 0)
+@if(isset($flights) && $flights > 0 || !isset($flights) && count($mapAirports) > 0 || !isset($flights) && count($mapHubs) > 0 || isset($sceneries))
   {{-- Map Modal Button --}}
   <div class="row">
     <div class="col d-grid">
@@ -13,6 +13,8 @@
           @lang('DBasic::widgets.assignm_map')
         @elseif($mapsource === 'aerodromes')
           @lang('DBasic::widgets.aerodr_map')
+        @elseif($mapsource === 'scenery')
+          My Sceneries Map
         @else
           @lang('DBasic::widgets.flights_map')
         @endif
@@ -36,6 +38,8 @@
               @lang('DBasic::widgets.assignm_map')
             @elseif($mapsource === 'aerodromes')
               @lang('DBasic::widgets.aerodr_map')
+            @elseif($mapsource === 'scenery')
+              My Sceneries Map
             @else
               @lang('DBasic::widgets.flights_map')
             @endif
@@ -49,11 +53,18 @@
         </div>
         <div class="modal-footer border-0 p-0 small text-end">
           <span>
+            @if(isset($sceneries))
+              Sceneries: {{ $sceneries }}
+            @endif
             @if(count($mapCityPairs) > 0)
               @lang('DBasic::widgets.citypairs'): {{ count($mapCityPairs) }} |
             @endif
-            @lang('DBasic::widgets.hubs'): {{ count($mapHubs) }} |
-            @lang('DBasic::widgets.airports'): {{ count($mapAirports) }}
+            @if(count($mapHubs) > 0)
+              @lang('DBasic::widgets.hubs'): {{ count($mapHubs) }} |
+            @endif
+            @if(count($mapAirports) > 0)
+              @lang('DBasic::widgets.airports'): {{ count($mapAirports) }}
+            @endif
             @if(isset($flights))
               | {{ trans_choice('common.flight', 2) }}: {{ $flights }}
             @endif
@@ -71,22 +82,74 @@
     {{-- Map Leaflet Script --}}
     <script type="text/javascript">
       function {{ $mapsource }}ExpandMap() {
-        // Build Icons
-        var RedIcon = new L.Icon({!! $mapIcons['RedIcon'] !!});
-        var GreenIcon = new L.Icon({!! $mapIcons['GreenIcon'] !!});
+        // Icons
         var BlueIcon = new L.Icon({!! $mapIcons['BlueIcon'] !!});
+        var GoldIcon = new L.Icon({!! $mapIcons['GoldIcon'] !!});
+        var GreenIcon = new L.Icon({!! $mapIcons['GreenIcon'] !!});
+        var GreyIcon = new L.Icon({!! $mapIcons['GreyIcon'] !!});
+        var OrangeIcon = new L.Icon({!! $mapIcons['OrangeIcon'] !!});
+        var RedIcon = new L.Icon({!! $mapIcons['RedIcon'] !!});
+        var VioletIcon = new L.Icon({!! $mapIcons['VioletIcon'] !!});
         var YellowIcon = new L.Icon({!! $mapIcons['YellowIcon'] !!});
-        // Build Map Boundary, Hubs and Airports Layer Group
+        // Map Boundary
         var mBoundary = L.featureGroup();
-        var mHubs = L.layerGroup();
-        var mAirports = L.layerGroup();
-        @foreach ($mapHubs as $hub)
-          var HUB_{{ $hub['id'] }} = L.marker([{{ $hub['loc'] }}], {icon: GreenIcon , opacity: 0.8}).bindPopup({!! "'".$hub['pop']."'" !!}).addTo(mHubs).addTo(mBoundary);
-        @endforeach
-        @foreach ($mapAirports as $airport)
-          var APT_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: BlueIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mAirports)@if($mapsource === 'aerodromes' && $loop->first || $mapsource === 'aerodromes' && $loop->last).addTo(mBoundary)@elseif($mapsource != 'aerodromes').addTo(mBoundary)@endif;
-        @endforeach
-        // Build City Pairs / Flights Layer Group
+        // Hubs
+        @if(count($mapHubs) > 0)
+          var mHubs = L.layerGroup();
+          @foreach ($mapHubs as $hub)
+            var HUB_{{ $hub['id'] }} = L.marker([{{ $hub['loc'] }}], {icon: GreenIcon , opacity: 0.8}).bindPopup({!! "'".$hub['pop']."'" !!}).addTo(mHubs).addTo(mBoundary);
+          @endforeach
+        @endif
+        // Airports
+        @if(count($mapAirports) > 0)
+          var mAirports = L.layerGroup();
+          @foreach ($mapAirports as $airport)
+            var APT_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: BlueIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mAirports).addTo(mBoundary);
+          @endforeach
+        @endif
+        // FS9 Sceneries
+        @if(count($mapFS9) > 0)
+          var mFS9 = L.layerGroup();
+          @foreach ($mapFS9 as $airport)
+            var FS9_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: RedIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mFS9).addTo(mBoundary);
+          @endforeach
+        @endif
+        // FSX Sceneries
+        @if(count($mapFSX) > 0)
+          var mFSX = L.layerGroup();
+          @foreach ($mapFSX as $airport)
+            var FSX_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: BlueIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mFSX).addTo(mBoundary);
+          @endforeach
+        @endif
+        // P3D Sceneries
+        @if(count($mapP3D) > 0)
+          var mP3D = L.layerGroup();
+          @foreach ($mapP3D as $airport)
+            var P3D_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: GoldIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mP3D).addTo(mBoundary);
+          @endforeach
+        @endif
+        // XP Sceneries
+        @if(count($mapXP) > 0)
+          var mXP = L.layerGroup();
+          @foreach ($mapXP as $airport)
+            var XP_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: VioletIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mXP).addTo(mBoundary);
+          @endforeach
+        @endif
+        // MSFS Sceneries
+        @if(count($mapMSFS) > 0)
+          var mMSFS = L.layerGroup();
+          @foreach ($mapMSFS as $airport)
+            var MSFS_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: OrangeIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mMSFS).addTo(mBoundary);
+          @endforeach
+        @endif
+        // OTHER Sceneries
+        @if(count($mapOTHER) > 0)
+          var mOTHER = L.layerGroup();
+          @foreach ($mapOTHER as $airport)
+            var OTHER_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: GreyIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mOTHER).addTo(mBoundary);
+          @endforeach
+        @endif
+        // City Pairs / Flights Layer Group
         @if(count($mapCityPairs) > 0)
           var mFlights = L.layerGroup();
           @foreach ($mapCityPairs as $citypair)
@@ -115,9 +178,9 @@
         });
         // Define Control Groups
         var BaseLayers = {'Dark Matter': DarkMatter, 'OpenSM Mapnik': OpenSM, 'NatGEO World': NatGeo, 'World Topo': WorldTopo};
-        var Overlays = {'Hubs': mHubs, 'Airports': mAirports, @if(count($mapCityPairs) > 0) 'Flights': mFlights ,@endif 'OpenAIP Data': OpenAIP};
+        var Overlays = {!! $mapOverlays !!};
         // Define Map and Add Control Box
-        var {{ $mapsource }} = L.map('{{ $mapsource }}', {center: [{{ $mapcenter }}], layers: [DarkMatter, mHubs, mAirports @if(count($mapCityPairs) > 0), mFlights @endif], scrollWheelZoom: false}).fitBounds(mBoundary.getBounds().pad(0.2));;
+        var {{ $mapsource }} = L.map('{{ $mapsource }}', {center: [{{ $mapcenter }}], layers: [DarkMatter, {!! $mapLayers !!}], scrollWheelZoom: false}).fitBounds(mBoundary.getBounds().pad(0.2));;
         L.control.layers(BaseLayers, Overlays).addTo({{ $mapsource }});
         // TimeOut to ReDraw The Map in Modal
         setTimeout(function(){ {{ $mapsource }}.invalidateSize().fitBounds(mBoundary.getBounds().pad(0.2))}, 300);

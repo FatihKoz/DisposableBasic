@@ -10,12 +10,14 @@ use App\Models\User;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Models\Enums\PirepState;
-use App\Models\Enums\PirepStatus;
 use App\Services\UserService;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Modules\DisposableBasic\Models\DB_Scenery;
+use Modules\DisposableBasic\Models\Enums\DB_Simulator;
 
 class Map extends Widget
 {
@@ -25,6 +27,7 @@ class Map extends Widget
     {
         $mapcenter = setting('acars.center_coords');
         $detailed_popups = is_bool($this->config['popups']) ? $this->config['popups'] : null;
+        $aircraft = null;
 
         if (setting('pilots.only_flights_from_current')) {
             $limit_location = true;
@@ -69,6 +72,8 @@ class Map extends Widget
             $type = 'aerodromes';
         } elseif ($this->config['source'] === 'assignment') {
             $type = 'assignment';
+        } elseif ($this->config['source'] === 'scenery') {
+            $type = 'scenery';
         } else {
             $airport_id = $this->config['source'];
             $type = 'airport';
@@ -185,6 +190,31 @@ class Map extends Widget
             $airports = DB::table('airports')->whereNull('deleted_at')->select('id', 'hub', 'iata', 'icao', 'lat', 'lon', 'name')->orderBy('id')->get();
         }
 
+        // My Sceneries Map
+        elseif ($type === 'scenery') {
+            $sceneries = DB_Scenery::withCount(['departures', 'arrivals'])->with(['airport'])->where('user_id', $user->id)->orderBy('airport_id')->get();
+
+            $airports = new Collection;
+
+            foreach ($sceneries as $sc) {
+                if (filled($sc->airport) && filled($sc->airport->lat) && filled($sc->airport->lon)) {
+                    $airports->push((object)[
+                        'id'     => $sc->airport_id,
+                        'hub'    => $sc->airport->hub,
+                        'iata'   => $sc->airport->iata,
+                        'icao'   => $sc->airport->icao,
+                        'lat'    => $sc->airport->lat,
+                        'lon'    => $sc->airport->lon,
+                        'name'   => $sc->airport->name,
+                        'sim'    => $sc->simulator,
+                        'region' => $sc->region,
+                        'deps'   => $sc->departures_count,
+                        'arrs'   => $sc->arrivals_count,
+                    ]);
+                }
+            }
+        }
+
         // Fleet Locations Map
         elseif ($type === 'fleet') {
             $awhere = [];
@@ -219,7 +249,7 @@ class Map extends Widget
         }
 
         // Build Unique City Pairs From Flights/Pireps
-        if ($type != 'fleet' && $type != 'aerodromes') {
+        if ($type != 'fleet' && $type != 'aerodromes' && $type != 'scenery') {
             $citypairs = [];
             $airports_pack = collect();
             foreach ($mapflights as $mf) {
@@ -253,74 +283,86 @@ class Map extends Widget
         }
 
         // Auto disable popups to increase performance and reduce php timeout errors
-        if ($type != 'fleet' && $type != 'aerodromes' && is_countable($mapflights) && count($mapflights) >= 1000) {
+        if ($type != 'fleet' && $type != 'aerodromes' && $type != 'scenery' && is_countable($mapflights) && count($mapflights) >= 1000) {
             $detailed_popups = false;
         }
 
-        // Map Icons
+        // Create Map Arrays
         $mapIcons = [];
+        $mapHubs = [];
+        $mapAirports = [];
+        $mapCityPairs = [];
+        $mapFS9 = [];
+        $mapFSX = [];
+        $mapP3D = [];
+        $mapXP = [];
+        $mapMSFS = [];
+        $mapOTHER = [];
 
-        $RedUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png';
-        $GreenUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png';
         $BlueUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png';
+        $GoldUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
+        $GreenUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png';
+        $GreyUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png';
+        $OrangeUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png';
+        $RedUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png';
+        $VioletUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png';
         $YellowUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png';
 
         $shadowUrl = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png';
         $iconSize = [12, 20];
         $shadowSize = [20, 20];
 
-        $mapIcons['RedIcon'] = json_encode(['iconUrl' => $RedUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
-        $mapIcons['GreenIcon'] = json_encode(['iconUrl' => $GreenUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
         $mapIcons['BlueIcon'] = json_encode(['iconUrl' => $BlueUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['GoldIcon'] = json_encode(['iconUrl' => $GoldUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['GreenIcon'] = json_encode(['iconUrl' => $GreenUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['GreyIcon'] = json_encode(['iconUrl' => $GreyUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['OrangeIcon'] = json_encode(['iconUrl' => $OrangeUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['RedIcon'] = json_encode(['iconUrl' => $RedUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
+        $mapIcons['VioletIcon'] = json_encode(['iconUrl' => $VioletUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
         $mapIcons['YellowIcon'] = json_encode(['iconUrl' => $YellowUrl, 'shadowUrl' => $shadowUrl, 'iconSize' => $iconSize, 'shadowSize' => $shadowSize]);
 
         // Routes For PopUps
         $hroute = 'DBasic.hub';
         $aroute = 'DBasic.aircraft';
 
-        // Map Hubs Array
-        $mapHubs = [];
-
-        foreach ($airports->where('hub', 1) as $hub) {
-            $hpop = '<a href="' . route($hroute, [$hub->id]) . '" target="_blank">' . $hub->id . ' ' . str_replace("'", "`", $hub->name) . '</a>';
-            if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $hub->id)->count() > 0 && $aircraft->where('airport_id', $hub->id)->count() < 6) {
-                $hpop = $hpop . '<hr>';
-                foreach ($aircraft->where('airport_id', $hub->id) as $ac) {
-                    $hpop = $hpop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration . ' (' . $ac->icao . ') </a><br>';
-                }
-            } elseif (isset($aircraft)) {
-                $hpop = $hpop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $hub->id)->count() . '<br>';
+        if ($type == 'scenery') {
+            // Populate Simulator Based Layer Arrays
+            foreach ($airports->whereIn('sim', [0, DB_Simulator::OTHER]) as $airport) {
+                $mapOTHER[] = $this->ProcessAirport($airport, $hroute, $aroute);
             }
-            $mapHubs[] = [
-                'id'  => $hub->id,
-                'loc' => $hub->lat . ', ' . $hub->lon,
-                'pop' => $hpop,
-            ];
+
+            foreach ($airports->where('sim', DB_Simulator::FS9) as $airport) {
+                $mapFS9[] = $this->ProcessAirport($airport, $hroute, $aroute);
+            }
+
+            foreach ($airports->where('sim', DB_Simulator::FSX) as $airport) {
+                $mapFSX[] = $this->ProcessAirport($airport, $hroute, $aroute);
+            }
+
+            foreach ($airports->where('sim', DB_Simulator::P3D) as $airport) {
+                $mapP3D[] = $this->ProcessAirport($airport, $hroute, $aroute);
+            }
+
+            foreach ($airports->where('sim', DB_Simulator::XP) as $airport) {
+                $mapXP[] = $this->ProcessAirport($airport, $hroute, $aroute);
+            }
+
+            foreach ($airports->where('sim', DB_Simulator::MSFS) as $airport) {
+                $mapMSFS[] = $this->ProcessAirport($airport, $hroute, $aroute);
+            }
+        } else {
+            // Populate Hubs Array
+            foreach ($airports->where('hub', 1) as $hub) {
+                $mapHubs[] = $this->ProcessHub($hub, $hroute, $aroute, $aircraft);
+            }
+
+            // Populate Airports Array
+            foreach ($airports->where('hub', 0) as $airport) {
+                $mapAirports[] = $this->ProcessAirport($airport, $hroute, $aroute, $aircraft);
+            }
         }
 
-        // Map Airport Array
-        $mapAirports = [];
-
-        foreach ($airports->where('hub', 0) as $airport) {
-            $apop = '<a href="' . route('frontend.airports.show', [$airport->id]) . '" target="_blank">' . $airport->id . ' ' . str_replace("'", "`", $airport->name) . '</a>';
-            if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $airport->id)->count() > 0 && $aircraft->where('airport_id', $airport->id)->count() < 6) {
-                $apop = $apop . '<hr>';
-                foreach ($aircraft->where('airport_id', $airport->id) as $ac) {
-                    $apop = $apop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration . ' (' . $ac->icao . ') </a><br>';
-                }
-            } elseif (isset($aircraft)) {
-                $apop = $apop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $airport->id)->count();
-            }
-            $mapAirports[] = [
-                'id'  => $airport->id,
-                'loc' => $airport->lat . ', ' . $airport->lon,
-                'pop' => $apop,
-            ];
-        }
-
-        // Map CityPairs Array
-        $mapCityPairs = [];
-
+        // Populate CityPairs Array
         if (isset($citypairs)) {
             foreach ($citypairs as $citypair) {
                 if ($detailed_popups === false) {
@@ -365,15 +407,74 @@ class Map extends Widget
             }
         }
 
+        // Define Overlays and Enabled Layers
+        // var Overlays = {'Hubs': mHubs, 'Airports': mAirports, 'Flights': mFlights, 'OpenAIP Data': OpenAIP};
+        $overlays = '"OpenAIP Data": OpenAIP,';
+        $layers  = '';
+
+        if (count($mapHubs) > 0) {
+            $overlays .= "'Hubs': mHubs,";
+            $layers .= " mHubs,";
+        }
+
+        if (count($mapAirports) > 0) {
+            $overlays .= "'Airports': mAirports,";
+            $layers .= " mAirports,";
+        }
+
+        if (count($mapCityPairs) > 0) {
+            $overlays .= "'Flights': mFlights,";
+            $layers .= " mFlights,";
+        }
+
+        if (count($mapFS9) > 0) {
+            $overlays .= "'Fs2004': mFS9,";
+            $layers .= " mFS9,";
+        }
+
+        if (count($mapFSX) > 0) {
+            $overlays .= "'FsX': mFSX,";
+            $layers .= " mFSX,";
+        }
+
+        if (count($mapP3D) > 0) {
+            $overlays .= "'Prepar 3D': mP3D,";
+            $layers .= " mP3D,";
+        }
+
+        if (count($mapXP) > 0) {
+            $overlays .= "'X-Plane': mXP,";
+            $layers .= " mXP,";
+        }
+
+        if (count($mapMSFS) > 0) {
+            $overlays .= "'MSFS': mMSFS,";
+            $layers .= " mMSFS,";
+        }
+
+        if (count($mapOTHER) > 0) {
+            $overlays .= "'Other Sims': mOTHER,";
+            $layers .= " mOTHER,";
+        }
+
         return view('DBasic::widgets.map', [
             'mapcenter'    => $mapcenter,
             'mapsource'    => $type,
             'aircraft'     => isset($aircraft) ? count($aircraft) : null,
             'flights'      => isset($mapflights) ? count($mapflights) : null,
+            'sceneries'    => ($type === 'scenery' && isset($airports)) ? count($airports) : null,
             'mapIcons'     => $mapIcons,
             'mapHubs'      => $mapHubs,
             'mapAirports'  => $mapAirports,
             'mapCityPairs' => $mapCityPairs,
+            'mapFS9'       => $mapFS9,
+            'mapFSX'       => $mapFSX,
+            'mapP3D'       => $mapP3D,
+            'mapXP'        => $mapXP,
+            'mapMSFS'      => $mapMSFS,
+            'mapOTHER'     => $mapOTHER,
+            'mapOverlays'  => '{' . $overlays . '}',
+            'mapLayers'    => $layers,
         ]);
     }
 
@@ -381,5 +482,53 @@ class Map extends Widget
     {
         $loading_style = '<div class="alert alert-warning mb-1 p-0 px-2 small fw-bold"><div class="spinner-border spinner-border-sm text-dark me-2" role="status"></div>Loading Map data...</div>';
         return $loading_style;
+    }
+
+    // Prepare Airport data for the array
+    public function ProcessAirport($airport = null, $hroute, $aroute, $aircraft = null)
+    {
+        if (!$airport) {
+            return [];
+        }
+
+        $apop = '<a href="' . route('frontend.airports.show', [$airport->id]) . '" target="_blank">' . $airport->id . ' ' . str_replace("'", "`", $airport->name) . '</a>';
+        if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $airport->id)->count() > 0 && $aircraft->where('airport_id', $airport->id)->count() < 6) {
+            $apop = $apop . '<hr>';
+            foreach ($aircraft->where('airport_id', $airport->id) as $ac) {
+                $apop = $apop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration . ' (' . $ac->icao . ') </a><br>';
+            }
+        } elseif (isset($aircraft)) {
+            $apop = $apop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $airport->id)->count();
+        }
+
+        return [
+            'id'  => $airport->id,
+            'loc' => $airport->lat . ', ' . $airport->lon,
+            'pop' => $apop,
+        ];
+    }
+
+    // Prepare Hub data for the array
+    public function ProcessHub($hub = null, $hroute, $aroute, $aircraft = null)
+    {
+        if (!$hub) {
+            return [];
+        }
+
+        $hpop = '<a href="' . route($hroute, [$hub->id]) . '" target="_blank">' . $hub->id . ' ' . str_replace("'", "`", $hub->name) . '</a>';
+        if (isset($aircraft) && isset($aroute) && $aircraft->where('airport_id', $hub->id)->count() > 0 && $aircraft->where('airport_id', $hub->id)->count() < 6) {
+            $hpop = $hpop . '<hr>';
+            foreach ($aircraft->where('airport_id', $hub->id) as $ac) {
+                $hpop = $hpop . '<a href="' . route($aroute, [$ac->registration]) . '" target="_blank">' . $ac->registration . ' (' . $ac->icao . ') </a><br>';
+            }
+        } elseif (isset($aircraft)) {
+            $hpop = $hpop . '<hr>Parked Aircraft: ' . $aircraft->where('airport_id', $hub->id)->count() . '<br>';
+        }
+
+        return [
+            'id'  => $hub->id,
+            'loc' => $hub->lat . ', ' . $hub->lon,
+            'pop' => $hpop,
+        ];
     }
 }

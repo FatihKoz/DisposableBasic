@@ -7,7 +7,38 @@ use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\UserState;
-use Nwidart\Modules\Facades\Module;
+use Modules\DisposableBasic\Models\Enums\DB_Simulator;
+use Modules\DisposableBasic\Models\Enums\DB_WorldRegion;
+
+// Decode Simulator Enum
+// Return string
+if (!function_exists('DB_DecodeSimulator')) {
+    function DB_DecodeSimulator($enum)
+    {
+        if ($enum && $enum > 0) {
+            $label = DB_Simulator::label($enum);
+        } else {
+            $label = '-';
+        }
+
+        return $label;
+    }
+}
+
+// Decode Region Enum
+// Return string
+if (!function_exists('DB_DecodeRegion')) {
+    function DB_DecodeRegion($enum)
+    {
+        if ($enum && $enum > 0) {
+            $label = DB_WorldRegion::label($enum);
+        } else {
+            $label = '-';
+        }
+
+        return $label;
+    }
+}
 
 // Aircraft State
 // Return mixed

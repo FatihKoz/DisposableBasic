@@ -15,6 +15,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Fleet page (with details of selected subfleet and/or aircraft)
 * Hubs page (with details of selected hub)
 * Statistics page (with basic leaderboard options)
+* My Sceneries page (allows keeping track of personal installed sceneries, provides available flight counts)
 * Support for variable aircraft addons and related displays (mainly for SimBrief integration)
 * Additional customizable pre-defined content pages (apart from phpVMS v7 pages system)
 * Live Weather Map (uses Windy as its source)
@@ -87,12 +88,13 @@ DBasic.subfleet    /dfleet/B738-DSP   // Subfleet details page, needs a {subflee
 DBasic.aircraft    /daircraft/TC-DHA  // Aircraft details page, needs a {registration} code to run
 
 DBasic.awards      /dawards           // Awards index page
-DBasic.news        /dnews             // News index page
 DBasic.livewx      /dlivewx           // Live Weather Map index page
+DBasic.news        /dnews             // News index page
 DBasic.pireps      /dpireps           // All Pireps index page
 DBasic.ranks       /dranks            // Ranks index page
 DBasic.reports     /dreports          // All Pireps index page (public, for IVAO/VATSIM)
 DBasic.roster      /droster           // Roster index page (full roster)
+DBasic.scenery     /dscenery          // My Sceneries page
 DBasic.stats       /dstats            // Statistics index page
 DBasic.statistics  /dstatistics       // Statistics index page (public, for IVAO/VATSIM)
 ```
@@ -675,6 +677,11 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+07.APR.24
+
+* Added My Sceneries feature
+* Updated Map Widget to support new scenery feature (**Check your duplicated blades**)
 
 31.MAR.24
 
