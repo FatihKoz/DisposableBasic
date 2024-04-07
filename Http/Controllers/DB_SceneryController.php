@@ -18,7 +18,7 @@ class DB_SceneryController extends Controller
         $user = Auth::user();
         $user_regions = DB_Scenery::where('user_id', $user->id)->where('region', '!=', 0)->groupBy('region')->pluck('region')->toArray();
         $user_simulators = DB_Scenery::where('user_id', $user->id)->where('simulator', '!=', 0)->groupBy('simulator')->pluck('simulator')->toArray();
-        $user_sceneries = DB_Scenery::groupBy('airport_id')->pluck('airport_id')->toArray();
+        $user_sceneries = DB_Scenery::where('user_id', $user->id)->groupBy('airport_id')->pluck('airport_id')->toArray();
 
         $where = [
             'active'  => true,
