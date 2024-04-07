@@ -104,7 +104,7 @@
         @if(count($mapAirports) > 0)
           var mAirports = L.layerGroup();
           @foreach ($mapAirports as $airport)
-            var APT_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: BlueIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mAirports).addTo(mBoundary);
+            var APT_{{ $airport['id'] }} = L.marker([{{ $airport['loc'] }}], {icon: BlueIcon , opacity: 0.8}).bindPopup({!! "'".$airport['pop']."'" !!}).addTo(mAirports)@if($mapsource === 'aerodromes' && $loop->first || $mapsource === 'aerodromes' && $loop->last).addTo(mBoundary)@elseif($mapsource != 'aerodromes').addTo(mBoundary)@endif;
           @endforeach
         @endif
         // FS9 Sceneries
