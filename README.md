@@ -678,6 +678,10 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+09.APR.24
+
+* Added flight listing capabilities to My Sceneries feature/page
+
 07.APR.24
 
 * Added My Sceneries feature
