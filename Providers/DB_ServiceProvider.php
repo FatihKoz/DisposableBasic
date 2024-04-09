@@ -72,6 +72,7 @@ class DB_ServiceProvider extends ServiceProvider
             Route::get('dpireps', 'DB_PirepController@index')->name('pireps');
             // Scenery List
             Route::get('dscenery', 'DB_SceneryController@index')->name('scenery');
+            Route::get('dflights', 'DB_SceneryController@flights')->name('scenery.flights');
             Route::post('dscenery/store', 'DB_SceneryController@store')->name('scenery.store');
             Route::post('dscenery/delete', 'DB_SceneryController@delete')->name('scenery.delete');
             // Stable Approach

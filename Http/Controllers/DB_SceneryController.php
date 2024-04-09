@@ -3,9 +3,12 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
+use App\Models\Bid;
 use App\Models\Flight;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Models\DB_Scenery;
 use Modules\DisposableBasic\Models\Enums\DB_Simulator;
@@ -51,6 +54,79 @@ class DB_SceneryController extends Controller
             'user_id'    => $user->id,
             'user_regs'  => $user_regions,
             'user_sims'  => $user_simulators
+        ]);
+    }
+
+    public function flights(Request $request)
+    {
+        $type = $request->input('type');
+
+        if (!in_array($type, ['arrivals', 'departures', 'trips'])) {
+            $type = 'arrivals';
+        }
+
+        $search_arrs = $type === 'arrivals' ? true : false;
+        $search_deps = $type === 'departures' ? true : false;
+        $search_trips = $type === 'trips' ? true : false;
+
+        $user = Auth::user();
+        $user_sceneries = DB_Scenery::where('user_id', $user->id)->groupBy('airport_id')->pluck('airport_id')->toArray();
+
+        $where = [
+            'active'  => true,
+            'visible' => true,
+        ];
+
+        if (setting('pilots.restrict_to_company')) {
+            $where['airline_id'] = $user->airline_id;
+        }
+
+        if (setting('pilots.only_flights_from_current')) {
+            $where['dpt_airport_id'] = $user->curr_airport_id;
+        }
+
+        $filter_by_user = (setting('pireps.restrict_aircraft_to_rank', true) || setting('pireps.restrict_aircraft_to_typerating', false)) ? true : false;
+
+        if ($filter_by_user) {
+            $user_service = app(UserService::class);
+            $user_subfleets = $user_service->getAllowableSubfleets($user)->pluck('id')->toArray();
+            $user_flights = DB::table('flight_subfleet')->select('flight_id')->whereIn('subfleet_id', $user_subfleets)->groupBy('flight_id')->pluck('flight_id')->toArray();
+            $open_flights = Flight::withCount('subfleets')->whereNull('user_id')->having('subfleets_count', 0)->pluck('id')->toArray();
+            $allowed_flights = array_merge($user_flights, $open_flights);
+        } else {
+            $allowed_flights = [];
+        }
+
+        $myflights = Flight::with(['airline', 'dpt_airport', 'arr_airport', 'simbrief'])->where($where)->whereNull('user_id')->when($search_deps, function ($query) use ($user_sceneries) {
+            return $query->whereIn('dpt_airport_id', $user_sceneries);
+        })->when($search_arrs, function ($query) use ($user_sceneries) {
+            return $query->whereIn('arr_airport_id', $user_sceneries);
+        })->when($search_trips, function ($query) use ($user_sceneries) {
+            return $query->whereIn('dpt_airport_id', $user_sceneries)->whereIn('arr_airport_id', $user_sceneries);
+        })->when($filter_by_user, function ($query) use ($allowed_flights) {
+            return $query->whereIn('id', $allowed_flights);
+        })->sortable(['flight_number', 'route_code', 'route_leg'])->paginate(25);
+
+        $saved_flights = [];
+        $bids = Bid::where('user_id', $user->id)->get();
+        foreach ($bids as $bid) {
+            if (!$bid->flight) {
+                $bid->delete();
+                continue;
+            }
+
+            $saved_flights[$bid->flight_id] = $bid->id;
+        }
+
+        return view('DBasic::scenery.flights', [
+            'flights'       => $myflights,
+            'units'         => DB_GetUnits(),
+            'type'          => $type,
+            'user'          => $user,
+            'saved'         => $saved_flights,
+            'simbrief'      => !empty(setting('simbrief.api_key')),
+            'simbrief_bids' => setting('simbrief.only_bids'),
+            'acars_plugin'  => check_module('VMSAcars'),
         ]);
     }
 

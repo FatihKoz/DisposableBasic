@@ -63,6 +63,11 @@
           </div>
         </form>
       </div>
+      @if($sceneries->count() > 0)
+        <div class="text-start mb-2">
+          @widget('DBasic::Map', ['source' => 'scenery'])
+        </div>
+      @endif
       <div class="card mb-2">
         <div class="card-header p-1">
           <h5 class="m-1">Flight Counts</h5>
@@ -87,11 +92,13 @@
           Only active and visible flights are considered.
         </div>
       </div>
-      @if($sceneries->count() > 0)
-        <div class="text-start mb-2">
-          @widget('DBasic::Map', ['source' => 'scenery'])
-        </div>
-      @endif
+      <div class="text-start mb-2">
+        @if(!setting('pilots.only_flights_from_current'))
+          <a href="{{ route('DBasic.scenery.flights', ['type' => 'departures']) }}" class="btn btn-sm btn-warning px-1 py-0">Search Departure Flights</a>
+        @endif
+        <a href="{{ route('DBasic.scenery.flights', ['type' => 'arrivals']) }}" class="btn btn-sm btn-warning px-1 py-0">Search Arrival Flights</a>
+        <a href="{{ route('DBasic.scenery.flights', ['type' => 'trips']) }}" class="btn btn-sm btn-warning px-1 py-0">Search Round Trip Flights</a>
+      </div>
       @if(count($user_regs) > 1)
         <div class="text-end mb-2">
           @foreach($user_regs as $reg)
