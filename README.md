@@ -339,6 +339,7 @@ When needed, you can use below widgets to enhance the data provided by your page
 @widget('DBasic::JumpSeat')
 @widget('DBasic::LeaderBoard')
 @widget('DBasic::Map')
+@widget('DBasic::Notams')
 @widget('DBasic::PersonalStats')
 @widget('DBasic::RandomFlights')
 @widget('DBasic::StableApproach')
