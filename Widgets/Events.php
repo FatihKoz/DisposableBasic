@@ -13,7 +13,7 @@ class Events extends Widget
     public function run()
     {
         $today = Carbon::today();
-        $event_code = DS_Setting('dbasic.event_routecode', 'EVENT');
+        $event_code = DB_Setting('dbasic.event_routecode', 'EVENT');
 
         if ($this->config['type'] === 'upcoming') {
             $where = [
