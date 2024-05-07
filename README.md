@@ -543,6 +543,20 @@ Additionally;
 
 *If you have less flights/pireps than expected displayed on map, check your laravel log for errors, widget simply skips records with faulty data and logs their details*  
 
+### Notams
+
+Fetches real world NOTAMs for a given airport. 
+
+```php
+@widget('DBasic::Notams', ['icao' => $airport->id])
+@widget('DBasic::Notams', ['icao' => $current_airport, 'filter' => true])
+```
+
+* `'icao'` must be a valid ICAO code of an airport (like `$airport->id` or `$flight->dep_airport_id` or `$pirep->arr_airport_id`) which is present in your v7 airports database
+* `'filter'` can be either `true` or `false`. When enabled only Serie A notams will be displayed, which works fine for Europe and America
+
+*To reduce server load and traffic, notams are cached for 45 minutes until a new set is fetched/required.*
+
 ### Personal Stats
 
 Provides personal pirep statistics per pilot according to config options defined.
@@ -677,6 +691,11 @@ If you have duplicated blades and encounter problems after updating the module o
 Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
 
 ## Release / Update Notes
+
+07.MAY.24
+
+* Fixed Events Widget (bad function call)
+* Added Notams Widget
 
 09.APR.24
 
