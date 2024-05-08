@@ -43,10 +43,10 @@ class Notams extends Widget
                         Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' Error Occured During NOTAM Feed Retrieval !');
                     }
                 } catch (GuzzleException $e) {
-                    Log::error('Disposable Basic | NOTAM Feed Download Error: ' . $e->getMessage());
+                    Log::error('Disposable Basic | NOTAM Feed Download Error, ' . $e->getMessage());
                 }
 
-                $rss_feed = simplexml_load_string($response->getBody());
+                $rss_feed = isset($response) ? simplexml_load_string($response->getBody()) : null;
 
                 if ($rss_feed && is_object($rss_feed)) {
                     foreach ($rss_feed->channel->item as $notam) {
