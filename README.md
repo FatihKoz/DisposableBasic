@@ -693,6 +693,15 @@ Beta testers of SmartCars v3 reported problems with some of the widgets, root ca
 
 ## Release / Update Notes
 
+11.MAY.24
+
+* Improved performance of stats  
+  _Specially pax/cgo counts with a reversed lookup, needs periodic crap record cleanup_
+
+09.MAY.24
+
+* Fixed Notams Widget
+
 07.MAY.24
 
 * Fixed Events Widget (bad function call)
