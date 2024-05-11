@@ -401,24 +401,18 @@ class DB_StatServices
             return array();
         }
 
-        /* Rejected Pirep counts, dashed out on purpose
-        if (setting('pireps.delete_rejected_hours') == 0 && $level > 10) {
-            if (empty($airline_id)) {
-                $stats[__('DBasic::widgets.pireps_rej')] = Pirep::where('state', PirepState::REJECTED)->count();
-            } else {
-                $stats[__('DBasic::widgets.pireps_rej')] = Pirep::where(['airline_id' => $airline_id, 'state' => PirepState::REJECTED])->count();
-            }
-        }
-        */
-
         // Count carried PAX and CGO for fancy stats
-        $allpireps = Pirep::where($where)->pluck('id')->toArray();
+        $allpireps = Pirep::where('state', '!=', PirepState::ACCEPTED)->when(isset($airline_id), function ($query) use ($airline_id) {
+            $query->where('airline_id', $airline_id);
+        })->when(isset($aircraft_id), function ($query) use ($aircraft_id) {
+            $query->where('aircraft_id', $aircraft_id);
+        })->pluck('id')->toArray();
 
         if (count($allpireps) < 65500) {
-            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereIn('pirep_id', $allpireps)->sum('count');
-            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereIn('pirep_id', $allpireps)->avg('count');
-            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereIn('pirep_id', $allpireps)->sum('count');
-            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereIn('pirep_id', $allpireps)->avg('count');
+            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->sum('count');
+            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->avg('count');
+            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->sum('count');
+            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->avg('count');
         } else {
             $pax_amount = 0;
             $cgo_amount = 0;
@@ -646,13 +640,13 @@ class DB_StatServices
         }
 
         // Pirep carried PAX and CGO
-        $allpireps = Pirep::where($where)->pluck('id')->toArray();
+        $allpireps = Pirep::where('state', '!=', PirepState::ACCEPTED)->pluck('id')->toArray();
 
         if (count($allpireps) < 65500) {
-            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereIn('pirep_id', $allpireps)->sum('count');
-            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereIn('pirep_id', $allpireps)->avg('count');
-            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereIn('pirep_id', $allpireps)->sum('count');
-            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereIn('pirep_id', $allpireps)->avg('count');
+            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->sum('count');
+            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->avg('count');
+            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->sum('count');
+            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->avg('count');
         } else {
             $pax_amount = 0;
             $cgo_amount = 0;
