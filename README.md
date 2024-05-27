@@ -707,7 +707,7 @@ _Not providing attribution link will result in removal of access and no support 
 
 27.MAY.24
 
-* Improved module view path registering code
+* Improved module view path registering code  
   _Change requires latest dev build as of 24th May 2024 or newer_
 
 11.MAY.24
