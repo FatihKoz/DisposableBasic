@@ -3,7 +3,7 @@
 phpVMS v7 module for Basic VA features
 
 * Module supports **only** php8.1+ and laravel10
-* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+240328.cc074f` / 28.MAR.2024
+* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+240524.84ecc6` / 24.MAY.2024
 * _php8.0 and laravel9 compatible latest version: v3.3.1_
 * _php7.4 and laravel8 compatible latest version: v3.0.19_
 
@@ -687,11 +687,28 @@ All Disposable Modules are capable of displaying customized files located under 
 As you can see from the above example, filename and sub-folder location is not changed. We only copy a file from a location to another and have a copied version of it.  
 If you have duplicated blades and encounter problems after updating the module or after editing, just rename them to see if the provided original works fine.
 
+## License Compatibility & Attribution Link
+
+As per the license, **addon name should be always visible in all pages**. It is best placed in the footer without a logo to save space but link **SHOULD BE** always visible.
+```html
+Powered by <a href="https://www.phpvms.net" target="_blank">phpVMS v7</a> & <a href="https://github.com/FatihKoz" target="_blank">DH Addons</a>
+```
+or
+```html
+Enhanced by <a href="https://github.com/FatihKoz" target="_blank">DH Addons</a>
+```
+_Not providing attribution link will result in removal of access and no support is provided afterwards._
+
 ## Known Bugs / Problems
 
-Beta testers of SmartCars v3 reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data.  
+* SmartCars v3 users reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data. So it is highly probable that more features of this module may fail when SC3 is in use too. With latest improvements done to SC3 implementation incompatibilities are reduced but still it may behave different than expected. Please follow changes/updates of SC3 modules being developed by other devs.
 
 ## Release / Update Notes
+
+27.MAY.24
+
+* Improved module view path registering code  
+  _Change requires latest dev build as of 24th May 2024 or newer_
 
 11.MAY.24
 
