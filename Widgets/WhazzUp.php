@@ -41,6 +41,7 @@ class WhazzUp extends Widget
         } else {
             $user_field = 'userId';
             $server_address = 'https://api.ivao.aero/v2/tracker/whazzup';
+            $ivao_vacode = filled(Theme::getSetting('gen_ivao_icao')) ? 'IVAOVA/'.Theme::getSetting('gen_ivao_icao') : 'DSPHBSC';
         }
 
         $whazzup = DB_WhazzUp::where('network', $network_selection)->orderby('updated_at', 'desc')->first();
@@ -66,6 +67,7 @@ class WhazzUp extends Widget
                     $fp = $flightplan->aircraft_short . ' | ' . $flightplan->departure . ' > ' . $flightplan->arrival;
                 } elseif ($flightplan) {
                     $fp = $flightplan->aircraftId . ' | ' . $flightplan->departureId . ' > ' . $flightplan->arrivalId;
+                    $vasys = str_contains($flightplan->remarks, $ivao_vacode);
                 } else {
                     $fp = 'No ATC Flight Plan!';
                 }
@@ -89,6 +91,7 @@ class WhazzUp extends Widget
                     'pirep'        => $pirep,
                     'airline'      => $airline,
                     'flightplan'   => $fp,
+                    'vasyscheck'   => isset($vasys) ? $vasys : null,
                 ];
             }
         }

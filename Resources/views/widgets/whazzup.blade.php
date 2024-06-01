@@ -40,6 +40,13 @@
                   @elseif($pilot['pirep'])
                     <i class="fas fa-clipboard-check text-success mx-1" title="{{ $pilot['pirep']->aircraft->icao.' | '.$pilot['pirep']->dpt_airport_id.' > '.$pilot['pirep']->arr_airport_id }}"></i>
                   @endif
+                  @if($network === 'IVAO')
+                    @if($pilot['vasyscheck'] === true)
+                      <i class="fas fa-file-alt text-success mx-1" title="IVAOVA/{{ Theme::getSetting('gen_ivao_icao') }} code found in FPL"></i>
+                    @elseif($pilot['vasyscheck'] === false)
+                      <i class="fas fa-file text-danger mx-1" title="IVAOVA/{{ Theme::getSetting('gen_ivao_icao') }} code NOT found in FPL!"></i>
+                    @endif
+                  @endif
                 @endif
                 {{ DB_ConvertMinutes($pilot['online_time']) }}
               </td>
