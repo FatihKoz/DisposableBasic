@@ -10,6 +10,7 @@
   var rvr = String("{{ $sb_rvr ?? 'RVR/500' }}");
   var rmktext = String("{{ $sb_rmk ?? ' RMK/TCAS '.config('app.name') }}").toUpperCase();
   var callsign = String("{{ $sb_callsign ?? '' }}").toUpperCase();
+  var ivaova = String("{{ $sb_ivaova ?? '' }}").toUpperCase();
 
   // Convert weights according to SimBrief requirements
   // All Weights must be in thousand pounds with 3 digits precision like 19.362
@@ -36,8 +37,9 @@
     if (str === '0') {
       // Nothing selected remove Spec Fields and use PhpVms data for basics
       rvr = String("{{ $sb_rvr ?? 'RVR/500' }}");
-      rmktext = String("{{ $sb_rmk ?? 'RMK/TCAS '.config('app.name') }}").toUpperCase();
-      callsign = String("{{ $sb_callsign ?? '' }}");
+      rmktext = String("{{ $sb_rmk ?? ' RMK/TCAS '.config('app.name') }}").toUpperCase();
+      callsign = String("{{ $sb_callsign ?? '' }}").toUpperCase();
+      ivaova = String("{{ $sb_ivaova ?? '' }}").toUpperCase();
       document.getElementById('dow').value = '--';
       document.getElementById('mzfw').value = '--';
       document.getElementById('mtow').value = '--';
@@ -45,7 +47,7 @@
       document.getElementById('maxfuel').value = '--';
       document.getElementById('fuelfactor').value = '';
       document.getElementById('type').value = actype;
-      document.getElementById('acdata').value = '{"extrarmk":"' + rvr + rmktext + callsign + '","paxwgt":' + paxwgt + ',"bagwgt":' + bagwgt + '}';
+      document.getElementById('acdata').value = '{"extrarmk":"' + rvr + callsign + ivaova + rmktext + '","paxwgt":' + paxwgt + ',"bagwgt":' + bagwgt + '}';
       document.getElementById('tdPayload').title = 'Calculation Not Possible !';
     } else {
       // A specification is selected, proceed working on it
@@ -135,7 +137,7 @@
       }
 
       // Add Extra Remarks
-      AcDataJson.extrarmk = rvr.concat(rmktext).concat(callsign);
+      AcDataJson.extrarmk = rvr.concat(callsign).concat(ivaova).concat(rmktext);
       // Write final ACDATA field for SimBrief
       document.getElementById('acdata').value = JSON.stringify(AcDataJson);
     }
