@@ -718,6 +718,11 @@ _Not providing attribution link will result in removal of access and no support 
 
 ## Release / Update Notes
 
+07.JUN.24
+
+* Added NextRank Widget
+* Improved WhazzUp Widget staff/admin checks (for IVAO's new FPL ITEM 18 requirement)
+
 01.JUN.24
 
 * Added support to Specs code for VA's using IVAO VA system requirements (FPL ITEM 18 change)
