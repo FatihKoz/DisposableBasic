@@ -14,7 +14,7 @@ class NextRank extends Widget
     public function run()
     {
         $user = User::with('rank')->find(Auth::id());
-        $curr_time = round(($user->flight_time + $user->transfer_time) / 60, 0);
+        $curr_time = setting('pilots.count_transfer_hours', false) ? round(($user->flight_time + $user->transfer_time) / 60, 0) : round($user->flight_time / 60, 0);
         $curr_rank = $user->rank;
         $next_rank = Rank::where('hours', '>', $curr_time)->where('auto_promote', 1)->orderby('hours')->first();
 
