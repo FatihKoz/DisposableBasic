@@ -554,6 +554,7 @@ This widget has no special settings except the optional user id, it displays the
 @widget('DBasic::NextRank', ['user' => $user->id])
 ```
 
+* `'card'` can be `true` or `false`. When enabled widget will render the card, if not it will be plain text with progress bar. By default it is `true`
 * `'user'` can be a user's id like `$user->id` or `3` for profile placements (if not provided widget will use the authorized user's id automatically)
 
 ### Notams

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class NextRank extends Widget
 {
-    protected $config = ['user' => null];
+    protected $config = ['user' => null, 'card' => true];
 
     public function run()
     {
@@ -20,13 +20,14 @@ class NextRank extends Widget
         $next_rank = Rank::where('hours', '>', $curr_time)->where('auto_promote', 1)->orderby('hours')->first();
 
         return view('DBasic::widgets.next_rank', [
-            'curr_time' => $curr_time,
+            'card'      => is_bool($this->config['card']) ? $this->config['card'] : true,
             'curr_rank' => $curr_rank,
-            'last'      => (blank($next_rank)) ? true : false,
+            'curr_time' => $curr_time,
+            'last'      => blank($next_rank) ? true : false,
+            'missing'   => filled($next_rank) ? $next_rank->hours - $curr_time : null,
             'next_rank' => $next_rank,
-            'notice'    => ($curr_rank->hours > $next_rank->hours) ? true : false,
-            'missing'   => $next_rank->hours - $curr_time,
-            'ratio'     => round((100 * $curr_time) / $next_rank->hours, 0),
+            'notice'    => filled($next_rank) ? (($curr_rank->hours > $next_rank->hours) ? true : false) : false,
+            'ratio'     => filled($next_rank) ? round((100 * $curr_time) / $next_rank->hours, 0) : 100,
             'user'      => $user,
         ]);
     }
