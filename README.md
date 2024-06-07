@@ -339,6 +339,7 @@ When needed, you can use below widgets to enhance the data provided by your page
 @widget('DBasic::JumpSeat')
 @widget('DBasic::LeaderBoard')
 @widget('DBasic::Map')
+@widget('DBasic::NextRank')
 @widget('DBasic::Notams')
 @widget('DBasic::PersonalStats')
 @widget('DBasic::RandomFlights')
@@ -543,6 +544,17 @@ Additionally;
 *For "Assignment" source type, Disposable Special/Extended module needs to be installed and active*  
 
 *If you have less flights/pireps than expected displayed on map, check your laravel log for errors, widget simply skips records with faulty data and logs their details*  
+
+### Next Rank
+
+This widget has no special settings except the optional user id, it displays the next available rank with a progress bar. Can be placed to any page protected with login like dashboard.
+
+```php
+@widget('DBasic::NextRank')
+@widget('DBasic::NextRank', ['user' => $user->id])
+```
+
+* `'user'` can be a user's id like `$user->id` or `3` for profile placements (if not provided widget will use the authorized user's id automatically)
 
 ### Notams
 
