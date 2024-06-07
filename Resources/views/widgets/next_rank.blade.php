@@ -12,7 +12,7 @@
       Congratulations, you reached the last rank available. Progress not available...
     @else
       <div class="progress">
-        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ $ratio }}%" aria-valuenow="{{ $ratio }}" aria-valuemin="0" aria-valuemax="100">{{ $ratio.'%'}}</div>
+        <div class="progress-bar progress-bar-striped @if($ratio < 75) bg-warning text-dark @else bg-success @endif" role="progressbar" style="width: {{ $ratio }}%" aria-valuenow="{{ $ratio }}" aria-valuemin="0" aria-valuemax="100">{{ $ratio.'%'}}</div>
       </div>
     @endif
   </div>

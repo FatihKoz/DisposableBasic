@@ -23,7 +23,7 @@ class NextRank extends Widget
             'curr_time' => $curr_time,
             'curr_rank' => $curr_rank,
             'next_rank' => $next_rank,
-            'ratio'     => round((100 * $curr_time) / $next_rank->hours, 2),
+            'ratio'     => round((100 * $curr_time) / $next_rank->hours, 0),
             'missing'   => $next_rank->hours - $curr_time,
             'notice'    => ($curr_rank->hours > $next_rank->hours) ? true : false,
             'last'      => (blank($next_rank)) ? true : false,
