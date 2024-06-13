@@ -376,7 +376,7 @@ class Map extends Widget
                             $popuptext = $popuptext . '<a href="/flights/';
                         }
                         $popuptext = $popuptext . $mf->id . '" target="_blank">';
-                        $popuptext = $popuptext . $mf->airline->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
+                        $popuptext = $popuptext . optional($mf->airline)->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
                     }
 
                     foreach ($mapflights->where('dpt_airport_id', substr($citypair['name'], 4, 4))->where('arr_airport_id', substr($citypair['name'], 0, 4)) as $mf) {
@@ -386,7 +386,7 @@ class Map extends Widget
                             $popuptext = $popuptext . '<a href="/flights/';
                         }
                         $popuptext = $popuptext . $mf->id . '" target="_blank">';
-                        $popuptext = $popuptext . $mf->airline->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
+                        $popuptext = $popuptext . optional($mf->airline)->code . $mf->flight_number . ' ' . $mf->dpt_airport_id . '-' . $mf->arr_airport_id . '</a><br>';
                     }
                 }
 
