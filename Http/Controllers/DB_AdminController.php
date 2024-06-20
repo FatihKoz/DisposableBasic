@@ -178,6 +178,7 @@ class DB_AdminController extends Controller
         $airports_pirep_arr = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
         $airports_flight_dep = DB::table('flights')->whereNull('deleted_at')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
         $airports_flight_arr = DB::table('flights')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
+        $wrong_country_codes = DB::table('airports')->whereNull('deleted_at')->whereRaw("length(country) != 2")->orderBy('id')->pluck('id')->toArray();
 
         // Flight Checks
         $flight_comp = DB::table('flights')->whereNull('deleted_at')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();
@@ -208,6 +209,7 @@ class DB_AdminController extends Controller
 
         return view('DBasic::admin.health_check', [
             'acars_pirep' => $acars_pirep,
+            'faulty_apt'  => $wrong_country_codes,
             'fleet_comp'  => $fleet_comp,
             'flight_comp' => $flight_comp,
             'flight_orig' => $flight_orig,

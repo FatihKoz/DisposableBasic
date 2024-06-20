@@ -151,6 +151,17 @@
     </div>
     <div class="col-sm-3">
       <div class="card border-blue-bottom" style="padding:10px;">
+        {{ count($faulty_apt) }}
+        <br>
+        <span class="text-danger" title="ISO alpha-2 codes should be used for airport countries"><b>Faulty Airport Country Codes</b></span>
+        @if(count($faulty_apt) > 0)
+          <hr>
+          @foreach($faulty_apt as $list){{ $list }}@if(!$loop->last){{ ', ' }}@endif @endforeach
+        @endif
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card border-blue-bottom" style="padding:10px;">
         {{ count($users_field) }}
         <br>
         <span class="text-danger" title="User Field Values"><b>Entries associated with MISSING users</b></span>

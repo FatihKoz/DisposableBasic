@@ -3,9 +3,11 @@
 namespace Modules\DisposableBasic\Services;
 
 use App\Models\Aircraft;
+use App\Models\Airport;
 use App\Models\Pirep;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\PirepState;
+use App\Services\AirportService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Models\DB_WhazzUpCheck;
@@ -34,6 +36,46 @@ class DB_CronServices
 
             DB_WhazzUpCheck::where('created_at', '<', $cleanup_time)->delete();
             Log::info('Disposable Basic | Network Presence check data cleanup completed');
+        }
+    }
+
+    // Update Airports via vaCentral Lookup
+    public function UpdateAirports()
+    {
+        Log::info('Disposable Basic | Airport data lookup and update process started...');
+        $airportSVC = app(AirportService::class);
+        $airports = Airport::whereNull('elevation')->orderBy('icao')->take(100)->get();
+
+        foreach ($airports as $ap) {
+            $api = $airportSVC->lookupAirport($ap->id);
+
+            if (filled($api)) {
+                $ap->icao = $api['icao'];
+                $ap->iata = $api['iata'];
+                $ap->name = $api['name'];
+                $ap->location = $api['location'];
+                $ap->region = $api['region'];
+                $ap->country = $api['country'];
+                $ap->timezone = $api['timezone'];
+                $ap->lat = $api['lat'];
+                $ap->lon = $api['lon'];
+                $ap->elevation = $api['elevation'];
+
+                $ap->save();
+                Log::info('Disposable Basic | ' . $ap->id . ' updated via vaCentral Lookup');
+            } else {
+                $ap->elevation = 1;
+                $ap->notes = 'Special or Custom Airport';
+
+                $ap->save();
+                Log::info('Disposable Basic | ' . $ap->id . ' not found via vaCentral Lookup, record updated with a note and 1 feet elevation');
+            }
+        }
+
+        if ($airports->count() > 0) {
+            Log::info('Disposable Basic | Airport data lookup and update process completed for ' . $airports->count() . ' records');
+        } else {
+            Log::info('Disposable Basic | Airport data update was not necessary, nothing done');
         }
     }
 }

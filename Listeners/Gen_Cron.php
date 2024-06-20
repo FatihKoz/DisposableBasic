@@ -47,6 +47,9 @@ class Gen_Cron extends Listener
                 $DB_OnlineSVC->DownloadWhazzUp('VATSIM', $url_vatsim);
             }
         }
+
+        // $DB_CronSVC = app(DB_CronServices::class);
+        // $DB_CronSVC->UpdateAirports();
     }
 
     public function cron_15min()
