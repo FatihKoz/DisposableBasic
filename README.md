@@ -25,6 +25,7 @@ This module pack aims to cover basic needs of any Virtual Airline with some new 
 * Manual Awarding and Manual Payment features
 * Aircraft state control (in use, in air, on ground)
 * IVAO/VATSIM Network Presence Check (with additional callsign checks)
+* Support for IVAO/VATSIM audits (works with presence check results and data)
 * Pirep Auto Rejecting capabilities,
 * Some widgets to enhance any page/layout as per virtual airline needs
 * Database checks (to identify errors easily when needed)
@@ -97,6 +98,9 @@ DBasic.roster      /droster           // Roster index page (full roster)
 DBasic.scenery     /dscenery          // My Sceneries page
 DBasic.stats       /dstats            // Statistics index page
 DBasic.statistics  /dstatistics       // Statistics index page (public, for IVAO/VATSIM)
+
+DBasic.ivao        /divao             // Audit ready page for IVAO (public)
+DBasic.vatsim      /dvatsim           // Audit ready page for VATSIM (public)
 ```
 
 Also for embedding in your main (landing) sites, some public url's are available.  
@@ -717,6 +721,12 @@ _Not providing attribution link will result in removal of access and no support 
 * SmartCars v3 users reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data. So it is highly probable that more features of this module may fail when SC3 is in use too. With latest improvements done to SC3 implementation incompatibilities are reduced but still it may behave different than expected. Please follow changes/updates of SC3 modules being developed by other devs.
 
 ## Release / Update Notes
+
+30.JUN.24
+
+* Added another failsafe for Map Widget (for missing airlines)
+* Added GDPR compliant IVAO and VATSIM audit support pages (last 90 days is considered)  
+  _Admins can export data as csv files and see their all/network network members_
 
 07.JUN.24
 

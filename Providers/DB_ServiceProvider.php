@@ -94,6 +94,9 @@ class DB_ServiceProvider extends ServiceProvider
             // Public Pages (for IVAO/VATSIM Audits)
             Route::get('dreports', 'DB_PirepController@index')->name('reports');
             Route::get('dstatistics', 'DB_StatisticController@index')->name('statistics');
+            Route::get('dvatsim', 'DB_AuditController@vatsim')->name('vatsim');
+            Route::get('divao', 'DB_AuditController@ivao')->name('ivao');
+            Route::post('daudit_export', 'DB_AuditController@export_pireps')->name('audit.export');
             // Plain Pages
             Route::get('dp_roster', 'DB_WebController@roster')->name('dp_roster');
             Route::get('dp_stats', 'DB_WebController@stats')->name('dp_stats');
