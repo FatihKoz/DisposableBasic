@@ -726,7 +726,7 @@ _Not providing attribution link will result in removal of access and no support 
 
 * Added another failsafe for Map Widget (for missing airlines)
 * Added GDPR compliant IVAO and VATSIM audit support pages (last 90 days is considered)  
-  _Admins can export data as csv files and see their all/network network members_
+  _Admins can export data as csv files and see their all/active network members_
 
 07.JUN.24
 
