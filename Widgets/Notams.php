@@ -4,6 +4,7 @@ namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
 use App\Models\Airport;
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
@@ -43,12 +44,16 @@ class Notams extends Widget
                         Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' Error Occured During NOTAM Feed Retrieval !');
                     }
                 } catch (GuzzleException $e) {
-                    Log::error('Disposable Basic | NOTAM Feed Download Error, ' . $e->getMessage());
+                    Log::error('Disposable Basic | ' . $icao . ' NOTAM Feed Download Error, ' . $e->getMessage());
                 }
 
-                $rss_feed = isset($response) ? simplexml_load_string($response->getBody()) : null;
+                try {
+                    $rss_feed = isset($response) ? simplexml_load_string($response->getBody()) : null;
+                } catch (Exception $e) {
+                    Log::error('Disposable Basic | ' . $icao . ' NOTAM Feed Processing Error, ' . $e->getMessage());
+                }
 
-                if ($rss_feed && is_object($rss_feed)) {
+                if (isset($rss_feed) && is_object($rss_feed)) {
                     foreach ($rss_feed->channel->item as $notam) {
                         if ($filter && !str_contains($notam->title, 'NOTAM A')) {
                             continue;
