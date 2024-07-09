@@ -722,6 +722,10 @@ _Not providing attribution link will result in removal of access and no support 
 
 ## Release / Update Notes
 
+09.JUL.24
+
+* Added failsafe for Notams Widget (simply logging and skipping process when data is not compatible)
+
 30.JUN.24
 
 * Added another failsafe for Map Widget (for missing airlines)
