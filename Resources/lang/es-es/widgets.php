@@ -127,7 +127,7 @@ return [
     'airline_map'  => 'Rutas de la aerolínea',
     'assignm_map'  => 'Mapa de asignaciones mensuales',
     'aerodr_map'   => 'Mapa de aeropuertos',
-    'citypairs'    => 'CityPairs',
+    'citypairs'    => 'Ciudades emparejadas',
     'airports'     => 'Aeropuertos',
     'hubs'         => 'Hubs',
 ];
