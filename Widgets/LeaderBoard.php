@@ -5,7 +5,6 @@ namespace Modules\DisposableBasic\Widgets;
 use App\Contracts\Widget;
 use Carbon\Carbon;
 use Modules\DisposableBasic\Services\DB_StatServices;
-use Illuminate\Support\Facades\App;
 
 class LeaderBoard extends Widget
 {
@@ -13,8 +12,7 @@ class LeaderBoard extends Widget
 
     public function run()
     {
-        $now = Carbon::now();
-        $now->locale(App::getLocale()); // Configure Carbon to use the current locale
+        $now = Carbon::now()->locale(app()->getLocale());
         $source = $this->config['source'];
         $count = is_numeric($this->config['count']) ? $this->config['count'] : 3;
         $type = $this->config['type'];
@@ -41,7 +39,7 @@ class LeaderBoard extends Widget
 
         // Period text (visible at Card Header)
         if ($period === 'currentm') {
-            $period_text = $now->startOfMonth()->isoFormat('MMMM'); // Use isoFormat('MMMM') to display the month name in the current locale
+            $period_text = $now->startOfMonth()->isoFormat('MMMM');
         } elseif ($period === 'lastm') {
             $period_text = $now->subMonthNoOverflow()->startOfMonth()->isoFormat('MMMM');
         } elseif ($period === 'prevm') {
