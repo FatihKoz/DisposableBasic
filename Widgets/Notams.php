@@ -53,7 +53,7 @@ class Notams extends Widget
                     Log::error('Disposable Basic | ' . $icao . ' NOTAM Feed Processing Error, ' . $e->getMessage());
                 }
 
-                if (isset($rss_feed) && is_object($rss_feed)) {
+                if (isset($rss_feed) && is_object($rss_feed) && isset($rss_feed->channel) && (is_array($rss_feed->channel->item) || is_object($rss_feed->channel->item))) {
                     foreach ($rss_feed->channel->item as $notam) {
                         if ($filter && !str_contains($notam->title, 'NOTAM A')) {
                             continue;
