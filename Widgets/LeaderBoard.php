@@ -12,7 +12,7 @@ class LeaderBoard extends Widget
 
     public function run()
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->locale(app()->getLocale());
         $source = $this->config['source'];
         $count = is_numeric($this->config['count']) ? $this->config['count'] : 3;
         $type = $this->config['type'];
@@ -39,17 +39,17 @@ class LeaderBoard extends Widget
 
         // Period text (visible at Card Header)
         if ($period === 'currentm') {
-            $period_text = $now->startOfMonth()->format('F');
+            $period_text = $now->startOfMonth()->isoFormat('MMMM');
         } elseif ($period === 'lastm') {
-            $period_text = $now->subMonthNoOverflow()->startOfMonth()->format('F');
+            $period_text = $now->subMonthNoOverflow()->startOfMonth()->isoFormat('MMMM');
         } elseif ($period === 'prevm') {
-            $period_text = $now->subMonthsNoOverflow(2)->startOfMonth()->format('F');
+            $period_text = $now->subMonthsNoOverflow(2)->startOfMonth()->isoFormat('MMMM');
         } elseif ($period === 'currenty') {
-            $period_text = $now->startOfYear()->format('Y');
+            $period_text = $now->startOfYear()->isoFormat('Y');
         } elseif ($period === 'lasty') {
-            $period_text = $now->subYearNoOverflow()->startOfYear()->format('Y');
+            $period_text = $now->subYearNoOverflow()->startOfYear()->isoFormat('Y');
         } elseif ($period === 'prevy') {
-            $period_text = $now->subYearsNoOverflow(2)->startOfYear()->format('Y');
+            $period_text = $now->subYearsNoOverflow(2)->startOfYear()->isoFormat('Y');
         }
 
         if (isset($period_text)) {
