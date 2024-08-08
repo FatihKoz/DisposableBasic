@@ -4,6 +4,8 @@ namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
 use App\Models\Aircraft;
+use App\Models\Bid;
+use App\Models\Simbrief;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Services\UserService;
@@ -32,6 +34,8 @@ class TransferAircraft extends Widget
 
         $rank_restriction = setting('pireps.restrict_aircraft_to_rank', true);
         $rate_restriction = setting('pireps.restrict_aircraft_to_typerating', false);
+        $bid_restriction = setting('bids.block_aircraft', true);
+        $ofp_restriction = setting('simbrief.block_aircraft', false);
 
         $user = Auth::user();
 
@@ -100,6 +104,18 @@ class TransferAircraft extends Widget
                 $ts_aircraft = $ts_aircraft->filter(function ($ac) {
                     return $ac->airport_id === $ac->subfleet->hub_id;
                 });
+            }
+
+            // Filter out Bidded Aircraft
+            $bidded = Bid::pluck('aircraft_id')->toArray();
+            if ($bid_restriction && !empty($bidded)) {
+                $ts_aircraft = $ts_aircraft->whereNotIn('id', $bidded);
+            }
+
+            // Filter out SimBrief Blocked Aircraft
+            $planned = Simbrief::whereNotNull('flight_id')->whereNotNull('aircraft_id')->whereNull('pirep_id')->pluck('aircraft_id')->toArray();
+            if ($ofp_restriction && !empty($planned)) {
+                $ts_aircraft = $ts_aircraft->whereNotIn('id', $planned);
             }
         }
 
