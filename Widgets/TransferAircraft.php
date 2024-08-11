@@ -5,7 +5,7 @@ namespace Modules\DisposableBasic\Widgets;
 use App\Contracts\Widget;
 use App\Models\Aircraft;
 use App\Models\Bid;
-use App\Models\Simbrief;
+use App\Models\SimBrief;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Services\UserService;
@@ -113,7 +113,7 @@ class TransferAircraft extends Widget
             }
 
             // Filter out SimBrief Blocked Aircraft
-            $planned = Simbrief::whereNotNull('flight_id')->whereNotNull('aircraft_id')->whereNull('pirep_id')->pluck('aircraft_id')->toArray();
+            $planned = SimBrief::whereNotNull('flight_id')->whereNotNull('aircraft_id')->whereNull('pirep_id')->pluck('aircraft_id')->toArray();
             if ($ofp_restriction && !empty($planned)) {
                 $ts_aircraft = $ts_aircraft->whereNotIn('id', $planned);
             }
