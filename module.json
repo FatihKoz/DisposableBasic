@@ -2,6 +2,14 @@
     "name": "DisposableBasic",
     "alias": "disposablebasic",
     "description": "phpVMS v7 module for Basic VA features",
+    "version": "3.6.13",
+    "readme_url": "https://github.com/FatihKoz/DisposableBasic?tab=readme-ov-file#readme",
+    "license_url": "https://github.com/FatihKoz/DisposableBasic?tab=License-1-ov-file#readme",
+    "attribution": {
+        "text": "Disposable Basic by DH Addons",
+        "url": "https://github.com/FatihKoz",
+        "img": null
+    },
     "keywords": [],
     "active": 0,
     "order": 9001,
@@ -10,6 +18,9 @@
         "Modules\\DisposableBasic\\Providers\\DB_EventProvider"
     ],
     "aliases": {},
-    "files": ["db_helpers.php", "db_helpers_tech.php"],
+    "files": [
+        "db_helpers.php", 
+        "db_helpers_tech.php"
+    ],
     "requires": []
 }
