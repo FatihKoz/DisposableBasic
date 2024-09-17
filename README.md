@@ -722,6 +722,12 @@ _Not providing attribution link will result in removal of access and no support 
 
 ## Release / Update Notes
 
+17.SEP.24
+
+* Updated Aircraft Transfer widget (to consider booked/bidded aircraft)
+* Reverted back module view path changes with a slight improvement for active theme
+* Updated module.json for future development
+
 24.JUL.24
 
 * Added another failsafe for Notams Widget (more compatibility checks for the source provided data)
