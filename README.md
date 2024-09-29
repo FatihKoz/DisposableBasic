@@ -722,6 +722,10 @@ _Not providing attribution link will result in removal of access and no support 
 
 ## Release / Update Notes
 
+29.SEP.24
+
+* Added Japanese traslation (Thanks to Minnsch, ANA Virtual Group)  
+
 17.SEP.24
 
 * Updated Aircraft Transfer widget (to consider booked/bidded aircraft)
