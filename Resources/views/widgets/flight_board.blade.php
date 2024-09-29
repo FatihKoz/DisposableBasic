@@ -53,8 +53,22 @@
                 {{ $flight->aircraft->registration.' ('.$flight->aircraft->icao.')' }}
               </a>
             </td>
-            <td>{{ optional($flight->position)->altitude.' ft' }}</td>
-            <td>{{ optional($flight->position)->gs.' kts' }}</td>
+            <td>
+              @if(filled(optional($flight->position)->altitude_msl))
+                {{ round($flight->position->altitude_msl).' ft' }}
+              @elseif(filled(optional($flight->position)->altitude))
+                {{ round($flight->position->altitude).' ft' }}
+              @else
+                -
+              @endif
+            </td>
+            <td>
+              @if(filled(optional($flight->position)->gs))
+              {{ $flight->position->gs.' kt' }}
+              @else
+                -
+              @endif
+            </td>
             <td>
               @if($flight->status == 'BST')
                 {{ PirepStatus::label($flight->status).' | '.optional($flight->field_values->where('slug', 'departure-gate')->first())->value }}
