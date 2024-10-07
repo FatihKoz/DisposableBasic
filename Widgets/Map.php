@@ -328,27 +328,27 @@ class Map extends Widget
         if ($type == 'scenery') {
             // Populate Simulator Based Layer Arrays
             foreach ($airports->whereIn('sim', [0, DB_Simulator::OTHER]) as $airport) {
-                $mapOTHER[] = $this->ProcessAirport($airport, $hroute, $aroute);
+                $mapOTHER[] = $this->ProcessAirport($airport, $aroute);
             }
 
             foreach ($airports->where('sim', DB_Simulator::FS9) as $airport) {
-                $mapFS9[] = $this->ProcessAirport($airport, $hroute, $aroute);
+                $mapFS9[] = $this->ProcessAirport($airport, $aroute);
             }
 
             foreach ($airports->where('sim', DB_Simulator::FSX) as $airport) {
-                $mapFSX[] = $this->ProcessAirport($airport, $hroute, $aroute);
+                $mapFSX[] = $this->ProcessAirport($airport, $aroute);
             }
 
             foreach ($airports->where('sim', DB_Simulator::P3D) as $airport) {
-                $mapP3D[] = $this->ProcessAirport($airport, $hroute, $aroute);
+                $mapP3D[] = $this->ProcessAirport($airport, $aroute);
             }
 
             foreach ($airports->where('sim', DB_Simulator::XP) as $airport) {
-                $mapXP[] = $this->ProcessAirport($airport, $hroute, $aroute);
+                $mapXP[] = $this->ProcessAirport($airport, $aroute);
             }
 
             foreach ($airports->where('sim', DB_Simulator::MSFS) as $airport) {
-                $mapMSFS[] = $this->ProcessAirport($airport, $hroute, $aroute);
+                $mapMSFS[] = $this->ProcessAirport($airport, $aroute);
             }
         } else {
             // Populate Hubs Array
@@ -358,7 +358,7 @@ class Map extends Widget
 
             // Populate Airports Array
             foreach ($airports->where('hub', 0) as $airport) {
-                $mapAirports[] = $this->ProcessAirport($airport, $hroute, $aroute, $aircraft);
+                $mapAirports[] = $this->ProcessAirport($airport, $aroute, $aircraft);
             }
         }
 
@@ -485,9 +485,9 @@ class Map extends Widget
     }
 
     // Prepare Airport data for the array
-    public function ProcessAirport($airport = null, $hroute, $aroute, $aircraft = null)
+    public function ProcessAirport($airport, $aroute, $aircraft = null)
     {
-        if (!$airport) {
+        if (!isset($airport)) {
             return [];
         }
 
@@ -509,9 +509,9 @@ class Map extends Widget
     }
 
     // Prepare Hub data for the array
-    public function ProcessHub($hub = null, $hroute, $aroute, $aircraft = null)
+    public function ProcessHub($hub, $hroute, $aroute, $aircraft = null)
     {
-        if (!$hub) {
+        if (!isset($hub)) {
             return [];
         }
 
