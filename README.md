@@ -3,7 +3,7 @@
 phpVMS v7 module for Basic VA features
 
 * Module supports **only** php8.1+ and laravel10
-* Minimum required phpVMS v7 version is `phpVms 7.0.0-dev+240524.84ecc6` / 24.MAY.2024
+* Minimum required phpVMS v7 version is `phpVms 7.0.34-dev.g9cdbce8b15` / 08.NOV.2024
 * _php8.0 and laravel9 compatible latest version: v3.3.1_
 * _php7.4 and laravel8 compatible latest version: v3.0.19_
 
@@ -721,6 +721,11 @@ _Not providing attribution link will result in removal of access and no support 
 * SmartCars v3 users reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data. So it is highly probable that more features of this module may fail when SC3 is in use too. With latest improvements done to SC3 implementation incompatibilities are reduced but still it may behave different than expected. Please follow changes/updates of SC3 modules being developed by other devs.
 
 ## Release / Update Notes
+
+09.NOV.24
+
+* Added parking stands and runway info to pirep api endpoints
+* Eliminated some php warnings  
 
 29.SEP.24
 
