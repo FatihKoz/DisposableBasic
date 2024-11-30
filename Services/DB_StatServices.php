@@ -18,7 +18,10 @@ use App\Models\Enums\PirepSource;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\UserState;
 use App\Support\Units\Distance;
+use App\Support\Units\Fuel;
+use App\Support\Units\Mass;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class DB_StatServices
@@ -355,7 +358,7 @@ class DB_StatServices
     // Basic Statistics
     public function BasicStats($airline_id = null)
     {
-        $stats = [];
+        $stats = new Collection;
 
         $where = [];
         if (isset($airline_id)) {
@@ -364,26 +367,35 @@ class DB_StatServices
 
         $subfleets_array = Subfleet::where($where)->pluck('id')->toArray();
 
-        if (empty($airline_id)) {
-            $stats[__('DBasic::common.airlines')] = Airline::where('active', 1)->count();
-        }
+        $stats->put('airlines_desc', empty($airline_id) ? __('DBasic::common.airlines') : null);
+        $stats->put('airlines_value', empty($airline_id) ? (int) Airline::where('active', 1)->count() : null);
 
-        $stats[__('DBasic::common.pilots')] = User::where($where)->count();
-        $stats[__('DBasic::common.subfleets')] = count($subfleets_array);
-        $stats[__('DBasic::common.aircraft')] = Aircraft::whereIn('subfleet_id', $subfleets_array)->count();
-        $stats[__('DBasic::common.flights')] = Flight::where($where)->count();
+        $stats->put('pilots_desc', __('DBasic::common.pilots'));
+        $stats->put('pilots_value', (int) User::where($where)->count());
 
-        return $stats;
+        $stats->put('subfleets_desc', __('DBasic::common.subfleets'));
+        $stats->put('subfleets_value', count($subfleets_array));
+
+        $stats->put('aircraft_desc', __('DBasic::common.aircraft'));
+        $stats->put('aircraft_value', (int) Aircraft::whereIn('subfleet_id', $subfleets_array)->count());
+
+        $stats->put('flights_desc', __('DBasic::common.flights'));
+        $stats->put('flights_value', (int) Flight::where($where)->count());
+
+        $stats->put('airports_desc', __('DBasic::common.airports'));
+        $stats->put('airports_value', (int) Airport::count());
+
+        $stats->put('hubs_desc', __('DBasic::common.hubs'));
+        $stats->put('hubs_value', (int) Airport::where('hub', 1)->count());
+
+        return $stats->toArray();
     }
 
     // Pirep Statistics
     public function PirepStats($airline_id = null, $aircraft_id = null)
     {
-        $stats = [];
-        $level = 100;
-        $unit_distance = setting('units.distance');
+        $stats = new Collection;
         $unit_weight = setting('units.weight');
-        $unit_fuel = setting('units.fuel');
 
         $where = [];
         $where['state'] = PirepState::ACCEPTED;
@@ -391,116 +403,98 @@ class DB_StatServices
             $where['airline_id'] = $airline_id;
         } elseif (isset($aircraft_id)) {
             $where['aircraft_id'] = $aircraft_id;
-            $level = 10;
         }
 
-        $stats[__('DBasic::widgets.pireps_ack')] = Pirep::where($where)->count();
+        $stats->put('pireps_desc', __('DBasic::widgets.pireps_ack'));
+        $stats->put('pireps_value', (int) Pirep::where($where)->count());
 
         // Return empty array if pirep count is zero, no need to work for the rest
-        if ($stats[__('DBasic::widgets.pireps_ack')] === 0) {
+        if ($stats['pireps_value'] === 0) {
             return array();
         }
 
-        // Count carried PAX and CGO for fancy stats
-        $allpireps = Pirep::where('state', '!=', PirepState::ACCEPTED)->when(isset($airline_id), function ($query) use ($airline_id) {
+        // Count carried PAX and CGO for fancy stats, skip not accepted pireps
+        $skipped_pireps = Pirep::where('state', '!=', PirepState::ACCEPTED)->when(isset($airline_id), function ($query) use ($airline_id) {
             $query->where('airline_id', $airline_id);
         })->when(isset($aircraft_id), function ($query) use ($aircraft_id) {
             $query->where('aircraft_id', $aircraft_id);
         })->pluck('id')->toArray();
 
-        if (count($allpireps) < 65500) {
-            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->sum('count');
-            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->avg('count');
-            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->sum('count');
-            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->avg('count');
+        if (count($skipped_pireps) < 65500 && !isset($aircraft_id)) {
+            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $skipped_pireps)->sum('count');
+            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $skipped_pireps)->avg('count');
+            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $skipped_pireps)->sum('count');
+            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $skipped_pireps)->avg('count');
         } else {
             $pax_amount = 0;
             $cgo_amount = 0;
+            $pax_avg = 0;
+            $cgo_avg = 0;
         }
 
-        if ($pax_amount > 0) {
-            $stats[__('DBasic::widgets.pireps_pax')] = number_format($pax_amount);
-            $stats[__('DBasic::widgets.avg_pax')] = number_format($pax_avg);
-        }
+        $stats->put('pax_desc', __('DBasic::widgets.pireps_pax'));
+        $stats->put('pax_value', (int) $pax_amount);
+        $stats->put('pax_avg_desc', __('DBasic::widgets.avg_pax'));
+        $stats->put('pax_avg_value', (float) $pax_avg);
 
-        if ($cgo_amount > 0) {
-            $stats[__('DBasic::widgets.pireps_cgo')] = number_format($cgo_amount) . ' ' . $unit_weight;
-            $stats[__('DBasic::widgets.avg_cgo')] = number_format($cgo_avg) . ' ' . $unit_weight;
-        }
+        $stats->put('cgo_desc', __('DBasic::widgets.pireps_cgo'));
+        $stats->put('cgo_value', new Mass($cgo_amount, $unit_weight));
+        $stats->put('cgo_avg_desc', __('DBasic::widgets.avg_cgo'));
+        $stats->put('cgo_avg_value', new Mass($cgo_avg, $unit_weight));
 
-        // Basic Pirep Statistics
+        // Basic Pirep Statistics (Totals)
         $total_time = Pirep::where($where)->sum('flight_time');
         $total_dist = Pirep::where($where)->sum('distance');
         $total_fuel = Pirep::where($where)->sum('fuel_used');
 
-        if ($level > 10) {
-            $average_time = Pirep::where($where)->avg('flight_time');
-            $average_dist = Pirep::where($where)->avg('distance');
-            $average_fuel = Pirep::where($where)->avg('fuel_used');
-        }
+        // Basic Pirep Statistics (Averages)
+        $average_time = Pirep::where($where)->avg('flight_time');
+        $average_dist = Pirep::where($where)->avg('distance');
+        $average_fuel = Pirep::where($where)->avg('fuel_used');
 
-        if ($unit_distance === 'km') {
-            $total_dist = $total_dist * 1.852;
-            if ($level > 10) {
-                $average_dist = $average_dist * 1.852;
-            }
-        } elseif ($unit_distance === 'mi') {
-            $total_dist = $total_dist * 1.15078;
-            if ($level > 10) {
-                $average_dist = $average_dist * 1.15078;
-            }
-        }
+        // Flight Time
+        $stats->put('time_desc', __('DBasic::widgets.ttime'));
+        $stats->put('time_value', (int) $total_time);
+        $stats->put('time_avg_desc', __('DBasic::widgets.atime'));
+        $stats->put('time_avg_value', (float) $average_time);
 
-        if ($unit_fuel === 'kg') {
-            $total_fuel = $total_fuel / 2.20462262185;
-            if ($level > 10) {
-                $average_fuel = $average_fuel / 2.20462262185;
-            }
-        }
+        // Fuel Usage
+        $stats->put('fuel_desc', __('DBasic::widgets.tfuel'));
+        $stats->put('fuel_value', new Fuel($total_fuel, config('phpvms.internal_units.fuel')));
+        $stats->put('fuel_avg_desc', __('DBasic::widgets.afuel'));
+        $stats->put('fuel_avg_value', new Fuel($average_fuel, config('phpvms.internal_units.fuel')));
+        $stats->put('fuel_perhour_desc', __('DBasic::widgets.hfuel'));
+        $perhourfuel = ($total_fuel > 0 && $total_time > 0) ? ($total_fuel / $total_time) * 60 : 0;
+        $stats->put('fuel_perhour_value', new Fuel($perhourfuel, config('phpvms.internal_units.fuel')));
 
-        $stats[__('DBasic::widgets.ttime')] = DB_ConvertMinutes($total_time, '%2dh %2dm');
-        if ($level > 10) {
-            $stats[__('DBasic::widgets.atime')] = DB_ConvertMinutes($average_time, '%2dh %2dm');
-        }
-
-        $stats[__('DBasic::widgets.tfuel')] = number_format($total_fuel) . ' ' . $unit_fuel;
-        if ($level > 10) {
-            $stats[__('DBasic::widgets.afuel')] = number_format($average_fuel) . ' ' . $unit_fuel;
-        }
-
-        if ($total_fuel > 0 && $total_time > 0) {
-            $average_fuel_hour = ($total_fuel / $total_time) * 60;
-            $stats[__('DBasic::widgets.hfuel')] = number_format($average_fuel_hour) . ' ' . $unit_fuel;
-        }
-
-        $stats[__('DBasic::widgets.tdist')] = number_format($total_dist) . ' ' . $unit_distance;
-        if ($level > 10) {
-            $stats[__('DBasic::widgets.adist')] = number_format($average_dist) . ' ' . $unit_distance;
-        }
-
-        if ($total_dist > 0 && $total_time > 0 && $level > 10) {
-            $average_dist_hour = ($total_dist / $total_time) * 60;
-            $stats[__('DBasic::widgets.hdist')] = number_format($average_dist_hour) . ' ' . $unit_distance;
-        }
+        // Distance Flown
+        $stats->put('dist_desc', __('DBasic::widgets.tdist'));
+        $stats->put('dist_value', new Distance($total_dist, config('phpvms.internal_units.distance')));
+        $stats->put('dist_avg_desc', __('DBasic::widgets.adist'));
+        $stats->put('dist_avg_value', new Distance($average_dist, config('phpvms.internal_units.distance')));
+        $stats->put('dist_perhour_desc', __('DBasic::widgets.hdist'));
+        $perhourdist = ($total_dist > 0 && $total_time > 0) ? ($total_dist / $total_time) * 60 : 0;
+        $stats->put('dist_perhour_value', new Distance($perhourdist, config('phpvms.internal_units.distance')));
 
         $where['source'] = PirepSource::ACARS;
 
+        // Landing Rate
         $average_lrate = Pirep::where($where)->avg('landing_rate');
-        $stats[__('DBasic::widgets.alrate')] = number_format(abs($average_lrate)) . ' ft/min';
+        $stats->put('lrate_avg_desc', __('DBasic::widgets.alrate'));
+        $stats->put('lrate_avg_value', abs($average_lrate));
 
-        if ($level > 10) {
-            $average_score = Pirep::where($where)->avg('score');
-            $stats[__('DBasic::widgets.ascore')] = number_format($average_score);
-        }
+        // Pirep Score
+        $average_score = Pirep::where($where)->avg('score');
+        $stats->put('score_avg_desc', __('DBasic::widgets.ascore'));
+        $stats->put('score_avg_value', (float) $average_score);
 
-        return $stats;
+        return $stats->toArray();
     }
 
     // Airline Finance (uses cache)
     public function AirlineFinance($journal_id)
     {
-        $currency = setting('units.currency');
-        $finance = [];
+        $finance = new Collection;
 
         // Cache
         $cache_key = 'journal-' . $journal_id . '-overall';
@@ -508,27 +502,27 @@ class DB_StatServices
 
         $overall = cache()->remember($cache_key, $cache_until, function () use ($journal_id) {
             return JournalTransaction::where('journal_id', $journal_id)
-                ->selectRaw('sum(credit) as ov_credit, sum(debit) as ov_debit, sum(credit) - sum(debit) as ov_balance')
-                ->first();
+            ->selectRaw('sum(credit) as ov_credit, sum(debit) as ov_debit, sum(credit) - sum(debit) as ov_balance')
+            ->first();
         });
 
         $income = $overall->ov_credit ?? 0;
         $expense = $overall->ov_debit ?? 0;
         $balance = $overall->ov_balance ?? 0;
 
-        $color = ($balance < 0) ? 'darkred' : 'darkgreen';
+        $finance->put('income_desc', __('DBasic::common.income'));
+        $finance->put('income_value', (float) $income);
+        $finance->put('expense_desc', __('DBasic::common.expense'));
+        $finance->put('expense_value', (float) $expense);
+        $finance->put('balance_desc', __('DBasic::common.balance'));
+        $finance->put('balance_value', (float) $balance);
 
-        $finance[__('DBasic::common.income')] = money($income, $currency);
-        $finance[__('DBasic::common.expense')] = money($expense, $currency);
-        $finance[__('DBasic::common.balance')] = '<span style="color: ' . $color . ';"><b>' . money($balance, $currency) . '</b></span>';
-
-        return $finance;
+        return $finance->toArray();
     }
 
     // Network Stats for IVAO/VATSIM (uses cache)
     public function NetworkStats($network = 'BOTH')
     {
-
         // $pireps = Pirep::where('state', PirepState::ACCEPTED)->pluck('id')->toArray();
         $pireps = Pirep::onlyTrashed()->pluck('id')->toArray();
 
@@ -602,7 +596,7 @@ class DB_StatServices
     }
 
     // Api Basic Statistics
-    // No formatting or text on values only convert to local units per settings    
+    // No formatting or text on values only convert to local units per settings
     public function ApiBasicStats()
     {
         $user_states = [UserState::PENDING, UserState::ACTIVE, UserState::ON_LEAVE];

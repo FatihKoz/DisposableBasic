@@ -92,15 +92,14 @@ class DB_AirlineController extends Controller
             $stats_pirep = $StatSvc->PirepStats($airline->id);
 
             return view('DBasic::airlines.show', [
-                'aircraft'  => $aircraft,
-                'airline'   => $airline,
-                'country'   => new ISO3166(),
-                'finance'   => $finance,
-                'pireps'    => $pireps,
-                'stats_b'   => $stats_basic,
-                'stats_p'   => $stats_pirep,
-                'units'     => DB_GetUnits(),
-                'users'     => $users,
+                'aircraft' => $aircraft,
+                'airline'  => $airline,
+                'country'  => new ISO3166(),
+                'finance'  => $finance,
+                'pireps'   => $pireps,
+                'stats'    => array_merge($stats_basic, $stats_pirep),
+                'units'    => DB_GetUnits(),
+                'users'    => $users,
             ]);
         }
     }

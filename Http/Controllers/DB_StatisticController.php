@@ -18,19 +18,16 @@ class DB_StatisticController extends Controller
         $StatSvc = app(DB_StatServices::class);
 
         $stats_basic = $StatSvc->BasicStats();
-        $stats_basic[__('DBasic::common.airports')] = DB::table('airports')->whereNull('deleted_at')->count();
-        $stats_basic[__('DBasic::common.hubs')] = DB::table('airports')->whereNull('deleted_at')->where('hub', 1)->count();
-
         $stats_pirep = $StatSvc->PirepStats();
         $stats_ivao = $StatSvc->NetworkStats('IVAO');
         $stats_vatsim = $StatSvc->NetworkStats('VATSIM');
 
         return view('DBasic::stats.index', [
             'multi_airline' => $multi_airline,
-            'stats_basic'   => $stats_basic,
+            'stats'         => array_merge($stats_basic, $stats_pirep),
             'stats_ivao'    => $stats_ivao,
             'stats_vatsim'  => $stats_vatsim,
-            'stats_pirep'   => $stats_pirep,
+            'units'         => DB_GetUnits(),
         ]);
     }
 }

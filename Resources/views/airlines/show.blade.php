@@ -80,6 +80,21 @@
                 <td class="text-end">{{ $country->alpha2($airline->country)['name'] ?? '' }} {{ ' ('.strtoupper($airline->country).')' }}</td>
               </tr>
             @endif
+            {{-- Overall Finance --}}
+            @if(filled($finance))
+              <tr>
+                <th>{{ $finance['income_desc'] }}</th>
+                <td class="text-end">{{ money($finance['income_value'], $units['currency']) }}</td>
+              </tr>
+              <tr>
+                <th>{{ $finance['expense_desc'] }}</th>
+                <td class="text-end">{{ money($finance['expense_value'], $units['currency']) }}</td>
+              </tr>
+              <tr>
+                <th>{{ $finance['balance_desc'] }}</th>
+                <td class="text-end">{{ money($finance['balance_value'], $units['currency']) }}</td>
+              </tr>
+            @endif
           </table>
         </div>
         @if(filled($airline->logo))
@@ -97,52 +112,49 @@
           @widget('DBasic::Map', ['source' => 'fleet', 'airline' => $airline->id])
         </div>
       </div>
-      {{-- Overall Finance --}}
-      <div class="card mb-2">
-        <div class="card-header p-1">
-          <h5 class="m-1">
-            @lang('DBasic::common.finance')
-            <i class="fas fa-receipt float-end"></i>
-          </h5>
-        </div>
-        <div class="card-body p-0 table-responsive">
-          <table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0">
-            @foreach($finance as $key => $value)
-              <tr>
-                <th>{{ $key }}</th>
-                <td class="text-end">{!! $value !!}</td>
-              </tr>
-            @endforeach
-          </table>
-        </div>
-      </div>
       {{-- Basic Stats --}}
-      <div class="card mb-1">
-        <div class="card-header p-1">
-          <h5 class="m-1">
-            @lang('DBasic::widgets.stats')
-            <i class="fas fa-cogs float-end"></i>
-          </h5>
-        </div>
-        <div class="card-body p-0 table-responsive">
-          <table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0">
-            @foreach($stats_b as $key => $value)
+      @if(filled($stats))
+        <div class="card mb-1">
+          <div class="card-header p-1">
+            <h5 class="m-1">
+              @lang('DBasic::widgets.stats')
+              <i class="fas fa-cogs float-end"></i>
+            </h5>
+          </div>
+          <div class="card-body p-0 table-responsive">
+            <table class="table table-sm table-borderless table-striped text-start text-nowrap mb-0">
               <tr>
-                <th>{{ $key }}</th>
-                <td class="text-end">{{ $value }}</td>
+                <th>{{ $stats['subfleets_desc'] }}</th>
+                <td class="text-end">{{ number_format($stats['subfleets_value']) }}</td>
               </tr>
-            @endforeach
-            @if($stats_p)
-              @foreach($stats_p as $key => $value)
-                <tr>
-                  <th>{{ $key }}</th>
-                  <td class="text-end">{{ $value }}</td>
-                </tr>
-              @endforeach
-            @endif
-          </table>
+              <tr>
+                <th>{{ $stats['aircraft_desc'] }}</th>
+                <td class="text-end">{{ number_format($stats['aircraft_value']) }}</td>
+              </tr>
+              <tr>
+                <th>{{ $stats['flights_desc'] }}</th>
+                <td class="text-end">{{ number_format($stats['flights_value']) }}</td>
+              </tr>
+              <tr>
+                <th>{{ $stats['pireps_desc'] }}</th>
+                <td class="text-end">{{ number_format($stats['pireps_value']) }}</td>
+              </tr>
+              <tr>
+                <th>{{ $stats['time_desc'] }}</th>
+                <td class="text-end">{{ DB_ConvertMinutes($stats['time_value'], '%02d h %02d m') }}</td>
+              </tr>
+              <tr>
+                <th>{{ $stats['dist_desc'] }}</th>
+                <td class="text-end">{{ number_format($stats['dist_value']->local(0)).' '.$units['distance'] }}</td>
+              </tr>
+              <tr>
+                <th>{{ $stats['fuel_desc'] }}</th>
+                <td class="text-end">{{ number_format($stats['fuel_value']->local(0)).' '.$units['fuel'] }}</td>
+              </tr>
+            </table>
+          </div>
         </div>
-      </div>
+      @endif
     </div>
   </div>
 @endsection

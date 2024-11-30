@@ -56,6 +56,7 @@ class Stats extends Widget
             'icon'        => isset($icon) ? $icon : 'fa-cogs',
             'is_visible'  => (isset($stats) && count($stats) > 0) ? true : false,
             'stats'       => is_array($stats) ? $stats : null,
+            'units'       => DB_GetUnits(),
         ]);
     }
 }

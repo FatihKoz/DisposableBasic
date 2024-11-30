@@ -60,7 +60,6 @@
           </div>
         </div>
       @endif
-
       <div class="row row-cols-lg-2">
         {{-- Files --}}
         <div class="col-md">
@@ -90,12 +89,30 @@
               </div>
               <div class="card-body p-0 table-responsive">
                 <table class="table table-sm table-borderless table-striped text-start mb-0">
-                  @foreach($stats as $key => $value)
-                    <tr>
-                      <th>{{ $key }}</th>
-                      <td class="text-end">{{ $value }}</td>
-                    </tr>
-                  @endforeach
+                  <tr>
+                    <th>{{ $stats['pireps_desc'] }}</th>
+                    <td class="text-end">{{ number_format($stats['pireps_value']) }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ $stats['time_desc'] }}</th>
+                    <td class="text-end">{{ DB_ConvertMinutes($stats['time_value'], '%02d h %02d m') }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ $stats['dist_desc'] }}</th>
+                    <td class="text-end">{{ number_format($stats['dist_value']->local(0)).' '.$units['distance'] }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ $stats['fuel_desc'] }}</th>
+                    <td class="text-end">{{ number_format($stats['fuel_value']->local(0)).' '.$units['fuel'] }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ $stats['fuel_perhour_desc'] }}</th>
+                    <td class="text-end">{{ number_format($stats['fuel_perhour_value']->local(0)).' '.$units['fuel'] }}</td>
+                  </tr>
+                  <tr>
+                    <th>{{ $stats['lrate_avg_desc'] }}</th>
+                    <td class="text-end">{{ number_format($stats['lrate_avg_value']).' ft/min' }}</td>
+                  </tr>
                 </table>
               </div>
               <div class="card-footer p-0 px-1 small text-end fw-bold">
