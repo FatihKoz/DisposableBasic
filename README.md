@@ -2,10 +2,13 @@
 
 phpVMS v7 module for Basic VA features
 
-* Module supports **only** php8.1+ and laravel10
-* Minimum required phpVMS v7 version is `phpVms 7.0.38-dev.g47ce6755b4` / 15.NOV.2024
-* _php8.0 and laravel9 compatible latest version: v3.3.1_
-* _php7.4 and laravel8 compatible latest version: v3.0.19_
+> [!IMPORTANT]
+> * Minimum required phpVMS v7 version is `phpVms 7.0.38-dev.g47ce6755b4` / 15.NOV.2024
+
+> [!TIP]
+> * Module supports **only** php8.1+ and laravel10
+> * _php8.0 and laravel9 compatible latest version: v3.3.1_
+> * _php7.4 and laravel8 compatible latest version: v3.0.19_
 
 Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
 
@@ -47,12 +50,12 @@ As of date, module supports vmsACARS.
 * Manual Install : Upload contents of the package to your phpvms root `/modules` folder via ftp or your control panel's file manager
 * GitHub Clone : Clone/pull repository to your phpvms root `/modules/DisposableBasic` folder
 * PhpVms Module Installer : Go to admin -> addons/modules , click Add New , select downloaded file then click Add Module
-*
 * Go to admin > addons/modules enable the module
 * Go to admin > dashboard (or /update) to trigger module migrations
 * When migration is completed, go to admin > maintenance and clean `application` cache
 
-:information_source: *There is a known bug in v7 core, which causes an error/exception when enabling/disabling modules manually. If you see a server error page or full stacktrace debug window when you enable a module just close that page and re-visit admin area in a different browser tab/window. You will see that the module is enabled and active, to be sure just clean your `application` cache*
+> [!WARNING]
+> :information_source: *There is a known bug in v7 core, which causes an error/exception when enabling/disabling modules manually. If you see a server error page or full stacktrace debug window when you enable a module just close that page and re-visit admin area in a different browser tab/window. You will see that the module is enabled and active, to be sure just clean your `application` cache*
 
 ### Update (from v3.xx to v3.yy)
 
@@ -62,9 +65,10 @@ Just upload updated files by overwriting your old module files, visit /update an
 
 Below order and steps are really important for proper update from old modules to new combined module pack
 
-:warning: **There is no easy going back to v2 series once v3 is installed !!!** :warning:  
-**Backup your database tables and old module files before this process**  
-**Only database tables starting with `disposable_` is needed to be backed up**
+> [!CAUTION]
+> :warning: **There is no easy going back to v2 series once v3 is installed !!!** :warning:  
+> **Backup your database tables and old module files before this process**  
+> **Only database tables starting with `disposable_` is needed to be backed up**
 
 * From admin > addons/modules **DISABLE** all old Disposable modules
 * From admin > addons/modules **DELETE** all old Disposable modules
