@@ -22,7 +22,7 @@ class DB_ApiController extends Controller
     {
         if (!$this->AuthCheck($request->header('x-service-key'))) {
             return response(['error' => ['code' => '401', 'http_code' => 'Unauthorized', 'message' => 'Check Service Key!']], 401);
-        };
+        }
 
         $count = (is_numeric($request->header('x-news-count'))) ? $request->header('x-news-count') : 3;
         $allnews = News::with('user')->orderby('created_at', 'DESC')->take($count)->get();
@@ -50,7 +50,7 @@ class DB_ApiController extends Controller
     {
         if (!$this->AuthCheck($request->header('x-service-key'))) {
             return response(['error' => ['code' => '401', 'http_code' => 'Unauthorized', 'message' => 'Check Service Key!']], 401);
-        };
+        }
 
         $where = [];
 
@@ -64,7 +64,7 @@ class DB_ApiController extends Controller
             $where[] = ['state', '!=', UserState::DELETED];
         }
 
-        $roster = array();
+        $roster = [];
         $eager_load = ['airline', 'current_airport', 'fields', 'home_airport', 'last_pirep', 'rank'];
         $users = User::withCount('awards')->with($eager_load)->where($where)->orderby('pilot_id')->get();
 
@@ -95,7 +95,7 @@ class DB_ApiController extends Controller
                 'mins_total'    => round($user->flight_time + $user->transfer_time),
                 'time_flight'   => DB_ConvertMinutes($user->flight_time),
                 'time_transfer' => DB_ConvertMinutes($user->transfer_time),
-                'time_total'    => DB_ConvertMinutes(($user->flight_time + $user->transfer_time)),
+                'time_total'    => DB_ConvertMinutes($user->flight_time + $user->transfer_time),
                 'awards'        => $user->awards_count,
                 'ivao_id'       => optional($user->fields->firstWhere('name', DB_Setting('dbasic.networkcheck_fieldname_ivao', 'IVAO ID')))->value,
                 'vatsim_id'     => optional($user->fields->firstWhere('name', DB_Setting('dbasic.networkcheck_fieldname_vatsim', 'VATSIM ID')))->value,
@@ -113,7 +113,7 @@ class DB_ApiController extends Controller
     {
         if (!$this->AuthCheck($request->header('x-service-key'))) {
             return response(['error' => ['code' => '401', 'http_code' => 'Unauthorized', 'message' => 'Check Service Key!']], 401);
-        };
+        }
 
         if ($request->header('x-pirep-type') != 'live') {
             $count = (is_numeric($request->header('x-pirep-count'))) ? $request->header('x-pirep-count') : 25;
@@ -121,10 +121,10 @@ class DB_ApiController extends Controller
         } else {
             $where = [
                 [
-                    'state', '==', PirepState::IN_PROGRESS
+                    'state', '==', PirepState::IN_PROGRESS,
                 ], [
-                    'status', '!=', PirepStatus::PAUSED
-                ]
+                    'status', '!=', PirepStatus::PAUSED,
+                ],
             ];
             $count = null;
         }
@@ -139,7 +139,7 @@ class DB_ApiController extends Controller
 
         foreach ($vms_pireps as $pirep) {
             $pireps[] = [
-                'flight_number' => optional($pirep->airline)->code . ' ' . $pirep->flight_number,
+                'flight_number' => optional($pirep->airline)->code.' '.$pirep->flight_number,
                 'flight_rcode'  => $pirep->route_code,
                 'flight_rleg'   => $pirep->route_leg,
                 'dep_id'        => $pirep->dpt_airport_id,
@@ -170,7 +170,7 @@ class DB_ApiController extends Controller
                 'pirep_lrate'   => $pirep->landing_rate,
                 'pirep_time'    => $pirep->flight_time,
                 'pirep_timep'   => $pirep->planned_flight_time,
-                'pirep_timeu'   => "min",
+                'pirep_timeu'   => 'min',
                 'formatted_ft'  => DB_ConvertMinutes($pirep->flight_time),
                 'formatted_pft' => DB_ConvertMinutes($pirep->planned_flight_time),
                 'pirep_dist'    => $pirep->distance->local(0),
@@ -198,7 +198,7 @@ class DB_ApiController extends Controller
     {
         if (!$this->AuthCheck($request->header('x-service-key'))) {
             return response(['error' => ['code' => '401', 'http_code' => 'Unauthorized', 'message' => 'Check Service Key!']], 401);
-        };
+        }
 
         $today = Carbon::today();
         $event_code = DS_Setting('dbasic.event_routecode', 'EVENT');
@@ -216,7 +216,7 @@ class DB_ApiController extends Controller
         foreach ($vms_events as $event) {
             // Prepare the event flight array
             $flight = [
-                'flight_number' => optional($event->airline)->code . ' ' . $event->flight_number,
+                'flight_number' => optional($event->airline)->code.' '.$event->flight_number,
                 'flight_rcode'  => $event->route_code,
                 'flight_rleg'   => $event->route_leg,
                 'departure'     => $event->dpt_airport_id,
@@ -231,7 +231,7 @@ class DB_ApiController extends Controller
                 'arr_full'      => optional($event->arr_airport)->full_name,
                 'date'          => filled($event->start_date) ? $event->start_date->format('d.M.Y') : null,
                 'time'          => filled($event->dpt_time) ? $event->dpt_time : null,
-                'time_diff'     => (filled($event->start_date) && filled($event->dpt_time)) ? Carbon::CreateFromFormat('Y.m.d H:i', ($event->start_date->format('Y.m.d') . ' ' . $event->dpt_time), 'UTC')->diffForHumans() : null,
+                'time_diff'     => (filled($event->start_date) && filled($event->dpt_time)) ? Carbon::CreateFromFormat('Y.m.d H:i', $event->start_date->format('Y.m.d').' '.$event->dpt_time, 'UTC')->diffForHumans() : null,
             ];
 
             // Append either current or upcoming collections
@@ -253,7 +253,7 @@ class DB_ApiController extends Controller
     {
         if (!$this->AuthCheck($request->header('x-service-key'))) {
             return response(['error' => ['code' => '401', 'http_code' => 'Unauthorized', 'message' => 'Check Service Key!']], 401);
-        };
+        }
 
         $StatSvc = app(DB_StatServices::class);
 
@@ -292,8 +292,8 @@ class DB_ApiController extends Controller
         return response()->json([
             'App Name'           => config('app.name'),
             'App URL'            => config('app.url'),
-            'Disposable Basic'   => 'Installed: ' . isset($DBM) . ' | Enabled: ' . $DBE,
-            'Disposable Special' => 'Installed: ' . isset($DSM) . ' | Enabled: ' . $DSE,
+            'Disposable Basic'   => 'Installed: '.isset($DBM).' | Enabled: '.$DBE,
+            'Disposable Special' => 'Installed: '.isset($DSM).' | Enabled: '.$DSE,
         ]);
     }
 

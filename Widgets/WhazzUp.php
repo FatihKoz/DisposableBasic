@@ -4,12 +4,12 @@ namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
 use App\Models\Airline;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\UserState;
 use App\Models\Pirep;
 use App\Models\User;
 use App\Models\UserField;
 use App\Models\UserFieldValue;
-use App\Models\Enums\PirepState;
-use App\Models\Enums\UserState;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Modules\DisposableBasic\Models\DB_WhazzUp;
@@ -28,7 +28,7 @@ class WhazzUp extends Widget
         $refresh_interval = (is_numeric($this->config['refresh']) && $this->config['refresh'] > 15) ? $this->config['refresh'] : 180;
 
         if (empty($this->config['field_name'])) {
-            $field_name = Theme::getSetting('gen_' . strtolower($network_selection) . '_field');
+            $field_name = Theme::getSetting('gen_'.strtolower($network_selection).'_field');
         }
 
         if (empty($field_name)) {
@@ -64,9 +64,9 @@ class WhazzUp extends Widget
                 $flightplan = ($network_selection === 'VATSIM') ? $online_pilot->flight_plan : $online_pilot->flightPlan;
 
                 if ($flightplan && $network_selection === 'VATSIM') {
-                    $fp = $flightplan->aircraft_short . ' | ' . $flightplan->departure . ' > ' . $flightplan->arrival;
+                    $fp = $flightplan->aircraft_short.' | '.$flightplan->departure.' > '.$flightplan->arrival;
                 } elseif ($flightplan) {
-                    $fp = $flightplan->aircraftId . ' | ' . $flightplan->departureId . ' > ' . $flightplan->arrivalId;
+                    $fp = $flightplan->aircraftId.' | '.$flightplan->departureId.' > '.$flightplan->arrivalId;
                     $vasys = str_contains($flightplan->remarks, $ivao_vacode);
                 } else {
                     $fp = 'No ATC Flight Plan!';
@@ -113,12 +113,13 @@ class WhazzUp extends Widget
     public function placeholder()
     {
         $loading_style = '<div class="alert alert-info mb-2 p-1 px-2 small fw-bold"><div class="spinner-border spinner-border-sm text-dark me-2" role="status"></div>Loading Network WhazzUp data...</div>';
+
         return $loading_style;
     }
 
     public function AirlinesArray()
     {
-        return Airline::where('active', 1)->pluck('icao')->toArray();;
+        return Airline::where('active', 1)->pluck('icao')->toArray();
     }
 
     public function NetworkUsersArray($field_name = null)

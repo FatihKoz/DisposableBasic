@@ -16,7 +16,7 @@ class AirportAssets extends Widget
         $count = is_numeric($this->config['count']) ? $this->config['count'] : 50;
         $title = __('DBasic::widgets.airport_assets');
         $icon = 'fa-bomb';
-        $units = array('weight' => setting('units.weight'), 'fuel' => setting('units.fuel'));
+        $units = ['weight' => setting('units.weight'), 'fuel' => setting('units.fuel')];
 
         $AirportSvc = app(DB_AirportServices::class);
 

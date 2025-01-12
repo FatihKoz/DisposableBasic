@@ -3,15 +3,15 @@
 namespace Modules\DisposableBasic\Services;
 
 use App\Models\Aircraft;
-use App\Models\Pirep;
-use App\Models\User;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
 use App\Models\Enums\UserState;
-use Illuminate\Support\Facades\DB;
+use App\Models\Pirep;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DB_AirportServices
 {
@@ -105,24 +105,24 @@ class DB_AirportServices
             return $result;
         }
 
-        $result['location'] = filled($airport->location) ? $airport->name . ' / ' . $airport->location : $airport->name;
+        $result['location'] = filled($airport->location) ? $airport->name.' / '.$airport->location : $airport->name;
 
         $current_time = time();
         $details = date_sun_info($current_time, $airport->lat, $airport->lon);
 
         if ($details) {
             foreach ($details as $key => $value) {
-                if ($key === $type . '_twilight_begin' && $value > 1) {
-                    $result['twilight_begin'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                if ($key === $type.'_twilight_begin' && $value > 1) {
+                    $result['twilight_begin'] = Carbon::parse($value)->format('H:i').' UTC';
                 }
-                if ($key === $type . '_twilight_end' && $value > 1) {
-                    $result['twilight_end'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                if ($key === $type.'_twilight_end' && $value > 1) {
+                    $result['twilight_end'] = Carbon::parse($value)->format('H:i').' UTC';
                 }
                 if ($key === 'sunrise' && $value > 1) {
-                    $result['sunrise'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                    $result['sunrise'] = Carbon::parse($value)->format('H:i').' UTC';
                 }
                 if ($key === 'sunset' && $value > 1) {
-                    $result['sunset'] = Carbon::parse($value)->format('H:i') . ' UTC';
+                    $result['sunset'] = Carbon::parse($value)->format('H:i').' UTC';
                 }
             }
         }

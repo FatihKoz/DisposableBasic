@@ -4,10 +4,10 @@ namespace Modules\DisposableBasic\Services;
 
 use App\Events\PirepCancelled;
 use App\Models\Aircraft;
-use App\Models\Pirep;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
+use App\Models\Pirep;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Models\DB_Tech;
@@ -18,14 +18,14 @@ class DB_FleetServices
     public function AircraftImage($aircraft)
     {
         $image = null;
-        $image_url = strtolower('image/aircraft/' . $aircraft->registration . '.jpg');
+        $image_url = strtolower('image/aircraft/'.$aircraft->registration.'.jpg');
 
         if (is_file($image_url)) {
             $image['url'] = $image_url;
             $image['title'] = $aircraft->registration;
 
             if ($aircraft->registration != $aircraft->name) {
-                $image['title'] = $aircraft->registration . ' "' . $aircraft->name . '"';
+                $image['title'] = $aircraft->registration.' "'.$aircraft->name.'"';
             }
         } elseif ($aircraft->subfleet) {
             $image = $this->SubfleetImage($aircraft->subfleet);
@@ -38,7 +38,7 @@ class DB_FleetServices
     public function SubfleetImage($subfleet)
     {
         $image = null;
-        $image_url = strtolower('image/subfleet/' . $subfleet->type . '.jpg');
+        $image_url = strtolower('image/subfleet/'.$subfleet->type.'.jpg');
 
         if (is_file($image_url)) {
             $image['url'] = $image_url;
@@ -64,13 +64,13 @@ class DB_FleetServices
                 $pirep->save();
                 $result = 1;
                 event(new PirepCancelled($pirep));
-                Log::info('Disposable Basic, Pirep ID:' . $pirep->id . ' CANCELLED');
+                Log::info('Disposable Basic, Pirep ID:'.$pirep->id.' CANCELLED');
             }
 
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
             $result = $result + 1;
-            Log::info('Disposable Basic, Aircraft REG:' . $aircraft->registration . ' PARKED');
+            Log::info('Disposable Basic, Aircraft REG:'.$aircraft->registration.' PARKED');
         }
 
         return $result;
@@ -101,7 +101,6 @@ class DB_FleetServices
 
         $count_while = 1;
         while ($count_while <= 3) {
-
             if ($count_while === 2) {
                 // Remove the aircraft_id from where array and try getting icao based pirep average
                 unset($where['aircraft_id']);

@@ -3,10 +3,10 @@
 namespace Modules\DisposableBasic\Models;
 
 use App\Contracts\Model;
+use App\Models\Enums\PirepState;
 use App\Models\Flight;
 use App\Models\Pirep;
 use App\Models\User;
-use App\Models\Enums\PirepState;
 
 class DB_RandomFlight extends Model
 {
@@ -55,6 +55,7 @@ class DB_RandomFlight extends Model
     public function pirep()
     {
         $where = ['user_id' => $this->user_id, 'state' => PirepState::ACCEPTED];
+
         return $this->hasOne(Pirep::class, 'flight_id', 'flight_id')->where($where)->whereDate('submitted_at', $this->assign_date);
     }
 }

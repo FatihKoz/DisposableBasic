@@ -29,6 +29,7 @@ class DB_TechController extends Controller
 
             if (!$tech) {
                 flash()->error('Record not found !');
+
                 return redirect(route('DBasic.tech'));
             }
         }
@@ -48,9 +49,9 @@ class DB_TechController extends Controller
 
     public function store(Request $request)
     {
-
         if (!$request->icao) {
             flash()->error('ICAO Type code is required !');
+
             return redirect(route('DBasic.tech'));
         }
 
@@ -105,6 +106,7 @@ class DB_TechController extends Controller
         );
 
         flash()->success('Technical details saved');
+
         return redirect(route('DBasic.tech'));
     }
 }

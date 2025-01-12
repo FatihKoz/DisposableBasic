@@ -5,13 +5,13 @@ namespace Modules\DisposableBasic\Http\Controllers;
 use App\Contracts\Controller;
 use App\Models\Airline;
 use App\Models\Airport;
-use App\Models\Pirep;
-use App\Models\User;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
 use App\Models\Enums\UserState;
-use League\ISO3166\ISO3166;
+use App\Models\Pirep;
+use App\Models\User;
 use Illuminate\Http\Request;
+use League\ISO3166\ISO3166;
 use Modules\DisposableBasic\Services\DB_StatServices;
 
 class DB_WebController extends Controller

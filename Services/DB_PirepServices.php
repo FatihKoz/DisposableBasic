@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Models\DB_WhazzUp;
 use Modules\DisposableBasic\Models\DB_WhazzUpCheck;
-use Modules\DisposableBasic\Services\DB_OnlineServices;
 
 class DB_PirepServices
 {
@@ -45,22 +44,22 @@ class DB_PirepServices
 
         // User is already identified on IVAO or VATSIM
         if ($network_selection === 'AUTO' && ($identified_network === 'IVAO' || $identified_network === 'VATSIM')) {
-            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' already identified on ' . $identified_network . ' (Presence Check)');
+            Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' already identified on '.$identified_network.' (Presence Check)');
             $network_selection = $identified_network;
         }
 
         // Check user's network preference for AUTO
         if ($network_selection === 'AUTO' && empty($user_ivao_id) && empty($user_vatsim_id)) {
-            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' not provided ANY NETWORK memberships (Presence Check)');
+            Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' not provided ANY NETWORK memberships (Presence Check)');
             $network_selection = 'NONE';
         } elseif ($network_selection === 'AUTO' && isset($user_ivao_id) && isset($user_vatsim_id)) {
-            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is member of BOTH networks (Presence Check)');
+            Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' is member of BOTH networks (Presence Check)');
             $network_selection = 'AUTO';
         } elseif ($network_selection === 'AUTO' && isset($user_ivao_id) && empty($user_vatsim_id)) {
-            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is ONLY an IVAO member (Presence Check)');
+            Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' is ONLY an IVAO member (Presence Check)');
             $network_selection = 'IVAO';
         } elseif ($network_selection === 'AUTO' && empty($user_ivao_id) && isset($user_vatsim_id)) {
-            Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is ONLY a VATSIM member (Presence Check)');
+            Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' is ONLY a VATSIM member (Presence Check)');
             $network_selection = 'VATSIM';
         }
 
@@ -96,7 +95,7 @@ class DB_PirepServices
             // Check IVAO
             $ivao_check = $this->CheckNetwork('IVAO', $network_server_ivao, $network_refresh, $network_field_ivao, $user_ivao_id);
             if ($ivao_check['is_online'] === 1) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on IVAO (Presence Check)');
+                Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' is identified on IVAO (Presence Check)');
                 $network_selection = $ivao_check['network'];
                 $model_data['network'] = $ivao_check['network'];
                 $model_data['callsign'] = $ivao_check['callsign'];
@@ -105,7 +104,7 @@ class DB_PirepServices
             // Check VATSIM
             $vatsim_check = $this->CheckNetwork('VATSIM', $network_server_vatsim, $network_refresh, $network_field_vatsim, $user_vatsim_id);
             if ($vatsim_check['is_online'] === 1) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is identified on VATSIM (Presence Check)');
+                Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' is identified on VATSIM (Presence Check)');
                 $network_selection = $vatsim_check['network'];
                 $model_data['network'] = $vatsim_check['network'];
                 $model_data['callsign'] = $vatsim_check['callsign'];
@@ -113,7 +112,7 @@ class DB_PirepServices
             }
             // User Flying Offline
             if ($ivao_check['is_online'] === 0 && $vatsim_check['is_online'] === 0) {
-                Log::debug('Disposable Basic | User ID:' . $pirep->user_id . ' is flying OFFLINE (Presence Check)');
+                Log::debug('Disposable Basic | User ID:'.$pirep->user_id.' is flying OFFLINE (Presence Check)');
                 $model_data['network'] = 'OFFLINE';
             }
         }
@@ -142,7 +141,7 @@ class DB_PirepServices
 
         // Update If Necessary
         if (!$whazzup || $whazzup->updated_at->diffInSeconds() > $network_refresh) {
-            Log::debug('Disposable Basic | Downloading ' . $network_name . ' WhazzUp data (Presence Check)');
+            Log::debug('Disposable Basic | Downloading '.$network_name.' WhazzUp data (Presence Check)');
             $OnlineSvc = app(DB_OnlineServices::class);
             $whazzup = $OnlineSvc->DownloadWhazzUp($network_name, $network_server);
         }
@@ -154,7 +153,7 @@ class DB_PirepServices
         }
 
         // Search Pilot in Network Feed
-        Log::debug('Disposable Basic | Searching ' . $user_networkid . ' in ' . $network_name . ' WhazzUp data (Presence Check)');
+        Log::debug('Disposable Basic | Searching '.$user_networkid.' in '.$network_name.' WhazzUp data (Presence Check)');
         $online_pilots = collect(json_decode($whazzup->pilots)); // Relies heavily on IVAO/VATSIM server data returns
         $online_pilots = $online_pilots->where($network_field, $user_networkid);
 

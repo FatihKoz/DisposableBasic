@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\User;
-use App\Models\UserField;
-use App\Models\UserFieldValue;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\UserState;
+use App\Models\User;
+use App\Models\UserField;
+use App\Models\UserFieldValue;
 use Modules\DisposableBasic\Models\Enums\DB_Simulator;
 use Modules\DisposableBasic\Models\Enums\DB_WorldRegion;
 
@@ -63,11 +63,11 @@ if (!function_exists('DB_AircraftState')) {
         }
 
         if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
+            $result = 'class="bg-'.$color.'"';
         } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
+            $result = 'class="table-'.$color.'"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-black" title="' . $title . '">' . AircraftState::label($state) . '</span>';
+            $result = '<span class="badge bg-'.$color.' text-black" title="'.$title.'">'.AircraftState::label($state).'</span>';
         }
 
         return $result;
@@ -93,11 +93,11 @@ if (!function_exists('DB_AircraftStatus')) {
         }
 
         if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
+            $result = 'class="bg-'.$color.'"';
         } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
+            $result = 'class="table-'.$color.'"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-black">' . AircraftStatus::label($status) . '</span>';
+            $result = '<span class="badge bg-'.$color.' text-black">'.AircraftStatus::label($status).'</span>';
         }
 
         return $result;
@@ -152,7 +152,7 @@ if (!function_exists('DB_ConvertDistance')) {
             return null;
         }
 
-        $value = number_format($value[$target_unit]) . ' ' . $target_unit;
+        $value = number_format($value[$target_unit]).' '.$target_unit;
 
         return $value;
     }
@@ -186,7 +186,7 @@ if (!function_exists('DB_ConvertWeight')) {
             return null;
         }
 
-        $value = number_format($value[$target_unit]) . ' ' . $target_unit;
+        $value = number_format($value[$target_unit]).' '.$target_unit;
 
         return $value;
     }
@@ -202,7 +202,7 @@ if (!function_exists('DB_FormatScheduleTime')) {
         }
 
         if (!str_contains($time, ':') && strlen($time) === 4) {
-            $time = substr($time, 0, 2) . ':' . substr($time, 2, 2);
+            $time = substr($time, 0, 2).':'.substr($time, 2, 2);
         }
 
         return $time;
@@ -223,7 +223,7 @@ if (!function_exists('DB_FuelCost')) {
         if ($unit === 'kg') {
             $cost = $cost / 0.45359237;
         }
-        $cost = number_format($cost, 3) . ' ' . ucfirst($currency) . '/' . ucfirst($unit);
+        $cost = number_format($cost, 3).' '.ucfirst($currency).'/'.ucfirst($unit);
 
         return $cost;
     }
@@ -290,7 +290,7 @@ if (!function_exists('DB_NetworkPresence')) {
             $button_title = 'No Network Presence';
             $network_name = 'OFFLINE';
         } elseif (isset($network_presence) && $network_presence > 0) {
-            $button_title = 'Network Presence ' . $network_presence . '%';
+            $button_title = 'Network Presence '.$network_presence.'%';
         } else {
             $button_title = 'Network Presence Not Calculated';
         }
@@ -307,9 +307,9 @@ if (!function_exists('DB_NetworkPresence')) {
         }
 
         if (filled($network_online) && $network_name != 'NONE' && $type == 'badge') {
-            $result = '<span class="badge badge-sm ' . $button_color . ' mx-1 px-1 text-black" title="' . $button_title . '">' . $network_name . '</span>';
+            $result = '<span class="badge badge-sm '.$button_color.' mx-1 px-1 text-black" title="'.$button_title.'">'.$network_name.'</span>';
         } elseif (filled($network_online) && $network_name != 'NONE' && $type == 'button') {
-            $result = '<span class="btn btn-sm ' . $button_color . ' m-0 mx-1 p-0 px-1 text-black" title="' . $button_title . '">' . $network_name . '</span>';
+            $result = '<span class="btn btn-sm '.$button_color.' m-0 mx-1 p-0 px-1 text-black" title="'.$button_title.'">'.$network_name.'</span>';
         } else {
             $result = null;
         }
@@ -339,11 +339,11 @@ if (!function_exists('DB_PirepState')) {
         }
 
         if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
+            $result = 'class="bg-'.$color.'"';
         } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
+            $result = 'class="table-'.$color.'"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-black">' . PirepState::label($state) . '</span>';
+            $result = '<span class="badge bg-'.$color.' text-black">'.PirepState::label($state).'</span>';
         }
 
         return $result;
@@ -431,13 +431,13 @@ if (!function_exists('DB_UserState')) {
         }
 
         if ($type === 'bg') {
-            $result = 'class="bg-' . $color . '"';
+            $result = 'class="bg-'.$color.'"';
         } elseif ($type === 'bg_add') {
-            $result = 'bg-' . $color;
+            $result = 'bg-'.$color;
         } elseif ($type === 'row') {
-            $result = 'class="table-' . $color . '"';
+            $result = 'class="table-'.$color.'"';
         } else {
-            $result = '<span class="badge bg-' . $color . ' text-black">' . UserState::label($state) . '</span>';
+            $result = '<span class="badge bg-'.$color.' text-black">'.UserState::label($state).'</span>';
         }
 
         return $result;
@@ -451,12 +451,12 @@ if (!function_exists('DB_XPlane_SDK')) {
     {
         // X-Plane Runway Surface Types
         $runway_surface = [
-            '0' => 'Not Defined',
-            '1' => 'Asphalt',
-            '2' => 'Concrete',
-            '3' => 'Grass',
-            '4' => 'Dirt',
-            '5' => 'Gravel',
+            '0'  => 'Not Defined',
+            '1'  => 'Asphalt',
+            '2'  => 'Concrete',
+            '3'  => 'Grass',
+            '4'  => 'Dirt',
+            '5'  => 'Gravel',
             '12' => 'Dry Lakebed',
             '13' => 'Water',
             '14' => 'Snow/Ice',
@@ -473,16 +473,16 @@ if (!function_exists('DB_XPlane_SDK')) {
         ];
         // X-Plane Approach Light Types
         $approach_lights = [
-            '0' => 'None',
-            '1' => 'ALSF-I',
-            '2' => 'ALSF-II',
-            '3' => 'Calvert',
-            '4' => 'Calvert II',
-            '5' => 'SSALR',
-            '6' => 'SSALF',
-            '7' => 'SALS',
-            '8' => 'MALSR',
-            '9' => 'MALSF',
+            '0'  => 'None',
+            '1'  => 'ALSF-I',
+            '2'  => 'ALSF-II',
+            '3'  => 'Calvert',
+            '4'  => 'Calvert II',
+            '5'  => 'SSALR',
+            '6'  => 'SSALF',
+            '7'  => 'SALS',
+            '8'  => 'MALSR',
+            '9'  => 'MALSF',
             '10' => 'MALS',
             '11' => 'ODALS',
             '12' => 'RAIL',
@@ -507,9 +507,9 @@ if (!function_exists('DB_XPlane_SDK')) {
 if (!function_exists('DB_ArrayUnique_MD')) {
     function DB_ArrayUnique_MD($array, $key)
     {
-        $temp_array = array();
+        $temp_array = [];
         $i = 0;
-        $key_array = array();
+        $key_array = [];
 
         foreach ($array as $val) {
             if (!in_array($val[$key], $key_array)) {

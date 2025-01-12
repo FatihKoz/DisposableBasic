@@ -5,9 +5,9 @@ namespace Modules\DisposableBasic\Widgets;
 use App\Contracts\Widget;
 use App\Models\Aircraft;
 use App\Models\Bid;
-use App\Models\SimBrief;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\AircraftStatus;
+use App\Models\SimBrief;
 use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +48,7 @@ class TransferAircraft extends Widget
             $icon_title = __('DBasic::widgets.ta_title_free');
         } elseif (is_numeric($price)) {
             $icon_color = 'primary';
-            $icon_title = __('DBasic::widgets.ta_title_fixed') . ' ' . number_format($price) . ' ' . setting('units.currency');
+            $icon_title = __('DBasic::widgets.ta_title_fixed').' '.number_format($price).' '.setting('units.currency');
         }
 
         if ($user) {
@@ -87,11 +87,11 @@ class TransferAircraft extends Widget
             // Conditionally apply filters for hubs and/or subfleets
             $ts_aircraft = Aircraft::with('airline')
                 ->where($where)
-                ->when(($list === 'hubs' || $list === 'hub'), function ($query) use ($hubs_array) {
+                ->when($list === 'hubs' || $list === 'hub', function ($query) use ($hubs_array) {
                     return $query->whereIn('airport_id', $hubs_array);
                 })->when($list === 'nohubs', function ($query) use ($hubs_array) {
                     return $query->whereNotIn('airport_id', $hubs_array);
-                })->when(($rank_restriction || $rate_restriction), function ($query) use ($allowed_subfleets) {
+                })->when($rank_restriction || $rate_restriction, function ($query) use ($allowed_subfleets) {
                     return $query->whereIn('subfleet_id', $allowed_subfleets);
                 })->when(is_numeric($landing_time_margin), function ($query) use ($before) {
                     return $query->where(function ($group) use ($before) {
@@ -134,6 +134,7 @@ class TransferAircraft extends Widget
     public function placeholder()
     {
         $loading_style = '<div class="alert alert-info mb-2 p-1 px-2 small fw-bold"><div class="spinner-border spinner-border-sm text-dark me-2" role="status"></div>Loading aircraft data...</div>';
+
         return $loading_style;
     }
 }

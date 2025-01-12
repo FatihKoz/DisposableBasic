@@ -3,9 +3,9 @@
 namespace Modules\DisposableBasic\Models;
 
 use App\Contracts\Model;
-use App\Models\User;
 use App\Models\Airport;
 use App\Models\Flight;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Kyslik\ColumnSortable\Sortable;

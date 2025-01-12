@@ -29,7 +29,7 @@ class Discord extends Widget
             $theme_server_id = Theme::getSetting('gen_discord_server');
         }
 
-        $server_id =  isset($theme_server_id) ? $theme_server_id : $this->config['server'];
+        $server_id = isset($theme_server_id) ? $theme_server_id : $this->config['server'];
 
         if (empty($server_id) || !is_numeric($server_id)) {
             return null;
@@ -43,17 +43,17 @@ class Discord extends Widget
             $model_data['rawdata'] = null;
 
             // Download
-            $discord_url = 'https://discord.com/api/guilds/' . $server_id . '/widget.json';
+            $discord_url = 'https://discord.com/api/guilds/'.$server_id.'/widget.json';
 
             try {
                 $response = $this->httpClient->request('GET', $discord_url);
                 if ($response->getStatusCode() == 200) {
                     $model_data['rawdata'] = $response->getBody();
                 } else {
-                    Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' error occured during download !');
+                    Log::error('Disposable Basic | HTTP '.$response->getStatusCode().' error occured during download !');
                 }
             } catch (GuzzleException $e) {
-                Log::error('Disposable Basic | Discord Widget Download Error : ' . $e->getMessage());
+                Log::error('Disposable Basic | Discord Widget Download Error : '.$e->getMessage());
             }
 
             $discord = DB_Discord::updateOrCreate(['server_id' => $server_id], $model_data);
@@ -114,11 +114,11 @@ class Discord extends Widget
         $loop_count = 0;
 
         while ($loop_count < ($count - 1)) {
-            $gdpr_name .= ' ' . $parts[$loop_count];
+            $gdpr_name .= ' '.$parts[$loop_count];
             $loop_count++;
         }
 
-        $gdpr_name .= ' ' . mb_substr($last_name, 0, 1);
+        $gdpr_name .= ' '.mb_substr($last_name, 0, 1);
 
         return $gdpr_name;
     }

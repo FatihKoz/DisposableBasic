@@ -1,3 +1,3 @@
 <?php
 
-return ['name' => 'DisposableBasic',];
+return ['name' => 'DisposableBasic'];

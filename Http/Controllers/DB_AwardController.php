@@ -13,7 +13,7 @@ class DB_AwardController extends Controller
         $awards = Award::orderby('id')->get()->sortby('name', SORT_NATURAL);
 
         return view('DBasic::awards.index', [
-            'awards' => $awards
+            'awards' => $awards,
         ]);
     }
 }

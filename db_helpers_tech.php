@@ -43,11 +43,12 @@ if (!function_exists('DB_GetRunways')) {
     function DB_GetRunways($icao)
     {
         $runways = DB_Runway::where('airport_id', $icao)->orderby('runway_ident', 'asc')->get();
+
         return $runways;
     }
 }
 
-// Get detailed addon specifications for an Aircraft 
+// Get detailed addon specifications for an Aircraft
 // Start from Aircraft level, then check Subfleet and ICAO Type (with $deep_check = true)
 if (!function_exists('DB_GetSpecs')) {
     function DB_GetSpecs($aircraft, $deep_check = false, $with_icao = false)
@@ -80,6 +81,7 @@ if (!function_exists('DB_GetSpecs_SF')) {
         if ($deep_check && blank($specs)) {
             $specs = DB_GetSpecs_ICAO(substr($subfleet->type, 0, 4));
         }
+
         return filled($specs) ? $specs : null;
     }
 }
@@ -89,6 +91,7 @@ if (!function_exists('DB_GetSpecs_ICAO')) {
     function DB_GetSpecs_ICAO($icao)
     {
         $specs = DB_Spec::where(['icao_id' => $icao, 'active' => true])->orderby('saircraft')->get();
+
         return filled($specs) ? $specs : null;
     }
 }

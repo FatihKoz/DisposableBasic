@@ -35,7 +35,7 @@ class JumpSeat extends Widget
             $icon_title = __('DBasic::widgets.js_title_free');
         } elseif (is_numeric($price)) {
             $icon_color = 'primary';
-            $icon_title = __('DBasic::widgets.js_title_fixed') . ' ' . number_format($price) . ' ' . setting('units.currency');
+            $icon_title = __('DBasic::widgets.js_title_fixed').' '.number_format($price).' '.setting('units.currency');
         }
 
         return view('DBasic::widgets.jumpseat_travel', [

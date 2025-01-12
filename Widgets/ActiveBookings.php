@@ -16,7 +16,7 @@ class ActiveBookings extends Widget
     {
         $source = ($this->config['source'] === 'bids') ? 'bids' : 'simbrief';
 
-        $eager_load = array('flight.airline', 'flight.arr_airport', 'flight.dpt_airport', 'user');
+        $eager_load = ['flight.airline', 'flight.arr_airport', 'flight.dpt_airport', 'user'];
 
         if ($source === 'bids') {
             $active_bookings = Bid::with($eager_load)->orderby('created_at', 'desc')->get();

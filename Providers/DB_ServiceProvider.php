@@ -3,8 +3,8 @@
 namespace Modules\DisposableBasic\Providers;
 
 use App\Services\ModuleService;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 
 class DB_ServiceProvider extends ServiceProvider
 {
@@ -21,7 +21,7 @@ class DB_ServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerLinks();
 
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
 
         app('arrilot.widget-namespaces')->registerNamespace('DBasic', 'Modules\DisposableBasic\Widgets');
     }
@@ -148,8 +148,8 @@ class DB_ServiceProvider extends ServiceProvider
     // Config
     protected function registerConfig()
     {
-        $this->publishes([__DIR__ . '/../Config/config.php' => config_path('DisposableBasic.php'),], 'config');
-        $this->mergeConfigFrom(__DIR__ . '/../Config/config.php', 'DisposableBasic');
+        $this->publishes([__DIR__.'/../Config/config.php' => config_path('DisposableBasic.php')], 'config');
+        $this->mergeConfigFrom(__DIR__.'/../Config/config.php', 'DisposableBasic');
     }
 
     // Translations
@@ -160,7 +160,7 @@ class DB_ServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'DBasic');
         } else {
-            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'DBasic');
+            $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'DBasic');
         }
     }
 
@@ -168,17 +168,17 @@ class DB_ServiceProvider extends ServiceProvider
     public function registerViews()
     {
         $viewPath = resource_path('views/modules/DisposableBasic');
-        $sourcePath = __DIR__ . '/../Resources/views';
+        $sourcePath = __DIR__.'/../Resources/views';
 
-        $this->publishes([$sourcePath => $viewPath,], 'views');
+        $this->publishes([$sourcePath => $viewPath], 'views');
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return str_replace('default', setting('general.theme'), $path) . '/modules/DisposableBasic';
+            return str_replace('default', setting('general.theme'), $path).'/modules/DisposableBasic';
         }, \Config::get('view.paths')), [$sourcePath]), 'DBasic');
 
         /*
         $this->loadViewsFrom(array_merge(array_filter(array_map(function ($path) {
-            $path = str_replace('default', setting('general.theme'), $path).'/modules/DisposableBasic'; 
+            $path = str_replace('default', setting('general.theme'), $path).'/modules/DisposableBasic';
             return (file_exists($path) && is_dir($path)) ? $path : null;
         }, \Config::get('view.paths'))), [$sourcePath]), 'DBasic');
         */

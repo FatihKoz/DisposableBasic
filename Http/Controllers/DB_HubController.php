@@ -5,16 +5,16 @@ namespace Modules\DisposableBasic\Http\Controllers;
 use App\Contracts\Controller;
 use App\Models\Aircraft;
 use App\Models\Airport;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\PirepStatus;
+use App\Models\Enums\UserState;
 use App\Models\Flight;
 use App\Models\Pirep;
 use App\Models\Subfleet;
 use App\Models\User;
-use App\Models\Enums\PirepState;
-use App\Models\Enums\PirepStatus;
-use App\Models\Enums\UserState;
-use League\ISO3166\ISO3166;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use League\ISO3166\ISO3166;
 use Modules\DisposableBasic\Services\DB_AirportServices;
 
 class DB_HubController extends Controller
@@ -26,6 +26,7 @@ class DB_HubController extends Controller
 
         if (!$hubs) {
             flash()->error('No hubs found !');
+
             return redirect(route('frontend.dashboard.index'));
         }
 
@@ -56,6 +57,7 @@ class DB_HubController extends Controller
 
         if (!$hub) {
             flash()->error('Airport is not hub !');
+
             return redirect(route('DBasic.hubs'));
         }
 

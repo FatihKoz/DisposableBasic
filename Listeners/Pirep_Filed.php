@@ -4,9 +4,9 @@ namespace Modules\DisposableBasic\Listeners;
 
 use App\Events\PirepFiled;
 use App\Models\Airline;
-use App\Models\PirepFieldValue;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\PirepSource;
+use App\Models\PirepFieldValue;
 use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Models\DB_WhazzUpCheck;
 use Modules\DisposableBasic\Services\DB_NotificationServices;
@@ -28,7 +28,7 @@ class Pirep_Filed
             $aircraft = $pirep->aircraft;
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
-            Log::info('Disposable Basic | Pirep:' . $pirep->id . ' FILED, Change STATE of ' . $aircraft->registration . ' to PARKED');
+            Log::info('Disposable Basic | Pirep:'.$pirep->id.' FILED, Change STATE of '.$aircraft->registration.' to PARKED');
         }
 
         if (DB_Setting('dbasic.networkcheck', false)) {
@@ -57,7 +57,7 @@ class Pirep_Filed
                 );
             }
 
-            Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $check_count . ' P:' . $check_online . ' Calculated Presence %:' . $check_result);
+            Log::debug('Disposable Basic | Pirep:'.$pirep->id.' FILED, C:'.$check_count.' P:'.$check_online.' Calculated Presence %:'.$check_result);
 
             if (DB_Setting('dbasic.networkcheck_callsign', false)) {
                 // Pirep is Filed, read recorded callsigns and write the result
@@ -80,7 +80,7 @@ class Pirep_Filed
                     $callsign_result = 0;
                 }
 
-                Log::debug('Disposable Basic | Pirep:' . $pirep->id . ' FILED, C:' . $callsigns_count . ' P:' . $callsign_check . ' Calculated Callsign Match %:' . $callsign_result);
+                Log::debug('Disposable Basic | Pirep:'.$pirep->id.' FILED, C:'.$callsigns_count.' P:'.$callsign_check.' Calculated Callsign Match %:'.$callsign_result);
                 PirepFieldValue::updateOrCreate(
                     ['pirep_id' => $pirep->id, 'slug' => 'network-callsign-check'],
                     ['name' => 'Network Callsign Check', 'value' => $callsign_result, 'source' => PirepSource::ACARS]

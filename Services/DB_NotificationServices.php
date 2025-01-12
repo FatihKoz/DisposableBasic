@@ -7,7 +7,6 @@ use League\HTMLToMarkdown\HtmlConverter;
 
 class DB_NotificationServices
 {
-
     public function NewsMessage($news)
     {
         $wh_url = DB_Setting('dbasic.discord_news_webhook');
@@ -28,11 +27,11 @@ class DB_NotificationServices
                     'description' => (new HtmlConverter(['header_style' => 'atx']))->convert($news->body),
                     'timestamp'   => date('c', strtotime($news->created_at)),
                     'author'      => [
-                        'name' => 'Published By: ' . $news->user->name_private,
+                        'name' => 'Published By: '.$news->user->name_private,
                         'url'  => route('frontend.profile.show', [$news->user->id]),
                     ],
                 ],
-            ]
+            ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $this->DiscordNotification($wh_url, $json_data);
@@ -58,39 +57,39 @@ class DB_NotificationServices
                         'url' => !empty($pirep->user->avatar) ? $pirep->user->avatar->url : $pirep->user->gravatar(256),
                     ],
                     'author'    => [
-                        'name' => 'Pilot In Command: ' . $pirep->user->name_private,
+                        'name' => 'Pilot In Command: '.$pirep->user->name_private,
                         'url'  => route('frontend.profile.show', [$pirep->user->id]),
                     ],
                     // Additional embed fields (Discord displays max 3 items per row)
                     'fields' => [
                         [
                             'name'   => '__Flight #__',
-                            'value'  => $pirep->airline->code . ' ' . $pirep->flight_number,
-                            'inline' => true
+                            'value'  => $pirep->airline->code.' '.$pirep->flight_number,
+                            'inline' => true,
                         ], [
                             'name'   => '__Origin__',
                             'value'  => $pirep->dpt_airport_id,
-                            'inline' => true
+                            'inline' => true,
                         ], [
                             'name'   => '__Destination__',
                             'value'  => $pirep->arr_airport_id,
-                            'inline' => true
+                            'inline' => true,
                         ], [
                             'name'   => '__Distance__',
-                            'value'  => $pirep->distance->local(0) . ' ' . setting('units.distance'),
-                            'inline' => true
+                            'value'  => $pirep->distance->local(0).' '.setting('units.distance'),
+                            'inline' => true,
                         ], [
                             'name'   => '__Block Time__',
                             'value'  => DB_ConvertMinutes($pirep->flight_time),
-                            'inline' => true
+                            'inline' => true,
                         ], [
                             'name'   => '__Equipment__',
                             'value'  => !empty($pirep->aircraft) ? $pirep->aircraft->ident : 'Not Reported',
-                            'inline' => true
+                            'inline' => true,
                         ],
                     ],
                 ],
-            ]
+            ],
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $this->DiscordNotification($wh_url, $json_data);
@@ -99,7 +98,7 @@ class DB_NotificationServices
     public function DiscordNotification($webhook_url, $json_data)
     {
         $ch = curl_init($webhook_url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-type: application/json']);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
@@ -107,7 +106,7 @@ class DB_NotificationServices
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
         if ($response) {
-            Log::debug('Disposable Basic | Discord WebHook Msg Response: ' . $response);
+            Log::debug('Disposable Basic | Discord WebHook Msg Response: '.$response);
         }
         curl_close($ch);
     }

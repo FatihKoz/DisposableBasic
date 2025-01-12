@@ -3,8 +3,7 @@
 use App\Contracts\Migration;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration
-{
+return new class() extends Migration {
     public function up()
     {
         // Add New Settings for Auto Reject and Update older ones

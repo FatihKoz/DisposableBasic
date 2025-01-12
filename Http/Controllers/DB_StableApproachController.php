@@ -84,12 +84,12 @@ class DB_StableApproachController extends Controller
             ]);
 
             $response['received'] = 'OK';
-            Log::debug('Disposable Basic, Stable Approach Report RECEIVED (A: ' . $report->analysis->id . ', P: ' . $pirep_id . ', U: ' . $user_id . ')');
+            Log::debug('Disposable Basic, Stable Approach Report RECEIVED (A: '.$report->analysis->id.', P: '.$pirep_id.', U: '.$user_id.')');
         } else {
             // Add reason to the response
             $response['received'] = 'rejected';
             $response['reason'] = $status;
-            Log::debug('Disposable Basic, Stable Approach Report REJECTED (' . $status . ')');
+            Log::debug('Disposable Basic, Stable Approach Report REJECTED ('.$status.')');
         }
 
         return response()->json($response);
@@ -102,11 +102,11 @@ class DB_StableApproachController extends Controller
         if ($report && $request->operation == 'update') {
             $report->is_stable = 1;
             $report->save();
-            Log::debug('Stable Approach Report ' . $report->sap_analysisID . ' updated by ' . Auth::user()->name_private);
+            Log::debug('Stable Approach Report '.$report->sap_analysisID.' updated by '.Auth::user()->name_private);
             flash()->success('Report approved as STABLE');
         } elseif ($report && $request->operation == 'delete') {
             $report->delete();
-            Log::debug('Stable Approach Report ' . $report->sap_analysisID . ' deleted by ' . Auth::user()->name_private);
+            Log::debug('Stable Approach Report '.$report->sap_analysisID.' deleted by '.Auth::user()->name_private);
             flash()->success('Report Deleted !');
         } else {
             flash()->warning('Report not found or not suitable for update');

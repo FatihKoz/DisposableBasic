@@ -13,7 +13,7 @@ class DB_PageController extends Controller
 
         $divider = strpos($coordinates, ',');
         $lat = substr($coordinates, 0, $divider);
-        $lon = substr($coordinates, ($divider + 1));
+        $lon = substr($coordinates, $divider + 1);
 
         return view('DBasic::pages.livewx', [
             'lat' => $lat,

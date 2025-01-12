@@ -33,7 +33,7 @@ class LeaderBoard extends Widget
             $icon = 'fa-plane-departure';
         } else {
             $title = ($count === 1) ? __('DBasic::widgets.best_pilot') : __('DBasic::widgets.top_pilots');
-            $footer_note = isset($hub) ? $hub . ' (' . __('DBasic::common.hub') . ')' : null;
+            $footer_note = isset($hub) ? $hub.' ('.__('DBasic::common.hub').')' : null;
             $icon = ($count === 1) ? 'fa-crown' : 'fa-list-ol';
         }
 
@@ -53,7 +53,7 @@ class LeaderBoard extends Widget
         }
 
         if (isset($period_text)) {
-            $title = $title . ' | ' . $period_text;
+            $title = $title.' | '.$period_text;
         }
 
         // Type text (visible at Card Footer)
@@ -90,6 +90,7 @@ class LeaderBoard extends Widget
     public function placeholder()
     {
         $loading_style = '<div class="alert alert-info mb-2 p-1 px-2 small fw-bold"><div class="spinner-border spinner-border-sm text-dark me-2" role="status"></div>Loading Leader Board data...</div>';
+
         return $loading_style;
     }
 }

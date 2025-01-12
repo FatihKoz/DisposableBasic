@@ -44,7 +44,7 @@ class Stats extends Widget
         }
 
         if (isset($details)) {
-            $header_note = ' | ' . $details->$main;
+            $header_note = ' | '.$details->$main;
             if ($details->$main != $details->name) {
                 $footer_note = $details->name;
             }

@@ -3,12 +3,12 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
-use App\Models\Airline;
 use App\Models\Aircraft;
-use App\Models\Pirep;
-use App\Models\Subfleet;
+use App\Models\Airline;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
+use App\Models\Pirep;
+use App\Models\Subfleet;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 use Modules\DisposableBasic\Services\DB_FleetServices;
@@ -60,6 +60,7 @@ class DB_FleetController extends Controller
 
         if (!$subfleet) {
             flash()->error('Subfleet not found !');
+
             return redirect(route('DBasic.fleet'));
         }
 
@@ -126,6 +127,7 @@ class DB_FleetController extends Controller
 
         if (!$aircraft) {
             flash()->error('Aircraft not found !');
+
             return redirect(route('DBasic.fleet'));
         }
 

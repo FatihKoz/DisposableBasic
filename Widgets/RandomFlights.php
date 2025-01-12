@@ -41,7 +41,7 @@ class RandomFlights extends Widget
             $whereRF['airport_id'] = $orig;
         }
 
-        $eager_load = array('flight.airline', 'flight.dpt_airport', 'flight.arr_airport', 'pirep', 'user');
+        $eager_load = ['flight.airline', 'flight.dpt_airport', 'flight.arr_airport', 'pirep', 'user'];
         $rfs = DB_RandomFlight::with($eager_load)->where($whereRF)->get();
 
         if ($rfs->isEmpty()) {

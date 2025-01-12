@@ -30,9 +30,9 @@ class Notams extends Widget
         $service_url = null;
 
         if ($icao) {
-            $service_url = 'https://ourairports.com/airports/' . $icao . '/notams.rss';
+            $service_url = 'https://ourairports.com/airports/'.$icao.'/notams.rss';
 
-            $cache_key = 'airports.notam.' . $icao;
+            $cache_key = 'airports.notam.'.$icao;
             $notams = Cache::get($cache_key);
 
             if (empty($notams)) {
@@ -41,16 +41,16 @@ class Notams extends Widget
                 try {
                     $response = $this->httpClient->request('GET', $service_url);
                     if ($response->getStatusCode() !== 200) {
-                        Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' Error Occured During NOTAM Feed Retrieval !');
+                        Log::error('Disposable Basic | HTTP '.$response->getStatusCode().' Error Occured During NOTAM Feed Retrieval !');
                     }
                 } catch (GuzzleException $e) {
-                    Log::error('Disposable Basic | ' . $icao . ' NOTAM Feed Download Error, ' . $e->getMessage());
+                    Log::error('Disposable Basic | '.$icao.' NOTAM Feed Download Error, '.$e->getMessage());
                 }
 
                 try {
                     $rss_feed = isset($response) ? simplexml_load_string($response->getBody()) : null;
                 } catch (Exception $e) {
-                    Log::error('Disposable Basic | ' . $icao . ' NOTAM Feed Processing Error, ' . $e->getMessage());
+                    Log::error('Disposable Basic | '.$icao.' NOTAM Feed Processing Error, '.$e->getMessage());
                 }
 
                 if (isset($rss_feed) && is_object($rss_feed) && isset($rss_feed->channel) && (is_array($rss_feed->channel->item) || is_object($rss_feed->channel->item))) {

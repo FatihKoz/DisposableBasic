@@ -4,9 +4,9 @@ namespace Modules\DisposableBasic\Services;
 
 use App\Models\Aircraft;
 use App\Models\Airport;
-use App\Models\Pirep;
 use App\Models\Enums\AircraftState;
 use App\Models\Enums\PirepState;
+use App\Models\Pirep;
 use App\Services\AirportService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +23,7 @@ class DB_CronServices
         foreach ($blocked_aircraft as $aircraft) {
             $aircraft->state = AircraftState::PARKED;
             $aircraft->save();
-            Log::info('Disposable Basic | ' . $aircraft->registration . ' state changed to PARKED (On Ground)');
+            Log::info('Disposable Basic | '.$aircraft->registration.' state changed to PARKED (On Ground)');
         }
     }
 
@@ -62,18 +62,18 @@ class DB_CronServices
                 $ap->elevation = $api['elevation'];
 
                 $ap->save();
-                Log::info('Disposable Basic | ' . $ap->id . ' updated via vaCentral Lookup');
+                Log::info('Disposable Basic | '.$ap->id.' updated via vaCentral Lookup');
             } else {
                 $ap->elevation = 1;
                 $ap->notes = 'Special or Custom Airport';
 
                 $ap->save();
-                Log::info('Disposable Basic | ' . $ap->id . ' not found via vaCentral Lookup, record updated with a note and 1 feet elevation');
+                Log::info('Disposable Basic | '.$ap->id.' not found via vaCentral Lookup, record updated with a note and 1 feet elevation');
             }
         }
 
         if ($airports->count() > 0) {
-            Log::info('Disposable Basic | Airport data lookup and update process completed for ' . $airports->count() . ' records');
+            Log::info('Disposable Basic | Airport data lookup and update process completed for '.$airports->count().' records');
         } else {
             Log::info('Disposable Basic | Airport data update was not necessary, nothing done');
         }

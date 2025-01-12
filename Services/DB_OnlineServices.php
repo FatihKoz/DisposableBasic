@@ -23,10 +23,11 @@ class DB_OnlineServices
         try {
             $response = $this->httpClient->request('GET', $server_address);
             if ($response->getStatusCode() !== 200) {
-                Log::error('Disposable Basic | HTTP ' . $response->getStatusCode() . ' Error Occured During WhazzUp Download !');
+                Log::error('Disposable Basic | HTTP '.$response->getStatusCode().' Error Occured During WhazzUp Download !');
             }
         } catch (GuzzleException $e) {
-            Log::error('Disposable Basic | WhazzUp Data Download Error: ' . $e->getMessage());
+            Log::error('Disposable Basic | WhazzUp Data Download Error: '.$e->getMessage());
+
             return;
         }
 

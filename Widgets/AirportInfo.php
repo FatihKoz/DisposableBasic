@@ -22,7 +22,7 @@ class AirportInfo extends Widget
         return view('DBasic::widgets.airport_info', [
             'apt_route'  => isset($apt_route) ? $apt_route : 'frontend.airports.show',
             'config'     => $this->config,
-            'hubs_only'  => ($hubs === true) ? 'hubs_only': null,
+            'hubs_only'  => ($hubs === true) ? 'hubs_only' : null,
             'is_visible' => Auth::check(),
         ]);
     }

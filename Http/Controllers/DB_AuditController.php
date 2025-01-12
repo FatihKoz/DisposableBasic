@@ -3,12 +3,12 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
+use App\Models\Enums\PirepState;
 use App\Models\Pirep;
 use App\Models\PirepFieldValue;
 use App\Models\User;
 use App\Models\UserField;
 use App\Models\UserFieldValue;
-use App\Models\Enums\PirepState;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -102,7 +102,7 @@ class DB_AuditController extends Controller
         $end = Carbon::parse($request->end);
         $pireps = Pirep::with(['aircraft', 'airline', 'user', 'field_values'])->whereIn('id', json_decode($request->pireps))->orderBy('submitted_at')->get();
 
-        $file_name = strtolower($network) . '-audit-pireps-' . $start->format('dMY') . '-' . $end->format('dMY') . '.csv';
+        $file_name = strtolower($network).'-audit-pireps-'.$start->format('dMY').'-'.$end->format('dMY').'.csv';
         $header = ['callsign', 'orig_icao', 'dest_icao', 'date', 'dep_time', 'arr_time', 'aircraft'];
         $path = $this->runExport($pireps, $header, $file_name);
 
@@ -113,8 +113,8 @@ class DB_AuditController extends Controller
     {
         // Create the directory under storage/app
         Storage::makeDirectory('export');
-        $path = storage_path('/app/export/' . $filename);
-        Log::info('Exporting audit pireps to ' . $path);
+        $path = storage_path('/app/export/'.$filename);
+        Log::info('Exporting audit pireps to '.$path);
         $writer = $this->openCsv($path);
         // Write out the header first
         $writer->insertOne($columns);
@@ -139,7 +139,7 @@ class DB_AuditController extends Controller
         $ret = [];
 
         // Prepare fields
-        $ret['callsign'] =  $row->fields->firstWhere('slug', 'network-callsign-used')->value ?? $row->airline->icao . $row->flight_number;
+        $ret['callsign'] = $row->fields->firstWhere('slug', 'network-callsign-used')->value ?? $row->airline->icao.$row->flight_number;
         $ret['orig_icao'] = $row->dpt_airport_id;
         $ret['dest_icao'] = $row->arr_airport_id;
         $ret['date'] = $row->submitted_at->format('d.M.Y');

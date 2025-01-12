@@ -3,8 +3,8 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
-use App\Models\Pirep;
 use App\Models\Enums\PirepState;
+use App\Models\Pirep;
 
 class DB_PirepController extends Controller
 {

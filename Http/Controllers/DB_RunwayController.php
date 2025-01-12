@@ -21,7 +21,7 @@ class DB_RunwayController extends Controller
                 flash()->success('Runway deleted.');
             }
 
-            return redirect(route('DBasic.runway') . '?airport=' . $request->input('airport'));
+            return redirect(route('DBasic.runway').'?airport='.$request->input('airport'));
         }
 
         if ($request->input('airport')) {
@@ -30,6 +30,7 @@ class DB_RunwayController extends Controller
 
             if (blank($runways)) {
                 flash()->info('Selected airport has no runways defined or last runway was deleted.');
+
                 return redirect(route('DBasic.runway'));
             }
         }
@@ -60,6 +61,7 @@ class DB_RunwayController extends Controller
 
         if (isset($error)) {
             flash()->error($error);
+
             return redirect(route('DBasic.runway'));
         }
 
@@ -81,6 +83,7 @@ class DB_RunwayController extends Controller
         );
 
         flash()->success('Runway saved');
-        return redirect(route('DBasic.runway') . '?airport=' . $request->airport_id);
+
+        return redirect(route('DBasic.runway').'?airport='.$request->airport_id);
     }
 }

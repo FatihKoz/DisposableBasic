@@ -5,6 +5,11 @@ namespace Modules\DisposableBasic\Services;
 use App\Models\Aircraft;
 use App\Models\Airline;
 use App\Models\Airport;
+use App\Models\Enums\AircraftStatus;
+use App\Models\Enums\FareType;
+use App\Models\Enums\PirepSource;
+use App\Models\Enums\PirepState;
+use App\Models\Enums\UserState;
 use App\Models\Flight;
 use App\Models\JournalTransaction;
 use App\Models\Pirep;
@@ -12,11 +17,6 @@ use App\Models\PirepFare;
 use App\Models\PirepFieldValue;
 use App\Models\Subfleet;
 use App\Models\User;
-use App\Models\Enums\AircraftStatus;
-use App\Models\Enums\FareType;
-use App\Models\Enums\PirepSource;
-use App\Models\Enums\PirepState;
-use App\Models\Enums\UserState;
 use App\Support\Units\Distance;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -35,9 +35,9 @@ class DB_StatServices
         $e_date = null;
 
         // Cache
-        $cache_key = 'pstats-' . $user_id . '-' . $type;
+        $cache_key = 'pstats-'.$user_id.'-'.$type;
         if (isset($period)) {
-            $cache_key .= '-' . $period;
+            $cache_key .= '-'.$period;
         }
 
         if (is_numeric($period)) {
@@ -77,21 +77,21 @@ class DB_StatServices
             $e_date = $now->endOfDay();
             $personal['period_text'] = __('DBasic::widgets.lastndays', ['period' => $period]);
         } elseif ($period === 'q1') { // Quarter 1 JAN-FEB-MAR
-            $s_date = $current_year . '-01-01 00:00:01';
-            $e_date = $current_year . '-03-31 23:59:59';
-            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+            $s_date = $current_year.'-01-01 00:00:01';
+            $e_date = $current_year.'-03-31 23:59:59';
+            $personal['period_text'] = $current_year.'/'.strtoupper($period);
         } elseif ($period === 'q2') { // Quarter 2 APR-MAY-JUN
-            $s_date = $current_year . '-04-01 00:00:01';
-            $e_date = $current_year . '-06-30 23:59:59';
-            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+            $s_date = $current_year.'-04-01 00:00:01';
+            $e_date = $current_year.'-06-30 23:59:59';
+            $personal['period_text'] = $current_year.'/'.strtoupper($period);
         } elseif ($period === 'q3') { // Quarter 3 JUL-AUG-SEP
-            $s_date = $current_year . '-07-01 00:00:01';
-            $e_date = $current_year . '-09-30 23:59:59';
-            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+            $s_date = $current_year.'-07-01 00:00:01';
+            $e_date = $current_year.'-09-30 23:59:59';
+            $personal['period_text'] = $current_year.'/'.strtoupper($period);
         } elseif ($period === 'q4') { // Quarter 4 OCT-NOV-DEC
-            $s_date = $current_year . '-10-01 00:00:01';
-            $e_date = $current_year . '-12-31 23:59:59';
-            $personal['period_text'] = $current_year . '/' . strtoupper($period);
+            $s_date = $current_year.'-10-01 00:00:01';
+            $e_date = $current_year.'-12-31 23:59:59';
+            $personal['period_text'] = $current_year.'/'.strtoupper($period);
         }
 
         $where = [];
@@ -153,7 +153,7 @@ class DB_StatServices
             $cache_key,
             $cache_until,
             function () use ($select_raw, $where, $period, $s_date, $e_date, $table_name, $date_field) {
-                return DB::table($table_name)->selectRaw($select_raw . ' as uresult')
+                return DB::table($table_name)->selectRaw($select_raw.' as uresult')
                     ->where($where)
                     ->when(isset($period), function ($query) use ($s_date, $e_date, $date_field) {
                         $query->whereBetween($date_field, [$s_date, $e_date]);
@@ -164,25 +164,25 @@ class DB_StatServices
         $personal['raw'] = $result;
         // Format the result according to type
         if ($type === 'avglanding') {
-            $personal['formatted'] = number_format($result) . ' ft/min';
+            $personal['formatted'] = number_format($result).' ft/min';
         } elseif ($type === 'avgscore') {
             $personal['formatted'] = number_format($result);
         } elseif ($type === 'avgtime' || $type === 'tottime') {
             $personal['formatted'] = DB_ConvertMinutes(round($result), '%2dh %2dm');
         } elseif ($type === 'avgdistance' || $type === 'totdistance') {
             if (setting('units.distance') === 'km') {
-                $personal['formatted'] = number_format($result * 1.852) . ' km';
+                $personal['formatted'] = number_format($result * 1.852).' km';
             } else {
-                $personal['formatted'] = number_format($result) . ' nm';
+                $personal['formatted'] = number_format($result).' nm';
             }
         } elseif ($type === 'avgfuel' || $type === 'totfuel') {
             if (setting('units.fuel') === 'kg') {
-                $personal['formatted'] = number_format($result / 2.20462262185) . ' kg';
+                $personal['formatted'] = number_format($result / 2.20462262185).' kg';
             } else {
-                $personal['formatted'] = number_format($result) . ' lbs';
+                $personal['formatted'] = number_format($result).' lbs';
             }
         } elseif ($type === 'fdm' || $type === 'assignment') {
-            $personal['formatted'] = number_format($result) . '%';
+            $personal['formatted'] = number_format($result).'%';
         } else {
             $personal['formatted'] = round($result);
         }
@@ -199,14 +199,14 @@ class DB_StatServices
         $whereIn_array = null;
 
         // Cache
-        $cache_key = 'lboard-' . $source . '-' . $type . '-' . $count;
+        $cache_key = 'lboard-'.$source.'-'.$type.'-'.$count;
         if (isset($period)) {
-            $cache_key .= '-' . $period;
+            $cache_key .= '-'.$period;
         } else {
             $cache_key .= '-alltime';
         }
         if (isset($hub)) {
-            $cache_key .= '-' . $hub;
+            $cache_key .= '-'.$hub;
         }
 
         if ($period === 'lastm' || $period === 'prevm') {
@@ -298,7 +298,7 @@ class DB_StatServices
             $cache_key,
             $cache_until,
             function () use ($eager_load, $base, $select_Raw, $where, $is_period, $s_date, $e_date, $whereIn_array, $type, $count) {
-                return Pirep::with($eager_load)->selectRaw($base . ', ' . $select_Raw . ' as totals')
+                return Pirep::with($eager_load)->selectRaw($base.', '.$select_Raw.' as totals')
                     ->where($where)
                     ->when(isset($is_period), function ($query) use ($s_date, $e_date) {
                         $query->whereBetween('created_at', [$s_date, $e_date]);
@@ -306,7 +306,7 @@ class DB_StatServices
                     ->when(is_array($whereIn_array), function ($query) use ($base, $whereIn_array) {
                         $query->whereIn($base, $whereIn_array);
                     })
-                    ->when(($type != 'lrate_high'), function ($query) {
+                    ->when($type != 'lrate_high', function ($query) {
                         $query->orderBy('totals', 'desc');
                     }, function ($query) {
                         $query->orderBy('totals', 'asc');
@@ -327,11 +327,10 @@ class DB_StatServices
         // Leader Board
         $leader_board = [];
         foreach ($results as $item) {
-
             if ($type === 'time') {
                 $item->totals = DB_ConvertMinutes($item->totals, '%2dh %2dm');
             } elseif ($type === 'lrate' || $type === 'lrate_low' || $type === 'lrate_high') {
-                $item->totals = number_format($item->totals) . ' ft/min';
+                $item->totals = number_format($item->totals).' ft/min';
             } elseif ($type === 'distance') {
                 $item->totals = DB_ConvertDistance(new Distance($item->totals, 'nmi'));
             } else {
@@ -343,7 +342,7 @@ class DB_StatServices
                 'icao'         => ($source === 'pilot') ? null : $item->$eager_load->icao,
                 'name'         => ($source === 'pilot') ? $item->user->name : $item->$eager_load->name,
                 'name_private' => ($source === 'pilot') ? $item->user->name_private : $item->$eager_load->name,
-                'pilot_ident'  => ($source === 'pilot') ? $item->user->ident . ' - ' : null,
+                'pilot_ident'  => ($source === 'pilot') ? $item->user->ident.' - ' : null,
                 'route'        => $route,
                 'totals'       => $item->totals,
             ];
@@ -398,7 +397,7 @@ class DB_StatServices
 
         // Return empty array if pirep count is zero, no need to work for the rest
         if ($stats[__('DBasic::widgets.pireps_ack')] === 0) {
-            return array();
+            return [];
         }
 
         // Count carried PAX and CGO for fancy stats
@@ -424,8 +423,8 @@ class DB_StatServices
         }
 
         if ($cgo_amount > 0) {
-            $stats[__('DBasic::widgets.pireps_cgo')] = number_format($cgo_amount) . ' ' . $unit_weight;
-            $stats[__('DBasic::widgets.avg_cgo')] = number_format($cgo_avg) . ' ' . $unit_weight;
+            $stats[__('DBasic::widgets.pireps_cgo')] = number_format($cgo_amount).' '.$unit_weight;
+            $stats[__('DBasic::widgets.avg_cgo')] = number_format($cgo_avg).' '.$unit_weight;
         }
 
         // Basic Pirep Statistics
@@ -463,30 +462,30 @@ class DB_StatServices
             $stats[__('DBasic::widgets.atime')] = DB_ConvertMinutes($average_time, '%2dh %2dm');
         }
 
-        $stats[__('DBasic::widgets.tfuel')] = number_format($total_fuel) . ' ' . $unit_fuel;
+        $stats[__('DBasic::widgets.tfuel')] = number_format($total_fuel).' '.$unit_fuel;
         if ($level > 10) {
-            $stats[__('DBasic::widgets.afuel')] = number_format($average_fuel) . ' ' . $unit_fuel;
+            $stats[__('DBasic::widgets.afuel')] = number_format($average_fuel).' '.$unit_fuel;
         }
 
         if ($total_fuel > 0 && $total_time > 0) {
             $average_fuel_hour = ($total_fuel / $total_time) * 60;
-            $stats[__('DBasic::widgets.hfuel')] = number_format($average_fuel_hour) . ' ' . $unit_fuel;
+            $stats[__('DBasic::widgets.hfuel')] = number_format($average_fuel_hour).' '.$unit_fuel;
         }
 
-        $stats[__('DBasic::widgets.tdist')] = number_format($total_dist) . ' ' . $unit_distance;
+        $stats[__('DBasic::widgets.tdist')] = number_format($total_dist).' '.$unit_distance;
         if ($level > 10) {
-            $stats[__('DBasic::widgets.adist')] = number_format($average_dist) . ' ' . $unit_distance;
+            $stats[__('DBasic::widgets.adist')] = number_format($average_dist).' '.$unit_distance;
         }
 
         if ($total_dist > 0 && $total_time > 0 && $level > 10) {
             $average_dist_hour = ($total_dist / $total_time) * 60;
-            $stats[__('DBasic::widgets.hdist')] = number_format($average_dist_hour) . ' ' . $unit_distance;
+            $stats[__('DBasic::widgets.hdist')] = number_format($average_dist_hour).' '.$unit_distance;
         }
 
         $where['source'] = PirepSource::ACARS;
 
         $average_lrate = Pirep::where($where)->avg('landing_rate');
-        $stats[__('DBasic::widgets.alrate')] = number_format(abs($average_lrate)) . ' ft/min';
+        $stats[__('DBasic::widgets.alrate')] = number_format(abs($average_lrate)).' ft/min';
 
         if ($level > 10) {
             $average_score = Pirep::where($where)->avg('score');
@@ -503,7 +502,7 @@ class DB_StatServices
         $finance = [];
 
         // Cache
-        $cache_key = 'journal-' . $journal_id . '-overall';
+        $cache_key = 'journal-'.$journal_id.'-overall';
         $cache_until = Carbon::now()->endOfDay();
 
         $overall = cache()->remember($cache_key, $cache_until, function () use ($journal_id) {
@@ -520,7 +519,7 @@ class DB_StatServices
 
         $finance[__('DBasic::common.income')] = money($income, $currency);
         $finance[__('DBasic::common.expense')] = money($expense, $currency);
-        $finance[__('DBasic::common.balance')] = '<span style="color: ' . $color . ';"><b>' . money($balance, $currency) . '</b></span>';
+        $finance[__('DBasic::common.balance')] = '<span style="color: '.$color.';"><b>'.money($balance, $currency).'</b></span>';
 
         return $finance;
     }
@@ -528,7 +527,6 @@ class DB_StatServices
     // Network Stats for IVAO/VATSIM (uses cache)
     public function NetworkStats($network = 'BOTH')
     {
-
         // $pireps = Pirep::where('state', PirepState::ACCEPTED)->pluck('id')->toArray();
         $pireps = Pirep::onlyTrashed()->pluck('id')->toArray();
 
@@ -543,9 +541,9 @@ class DB_StatServices
         $nwstats = [];
 
         // Cache
-        $cache_overall = 'ns-alltime-' . $network;
-        $cache_last90 = 'ns-last90-' . $network;
-        $cache_last180 = 'ns-last180-' . $network;
+        $cache_overall = 'ns-alltime-'.$network;
+        $cache_last90 = 'ns-last90-'.$network;
+        $cache_last180 = 'ns-last180-'.$network;
         $cache_until = Carbon::now()->endOfDay();
 
         // Periods
@@ -562,7 +560,7 @@ class DB_StatServices
 
         if (filled($overall) && $overall->count() > 0) {
             foreach ($overall as $ns) {
-                $nwstats[$ns->network . ' (All Time)'] = $ns->pireps;
+                $nwstats[$ns->network.' (All Time)'] = $ns->pireps;
             }
         }
 
@@ -577,7 +575,7 @@ class DB_StatServices
 
         if (filled($last90days) && $last90days->count() > 0) {
             foreach ($last90days as $ns) {
-                $nwstats[$ns->network . ' (Last 90 Days)'] = $ns->pireps;
+                $nwstats[$ns->network.' (Last 90 Days)'] = $ns->pireps;
             }
         }
 
@@ -592,7 +590,7 @@ class DB_StatServices
 
         if (filled($last180days) && $last180days->count() > 0) {
             foreach ($last180days as $ns) {
-                $nwstats[$ns->network . ' (Last 180 Days)'] = $ns->pireps;
+                $nwstats[$ns->network.' (Last 180 Days)'] = $ns->pireps;
             }
         }
 
@@ -602,7 +600,7 @@ class DB_StatServices
     }
 
     // Api Basic Statistics
-    // No formatting or text on values only convert to local units per settings    
+    // No formatting or text on values only convert to local units per settings
     public function ApiBasicStats()
     {
         $user_states = [UserState::PENDING, UserState::ACTIVE, UserState::ON_LEAVE];
@@ -666,7 +664,7 @@ class DB_StatServices
         // Pirep Times
         $stats['pireps_time_ttl'] = round(Pirep::where($where)->sum('flight_time'), 0);
         $stats['pireps_time_avg'] = round(Pirep::where($where)->avg('flight_time'), 0);
-        $stats['pireps_time_unt'] = "min";
+        $stats['pireps_time_unt'] = 'min';
 
         // Pirep Distance
         $total_dist = Pirep::where($where)->sum('distance');

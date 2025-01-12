@@ -3,14 +3,14 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
-use App\Models\Airline;
 use App\Models\Aircraft;
-use App\Models\Pirep;
-use App\Models\Subfleet;
-use App\Models\User;
+use App\Models\Airline;
 use App\Models\Enums\ActiveState;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\UserState;
+use App\Models\Pirep;
+use App\Models\Subfleet;
+use App\Models\User;
 use League\ISO3166\ISO3166;
 use Modules\DisposableBasic\Services\DB_StatServices;
 
@@ -24,11 +24,13 @@ class DB_AirlineController extends Controller
 
         if (!$airlines) {
             flash()->error('No active airline found !');
+
             return redirect(route('frontend.dashboard.index'));
         }
 
         if ($airlines->count() === 1) {
             $airline = $airlines->first();
+
             return redirect(route('DBasic.airline', [$airline->icao]));
         }
 
@@ -47,6 +49,7 @@ class DB_AirlineController extends Controller
             return redirect(route('DBasic.airline', [$airline_icao]));
         } else {
             flash()->error('Airline not found !');
+
             return redirect(route('DBasic.airlines'));
         }
     }
@@ -58,6 +61,7 @@ class DB_AirlineController extends Controller
 
         if (!$airline) {
             flash()->error('Airline not found !');
+
             return redirect(route('DBasic.airlines'));
         }
 

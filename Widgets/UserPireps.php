@@ -3,9 +3,9 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
-use App\Models\Pirep;
 use App\Models\Enums\PirepState;
 use App\Models\Enums\PirepStatus;
+use App\Models\Pirep;
 use Illuminate\Support\Facades\Auth;
 
 class UserPireps extends Widget

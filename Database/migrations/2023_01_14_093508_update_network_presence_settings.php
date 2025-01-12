@@ -3,8 +3,7 @@
 use App\Contracts\Migration;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration
-{
+return new class() extends Migration {
     public function up()
     {
         // Add New Settings for WhazzUp Checks (Network Presence)
@@ -19,7 +18,7 @@ return new class() extends Migration
             DB::table('disposable_settings')->updateOrInsert(
                 ['key' => 'dbasic.networkcheck_fieldname_vatsim'],
                 ['group' => 'Network Checks', 'name' => 'User Field Name (VATSIM)', 'default' => 'VATSIM ID', 'order' => '8812']
-            );            
+            );
             // Update Order and Options
             DB::table('disposable_settings')->updateOrInsert(
                 ['key' => 'dbasic.networkcheck'],
@@ -30,7 +29,7 @@ return new class() extends Migration
                 ['group' => 'Network Checks', 'name' => 'Check Network Callsign', 'field_type' => 'check', 'default' => 'false', 'order' => '8802']
             );
             DB::table('disposable_settings')->updateOrInsert(
-                ['key' => 'dbasic.networkcheck_server'], 
+                ['key' => 'dbasic.networkcheck_server'],
                 ['group' => 'Network Checks', 'name' => 'Server Selection', 'field_type' => 'select', 'options' => 'IVAO,VATSIM,AUTO', 'default' => 'AUTO', 'order' => '8803']
             );
             DB::table('disposable_settings')->updateOrInsert(

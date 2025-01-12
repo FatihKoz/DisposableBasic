@@ -3,8 +3,8 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
-use Modules\DisposableBasic\Models\DB_Session;
 use Carbon\Carbon;
+use Modules\DisposableBasic\Models\DB_Session;
 
 class ActiveUsers extends Widget
 {

@@ -53,7 +53,7 @@ class DB_SceneryController extends Controller
             'flights'    => $flights,
             'user_id'    => $user->id,
             'user_regs'  => $user_regions,
-            'user_sims'  => $user_simulators
+            'user_sims'  => $user_simulators,
         ]);
     }
 
@@ -151,7 +151,7 @@ class DB_SceneryController extends Controller
             ]
         );
 
-        Log::debug('Disposable Basic | Scenery record for ' . strtoupper($request->airport_id) . ' added by ' . Auth::user()->name_private);
+        Log::debug('Disposable Basic | Scenery record for '.strtoupper($request->airport_id).' added by '.Auth::user()->name_private);
         flash()->success('Scenery entry saved');
 
         return redirect(route('DBasic.scenery'));
@@ -169,7 +169,7 @@ class DB_SceneryController extends Controller
 
         if ($scenery) {
             $scenery->delete();
-            Log::debug('Disposable Basic | Scenery record for ' . $scenery->airport_id . ' deleted by ' . Auth::user()->name_private);
+            Log::debug('Disposable Basic | Scenery record for '.$scenery->airport_id.' deleted by '.Auth::user()->name_private);
             flash()->warning('Scenery entry deleted!');
         } else {
             flash()->warning('Scenery not found!');

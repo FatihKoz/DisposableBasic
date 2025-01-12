@@ -3,8 +3,8 @@
 namespace Modules\DisposableBasic\Widgets;
 
 use App\Contracts\Widget;
-use App\Models\User;
 use App\Models\JournalTransaction;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class JournalDetails extends Widget

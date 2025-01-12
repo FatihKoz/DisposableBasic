@@ -35,7 +35,7 @@ class DB_StableApproach extends Model
         return ($this->is_stable == 1) ? true : false;
     }
 
-    public function getReportAttribute() 
+    public function getReportAttribute()
     {
         return filled($this->raw_report) ? json_decode($this->raw_report) : null;
     }

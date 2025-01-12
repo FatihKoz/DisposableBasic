@@ -3,13 +3,13 @@
 namespace Modules\DisposableBasic\Listeners;
 
 use App\Contracts\Listener;
-use App\Events\CronFiveMinute;
 use App\Events\CronFifteenMinute;
-use App\Events\CronThirtyMinute;
+use App\Events\CronFiveMinute;
 use App\Events\CronHourly;
-use App\Events\CronNightly;
-use App\Events\CronWeekly;
 use App\Events\CronMonthly;
+use App\Events\CronNightly;
+use App\Events\CronThirtyMinute;
+use App\Events\CronWeekly;
 use Illuminate\Support\Facades\Log;
 use Modules\DisposableBasic\Services\DB_CronServices;
 use Modules\DisposableBasic\Services\DB_OnlineServices;
@@ -17,13 +17,13 @@ use Modules\DisposableBasic\Services\DB_OnlineServices;
 class Gen_Cron extends Listener
 {
     public static $callbacks = [
-        CronFiveMinute::class => 'cron_05min',
+        CronFiveMinute::class    => 'cron_05min',
         CronFifteenMinute::class => 'cron_15min',
-        CronThirtyMinute::class => 'cron_30min',
-        CronHourly::class  => 'cron_hourly',
-        CronNightly::class => 'cron_nightly',
-        CronWeekly::class => 'cron_weekly',
-        CronMonthly::class => 'cron_monthly',
+        CronThirtyMinute::class  => 'cron_30min',
+        CronHourly::class        => 'cron_hourly',
+        CronNightly::class       => 'cron_nightly',
+        CronWeekly::class        => 'cron_weekly',
+        CronMonthly::class       => 'cron_monthly',
     ];
 
     public function cron_05min()
@@ -91,6 +91,6 @@ class Gen_Cron extends Listener
     // Test Method
     public function DB_WriteToLog($text = null)
     {
-        Log::debug('Disposable Basic | ' . $text);
+        Log::debug('Disposable Basic | '.$text);
     }
 }

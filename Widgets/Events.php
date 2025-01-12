@@ -20,7 +20,7 @@ class Events extends Widget
                 ['start_date', '>', $today],
                 'route_code'  => $event_code,
             ];
-            $widget_title = "Upcoming Event";
+            $widget_title = 'Upcoming Event';
         } else {
             $where = [
                 'start_date'  => $today,
@@ -35,8 +35,8 @@ class Events extends Widget
 
         return view('DBasic::widgets.events', [
             'events'     => $events,
-            'event_type' => ($this->config['type'] === 'upcoming') ? "Upcoming" : "Current",
-            'event_text' => (count($events) > 1) ? $widget_title . 's' : $widget_title,
+            'event_type' => ($this->config['type'] === 'upcoming') ? 'Upcoming' : 'Current',
+            'event_text' => (count($events) > 1) ? $widget_title.'s' : $widget_title,
             'is_visible' => (count($events) > 0) ? true : false,
         ]);
     }

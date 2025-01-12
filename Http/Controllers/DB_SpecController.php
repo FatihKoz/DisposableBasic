@@ -12,7 +12,6 @@ class DB_SpecController extends Controller
     // Specifications management page
     public function index(Request $request)
     {
-
         if ($request->input('spec_delete')) {
             $spec = DB_Spec::where('id', $request->input('spec_delete'))->first();
 
@@ -111,6 +110,7 @@ class DB_SpecController extends Controller
         );
 
         flash()->success('Specifications saved');
+
         return redirect(route('DBasic.specs'));
     }
 }

@@ -3,9 +3,9 @@
 namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
+use App\Models\Enums\UserState;
 use App\Models\User;
 use App\Models\UserAward;
-use App\Models\Enums\UserState;
 use App\Services\FinanceService;
 use App\Support\Money;
 use Carbon\Carbon;
@@ -98,14 +98,14 @@ class DB_AdminController extends Controller
                 $user->airline->journal,
                 $amount,
                 $user,
-                'Bonus Payment (' . $user->name_private . ')',
+                'Bonus Payment ('.$user->name_private.')',
                 $group,
                 'bonus',
                 $today
             );
 
-            flash()->success('Wire transfer completed. Amount: ' . $amount . ' > User: ' . $user->name_private);
-            Log::info('Disposable Basic | Bonus Payment of ' . $amount . ' to ' . $user->name_private . ' completed by ' . Auth::user()->name_private);
+            flash()->success('Wire transfer completed. Amount: '.$amount.' > User: '.$user->name_private);
+            Log::info('Disposable Basic | Bonus Payment of '.$amount.' to '.$user->name_private.' completed by '.Auth::user()->name_private);
         } else {
             flash()->error('Airline balance is NOT enough to complete wire transfer !');
             Log::info('Disposable Basic | Bonus Payment Result: Rejected, Not Enough Funds');
@@ -121,7 +121,6 @@ class DB_AdminController extends Controller
         $section = null;
 
         foreach ($formdata as $id => $value) {
-
             if ($id === 'group') {
                 $section = $value;
             }
@@ -132,11 +131,12 @@ class DB_AdminController extends Controller
                 continue;
             }
 
-            Log::debug('Disposable Basic, ' . $setting->group . ' setting for ' . $setting->name . ' changed to ' . $value);
+            Log::debug('Disposable Basic, '.$setting->group.' setting for '.$setting->name.' changed to '.$value);
             DB::table('disposable_settings')->where(['id' => $setting->id])->update(['value' => $value]);
         }
 
-        flash()->success($section . ' settings saved.');
+        flash()->success($section.' settings saved.');
+
         return back(); // return redirect(route('DBasic.admin'));
     }
 
@@ -178,7 +178,7 @@ class DB_AdminController extends Controller
         $airports_pirep_arr = DB::table('pireps')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
         $airports_flight_dep = DB::table('flights')->whereNull('deleted_at')->whereNotIn('dpt_airport_id', $current_airports)->groupBy('dpt_airport_id')->pluck('dpt_airport_id')->toArray();
         $airports_flight_arr = DB::table('flights')->whereNull('deleted_at')->whereNotIn('arr_airport_id', $current_airports)->groupBy('arr_airport_id')->pluck('arr_airport_id')->toArray();
-        $wrong_country_codes = DB::table('airports')->whereNull('deleted_at')->whereRaw("length(country) != 2")->orderBy('id')->pluck('id')->toArray();
+        $wrong_country_codes = DB::table('airports')->whereNull('deleted_at')->whereRaw('length(country) != 2')->orderBy('id')->pluck('id')->toArray();
 
         // Flight Checks
         $flight_comp = DB::table('flights')->whereNull('deleted_at')->whereNotIn('airline_id', $current_airlines)->pluck('id')->toArray();

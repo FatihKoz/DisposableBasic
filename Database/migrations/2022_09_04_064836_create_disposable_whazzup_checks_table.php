@@ -29,7 +29,7 @@ class CreateDisposableWhazzupChecksTable extends Migration
                 ['group' => 'Network Checks', 'name' => 'Check Network Presence', 'field_type' => 'check', 'default' => 'false', 'order' => '8801']
             );
             DB::table('disposable_settings')->updateOrInsert(
-                ['key' => 'dbasic.networkcheck_server'], 
+                ['key' => 'dbasic.networkcheck_server'],
                 ['group' => 'Network Checks', 'name' => 'Server Selection', 'field_type' => 'select', 'options' => 'IVAO,VATSIM', 'default' => 'IVAO', 'order' => '8802']
             );
             DB::table('disposable_settings')->updateOrInsert(

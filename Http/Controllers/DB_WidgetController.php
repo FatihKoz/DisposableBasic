@@ -4,18 +4,18 @@ namespace Modules\DisposableBasic\Http\Controllers;
 
 use App\Contracts\Controller;
 use App\Models\Aircraft;
-use App\Models\User;
 use App\Models\Enums\FuelType;
 use App\Models\Enums\PirepState;
+use App\Models\User;
 use App\Services\AirportService;
 use App\Services\FinanceService;
 use App\Support\Math;
 use App\Support\Money;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 class DB_WidgetController extends Controller
 {
@@ -45,7 +45,7 @@ class DB_WidgetController extends Controller
             $aircraft->airport_id = $user_location;
             $aircraft->save();
             flash()->success(__('DBasic::widgets.ta_ok_free', ['registration' => $aircraft->registration]));
-            Log::info('Disposable Basic | Free Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private);
+            Log::info('Disposable Basic | Free Aircraft Transfer > '.$aircraft->registration.' moved to '.$user_location.' by '.$user->name_private);
 
             return back(); // return redirect(url($current_page));
         }
@@ -72,7 +72,7 @@ class DB_WidgetController extends Controller
             // Ground Handling Prices (with multiplier)
             $orig_gh = filled($base_airport->ground_handling_cost) ? $base_airport->ground_handling_cost : setting('airports.default_ground_handling_cost');
             $dest_gh = filled($dest_airport->ground_handling_cost) ? $dest_airport->ground_handling_cost : setting('airports.default_ground_handling_cost');
-            $gh_multiplier = filled($aircraft->subfleet->ground_handling_multiplier) ? $aircraft->subfleet->ground_handling_multiplier . '%' : '100%';
+            $gh_multiplier = filled($aircraft->subfleet->ground_handling_multiplier) ? $aircraft->subfleet->ground_handling_multiplier.'%' : '100%';
             $gh_cost = Math::applyAmountOrPercent(round($orig_gh + $dest_gh, 2), $gh_multiplier);
 
             // Fuel Burn (per nm, with subfleet averages)
@@ -86,28 +86,28 @@ class DB_WidgetController extends Controller
             }
 
             // Fuel Cost
-            $aprx_fuelburn = round($avrg_fuelburn * (string)$transfer_distance, 3);
+            $aprx_fuelburn = round($avrg_fuelburn * (string) $transfer_distance, 3);
             $fuel_cost = round($aprx_fuelburn * $fuel_price, 3);
 
             // Transfer Cost
             $transfer_cost = Money::createFromAmount(round($gh_cost + $fuel_cost, 2));
-            Log::debug('Disposable Basic | Aircraft Transfer > Transfer Distance: ' . $transfer_distance);
-            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Price: ' . $fuel_price);
-            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Burn: ' . $avrg_fuelburn);
-            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Used: ' . $aprx_fuelburn);
-            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Cost: ' . $fuel_cost);
-            Log::debug('Disposable Basic | Aircraft Transfer > GH Cost: ' . $gh_cost);
-            Log::debug('Disposable Basic | Aircraft Transfer > Calculated Cost: ' . $transfer_cost);
+            Log::debug('Disposable Basic | Aircraft Transfer > Transfer Distance: '.$transfer_distance);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Price: '.$fuel_price);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Burn: '.$avrg_fuelburn);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Used: '.$aprx_fuelburn);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fuel Cost: '.$fuel_cost);
+            Log::debug('Disposable Basic | Aircraft Transfer > GH Cost: '.$gh_cost);
+            Log::debug('Disposable Basic | Aircraft Transfer > Calculated Cost: '.$transfer_cost);
         }
 
         // Transfer price is fixed (Define cost, continue)
         if (is_numeric($price)) {
             $transfer_cost = Money::createFromAmount($price);
-            Log::debug('Disposable Basic | Aircraft Transfer > Fixed Cost: ' . $transfer_cost);
+            Log::debug('Disposable Basic | Aircraft Transfer > Fixed Cost: '.$transfer_cost);
         }
 
         if ($interim_price === true) {
-            flash()->info('Aprx. Transfer Cost: ' . $transfer_cost . ' | ' . $aircraft->registration);
+            flash()->info('Aprx. Transfer Cost: '.$transfer_cost.' | '.$aircraft->registration);
 
             return back(); // return redirect(url($current_page));
         }
@@ -126,7 +126,7 @@ class DB_WidgetController extends Controller
             $user->journal,
             $transfer_cost,
             $user,
-            'Aircraft Transfer ' . $aircraft->registration,
+            'Aircraft Transfer '.$aircraft->registration,
             'Aircraft Transfer',
             'actransfer',
             Carbon::now()->format('Y-m-d')
@@ -136,7 +136,7 @@ class DB_WidgetController extends Controller
             $aircraft->subfleet->airline->journal,
             $transfer_cost,
             $user,
-            'Aircraft Transfer ' . $aircraft->registration . ' (' . $user->name_private . ')',
+            'Aircraft Transfer '.$aircraft->registration.' ('.$user->name_private.')',
             'Aircraft Transfer',
             'actransfer',
             Carbon::now()->format('Y-m-d')
@@ -152,7 +152,7 @@ class DB_WidgetController extends Controller
         // Move Asset (complete)
         $aircraft->airport_id = $user_location;
         $aircraft->save();
-        Log::info('Disposable Basic | Aircraft Transfer > ' . $aircraft->registration . ' moved to ' . $user_location . ' by ' . $user->name_private . '. Price: ' . $transfer_cost);
+        Log::info('Disposable Basic | Aircraft Transfer > '.$aircraft->registration.' moved to '.$user_location.' by '.$user->name_private.'. Price: '.$transfer_cost);
 
         return back(); // return redirect(url($current_page));
     }
@@ -190,7 +190,7 @@ class DB_WidgetController extends Controller
         if ($price === 'auto') {
             $AirportSvc = app(AirportService::class);
             $transfer_distance = $AirportSvc->calculateDistance($user_location, $new_location);
-            $transfer_cost = Money::createFromAmount(round($base_price * (string)$transfer_distance, 2));
+            $transfer_cost = Money::createFromAmount(round($base_price * (string) $transfer_distance, 2));
         }
 
         // Transfer price is fixed (Define Cost, continue)
@@ -199,7 +199,7 @@ class DB_WidgetController extends Controller
         }
 
         if ($interim_price === true) {
-            flash()->info('Aprx. Ticket Price: ' . $transfer_cost . ' | ' . $new_location);
+            flash()->info('Aprx. Ticket Price: '.$transfer_cost.' | '.$new_location);
 
             return back(); // return redirect(url($current_page));
         }
@@ -218,7 +218,7 @@ class DB_WidgetController extends Controller
             $user->journal,
             $transfer_cost,
             $user,
-            'JumpSeat Travel ' . $new_location,
+            'JumpSeat Travel '.$new_location,
             'JumpSeat Travel',
             'jumpseat',
             Carbon::now()->format('Y-m-d')
@@ -228,7 +228,7 @@ class DB_WidgetController extends Controller
             $user->airline->journal,
             $transfer_cost,
             $user,
-            'JumpSeat Travel (' . $user->name_private . ')',
+            'JumpSeat Travel ('.$user->name_private.')',
             'JumpSeat Travel',
             'jumpseat',
             Carbon::now()->format('Y-m-d')

@@ -30,7 +30,7 @@ class PersonalStats extends Widget
             'pstat'   => isset($personal['formatted']) ? $personal['formatted'] : __('DBasic::widgets.noreports'),
             'rstat'   => isset($personal['raw']) ? $personal['raw'] : null,
             'sname'   => isset($personal['stat_name']) ? $personal['stat_name'] : null,
-            'speriod' => isset($personal['period_text']) ? '(' . $personal['period_text'] . ')' : null,
+            'speriod' => isset($personal['period_text']) ? '('.$personal['period_text'].')' : null,
             'visible' => $is_visible,
         ]);
     }

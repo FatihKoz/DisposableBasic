@@ -48,11 +48,11 @@ class DB_Runway extends Model
         if ($this->length) {
             $unit = (setting('units.distance') === 'km') ? 'm' : 'ft';
             $length = (setting('units.distance') === 'km') ? ltrim($this->length, '0') : round(intval($this->length) * 3.28084);
-            $runway_data = $this->runway_ident . ' | ' . $length . $unit;
+            $runway_data = $this->runway_ident.' | '.$length.$unit;
         }
 
         if ($this->ils_freq && $this->loc_course) {
-            $runway_data = $runway_data . ' (' . $this->ils_freq . 'mhz ' . $this->loc_course . '&deg;)';
+            $runway_data = $runway_data.' ('.$this->ils_freq.'mhz '.$this->loc_course.'&deg;)';
         }
 
         return $runway_data;
