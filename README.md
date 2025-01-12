@@ -3,7 +3,7 @@
 phpVMS v7 module for Basic VA features
 
 > [!IMPORTANT]
-> * Minimum required phpVMS v7 version is `phpVms 7.0.38-dev.g47ce6755b4` / 15.NOV.2024
+> * Minimum required phpVMS v7 version is `phpVms 7.0.52-dev.g0421186c64` / 05.JAN.2025
 
 > [!TIP]
 > * Module supports **only** php8.1+ and laravel10
@@ -725,6 +725,10 @@ _Not providing attribution link will result in removal of access and no support 
 * SmartCars v3 users reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data. So it is highly probable that more features of this module may fail when SC3 is in use too. With latest improvements done to SC3 implementation incompatibilities are reduced but still it may behave different than expected. Please follow changes/updates of SC3 modules being developed by other devs.
 
 ## Release / Update Notes
+
+12.JAN.25
+
+* Version rounding and required minimum phpVMS version change
 
 15.NOV.24
 
