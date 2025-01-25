@@ -130,9 +130,9 @@ class WhazzUp extends Widget
         $network_users = UserFieldValue::where('user_field_id', $user_field_id)->whereNotIn('user_id', $inactive_users)->whereNotNull('value')->pluck('value')->toArray();
 
         if ($network_selection === 'VATSIM') {
-            User::where('state', UserState::ACTIVE)->whereNotNull('vatsim_id')->pluck('vatsim_id')->toArray();
+            $oauth_users = User::where('state', UserState::ACTIVE)->whereNotNull('vatsim_id')->pluck('vatsim_id')->toArray();
         } elseif ($network_selection === 'IVAO') {
-            User::where('state', UserState::ACTIVE)->whereNotNull('ivao_id')->pluck('ivao_id')->toArray();
+            $oauth_users = User::where('state', UserState::ACTIVE)->whereNotNull('ivao_id')->pluck('ivao_id')->toArray();
         } else {
             $oauth_users = [];
         }
