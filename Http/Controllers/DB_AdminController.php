@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
-use Nwidart\Modules\Facades\Module;
 use Modules\DisposableBasic\Services\DB_FleetServices;
+use Nwidart\Modules\Facades\Module;
 
 class DB_AdminController extends Controller
 {
@@ -240,7 +240,7 @@ class DB_AdminController extends Controller
         }
 
         $contents = json_decode(file_get_contents($file));
-        
+
         $details->name = isset($contents->name) ? $contents->name : $module_name;
         $details->description = isset($contents->description) ? $contents->description : null;
         $details->version = isset($contents->version) ? $contents->version : null;
