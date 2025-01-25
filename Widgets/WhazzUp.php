@@ -53,12 +53,12 @@ class WhazzUp extends Widget
 
         if ($whazzup) {
             $online_pilots = collect(json_decode($whazzup->pilots));
-            $online_pilots = $online_pilots->whereIn($user_field, $this->NetworkUsersArray($field_name));
+            $online_pilots = $online_pilots->whereIn($user_field, $this->NetworkUsersArray($field_name, $network_selection));
             $dltime = isset($whazzup->updated_at) ? $whazzup->updated_at : null;
 
             $pilots = [];
             foreach ($online_pilots as $online_pilot) {
-                $user = $this->FindUser($online_pilot->$user_field);
+                $user = $this->FindUser($online_pilot->$user_field, $network_selection);
                 $pirep = $this->FindActivePirep(filled($user) ? $user->id : null);
                 $airline_icao = substr($online_pilot->callsign, 0, 3);
                 $flightplan = ($network_selection === 'VATSIM') ? $online_pilot->flight_plan : $online_pilot->flightPlan;
@@ -122,18 +122,41 @@ class WhazzUp extends Widget
         return Airline::where('active', 1)->pluck('icao')->toArray();
     }
 
-    public function NetworkUsersArray($field_name = null)
+    public function NetworkUsersArray($field_name = null, $network_selection = null)
     {
         $inactive_users = User::where('state', '!=', UserState::ACTIVE)->pluck('id')->toArray();
         $user_field_id = optional(UserField::select('id')->where('name', $field_name)->first())->id;
+
         $network_users = UserFieldValue::where('user_field_id', $user_field_id)->whereNotIn('user_id', $inactive_users)->whereNotNull('value')->pluck('value')->toArray();
 
-        return filled($network_users) ? $network_users : null;
+        if ($network_selection === 'VATSIM') {
+            User::where('state', UserState::ACTIVE)->whereNotNull('vatsim_id')->pluck('vatsim_id')->toArray();
+        } elseif ($network_selection === 'IVAO') {
+            User::where('state', UserState::ACTIVE)->whereNotNull('ivao_id')->pluck('ivao_id')->toArray();
+        } else {
+            $oauth_users = [];
+        }
+
+        $combined_users = array_unique(array_merge($network_users, $oauth_users));
+
+        return filled($combined_users) ? $combined_users : null;
     }
 
-    public function FindUser($network_id = null)
+    public function FindUser($network_id = null, $network_selection = null)
     {
-        return optional(UserFieldValue::with('user')->select('user_id')->where('value', $network_id)->first())->user;
+        if (filled($network_id) && $network_selection === 'VATSIM') {
+            $user = User::where('vatsim_id', $network_id)->first();
+        } elseif (filled($network_id) && $network_selection === 'IVAO') {
+            $user = User::where('ivao_id', $network_id)->first();
+        } else {
+            $user = null;
+        }
+
+        if (!$user) {
+            $user = optional(UserFieldValue::with('user')->select('user_id')->where('value', $network_id)->first())->user;
+        }
+
+        return $user;
     }
 
     public function FindActivePirep($user_id = null)

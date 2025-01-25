@@ -10,7 +10,7 @@
         <a href="https://github.com/FatihKoz/DisposableBasic#readme" target="_blank" title="Online Readme">Online Readme</a>
       </p>
       <hr>
-      <p><a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
+      <p>@if(filled($details->version)) Version: {{ $details->version }} @endif <a href="https://github.com/FatihKoz" target="_blank">&copy; B.Fatih KOZ</a></p>
     </div>
   </div>
   <div class="row text-center" style="margin-left:5px; margin-right:5px;">

@@ -26,6 +26,8 @@ class Gen_AutoReject
         $margin_presence = DB_Setting('dbasic.networkcheck_margin', 80);
         $reject_presence = DB_Setting('dbasic.ar_presence', false);
         $reject_callsign = DB_Setting('dbasic.ar_callsign', false);
+        $reject_acicao = DB_Setting('dbasic.ar_aircraft_icao', false);
+        $reject_livery = DB_Setting('dbasic.ar_livery', false);
 
         if ($auto_reject === false) {
             return;
@@ -57,12 +59,18 @@ class Gen_AutoReject
             $thr_dist = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'arrival-threshold-distance'])->value('value');
             $g_force = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'landing-g-force'])->value('value');
             $pause_time = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'total-pause-time'])->value('value');
+            $aircraft_icao = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'aircraft-icao'])->value('value');
+            $aircraft_title = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'aircraft'])->value('value');
+            $simulator = DB::table('pirep_field_values')->where(['pirep_id' => $pirep->id, 'slug' => 'simulator'])->value('value');
         } else {
             $network_presence = optional($pirep->fields->where('slug', 'network-presence-check')->first())->value;
             $network_callsign = optional($pirep->fields->where('slug', 'network-callsign-check')->first())->value;
             $thr_dist = optional($pirep->fields->where('slug', 'arrival-threshold-distance')->first())->value;
             $g_force = optional($pirep->fields->where('slug', 'landing-g-force')->first())->value;
             $pause_time = optional($pirep->fields->where('slug', 'total-pause-time')->first())->value;
+            $aircraft_icao = optional($pirep->fields->where('slug', 'aircraft-icao')->first())->value;
+            $aircraft_title = optional($pirep->fields->where('slug', 'aircraft')->first())->value;
+            $simulator = optional($pirep->fields->where('slug', 'simulator')->first())->value;
         }
 
         // Convert pirep sause time to minutes
@@ -156,6 +164,18 @@ class Gen_AutoReject
             $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Flights must be operated online with proper callsigns!']);
             $pirep_state = PirepState::REJECTED;
             Log::info('Disposable Basic | Pirep:'.$pirep->id.' Rejected automatically by Callsign. Check Result:'.$network_callsign.'% Requirement:'.$margin_presence.'%');
+        }
+
+        // Reject By Aircraft ICAO Code
+        if ($reject_acicao && $aircraft && trim($aircraft_icao) !== trim($aircraft->icao)) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Aircraft ICAO Code Mismatch']);
+            $pirep_state = PirepState::REJECTED;
+        }
+
+        // Reject By Aircraft Title (Exclude X-Plane)
+        if ($reject_livery && $aircraft && !str_contains($simulator, 'X-Plane') && (str_contains($aircraft_title, $pirep->airline->icao) || str_contains($aircraft_title, $aircraft->airline->icao))) {
+            $pirep_comments[] = array_merge($default_fields, ['comment' => 'Reject Reason: Aircraft Livery Mismatch']);
+            $pirep_state = PirepState::REJECTED;
         }
 
         // Write Comments

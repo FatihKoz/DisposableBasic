@@ -259,8 +259,14 @@ It is possible to auto reject pireps with below checks;
 * Landing Threshold Difference (between first touchdown and runway threshold, feet)
 * G-Force (maximum landing g-force)
 * Fuel Burn (minimum fuel burn, pounds - lbs)
+* Aircraft Title
+* Aircraft ICAO Type Code (flown vs. reported aircraft)
 
 For the system to work properly set your acars pireps to be auto approved, let phpvms handle acceptance and module to reject only when needed. Be advised, while using scenery based checks like landing rate and threshold difference, you may get false positives. Also flight time difference is risky to use, you should get reports if long holdings and extra ordinary stuff happens during flights to identify false positives before correcting them.
+
+Aircraft Title and ICAO Type Code checks are tricky, enable with caution only if you are providing aircraft repaints/liveries which you have control over. For FSX/P3D/MSFS series, aircraft title needs to contain the airline ICAO code, like `PMDG B737-800 Winglets THY` or `Fenix A321 TSW CFM Sharklets`. X-Plane is not supported as it does not have a system reporting back the livery being used. To provide support for multi airline setups, code checks both aircraft's and flight's airline code, either of one needs to be in the title. Otherwise the pirep will be rejected due to title mismatch.
+
+Also, Aircraft ICAO Code may not be entered correctly to aircraft files (either by the developer itself or by the repaint artist), don't get surprised if you have false positive rejections while using these title and icao based checks.  
 
 Auto Rejected pireps can be always accepted by admins/staff via phpvms admin section.
 
@@ -286,7 +292,9 @@ By default, ground checks are done on status change (like from BOARDING to PUSHB
 
 Presence checks has an AUTO option (default), this enables checking both networks initially and continues on the one which the pilot is online. If you are operating only on one network, selecting it from settings is still the best choice (to reduce server load and unnecessary traffic) but if you allow both then leave the setting at AUTO and provide two custom profile fields for your pilots to fill in their network ID's. System is designed to check ID's existence too to reduce traffic and server load.
 
-System will save individual checks in a separate table which is cleaned up periodically and saves the results as new pirep field values. `network-online` (identified/selected network), `network-presence-check` (ratio of presence), `network-callsign-check` (ratio of callsign usage), `network-callsign-used` (used callsign or callsigns during flight) are the slugs used for those pirep fields.
+System will save individual checks in a separate table which is cleaned up periodically and saves the results as new pirep field values. `network-online` (identified/selected network), `network-presence-check` (ratio of presence), `network-callsign-check` (ratio of callsign usage), `network-callsign-used` (used callsign or callsigns during flight) are the slugs used for those pirep fields.  
+
+When oAuth is enabled for IVAO/VATSIM, presence checks can be done by obtained Network IDs, and custom profile fields will not be required/used.  
 
 ## Stable Approach Plugin Support
 
@@ -684,7 +692,7 @@ Displays a users latest pireps with reverse order. Designed mainly for user prof
 
 ### WhazzUp
 
-Provides live server data for IVAO and VATSIM networks.
+Provides live server data for IVAO and VATSIM networks. It can use oAuth provided Network ID's or custom profile field entries, depending on setup.
 
 ```php
 @widget('DBasic::WhazzUp', ['network' => 'IVAO', 'field_name' => 'IVAO ID', 'refresh' => 300])
@@ -692,9 +700,9 @@ Provides live server data for IVAO and VATSIM networks.
 
 * `'network'` should be `'IVAO'` or `'VATSIM'`
 * `'refresh'` can be any number in seconds greater than `15` (as per network requirements)
-* `'field_name'` should be the exact custom profile field name you defined at phpvms > admin > users > custom fields page for that Network.
+* `'field_name'` should be the exact custom profile field name you defined at phpvms > admin > users > custom fields page for that Network. Necessary only when oAuth is not being used.  
 
-Providing a wrong `field name` value will result in `No Online .... flights found` result even if you have pilots flying online.
+When oAuth is not being used, providing a wrong `field name` value will result in `No Online .... flights found` result even if you have pilots flying online.
 
 ## Duplicating Module Blades/Views
 
@@ -725,6 +733,14 @@ _Not providing attribution link will result in removal of access and no support 
 * SmartCars v3 users reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data. So it is highly probable that more features of this module may fail when SC3 is in use too. With latest improvements done to SC3 implementation incompatibilities are reduced but still it may behave different than expected. Please follow changes/updates of SC3 modules being developed by other devs.
 
 ## Release / Update Notes
+
+25.JAN.25
+
+* Added Aircraft Title/Livery/Name checks for auto rejection
+* Added Aircraft ICAO Code checks for auto rejection
+* Added version info to module admin area
+* Added support for oAuth provided Network IDs for presence checks
+* Added support for oAuth provided Network IDs for WhazzUp Widget
 
 12.JAN.25
 

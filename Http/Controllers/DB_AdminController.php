@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
+use Nwidart\Modules\Facades\Module;
 use Modules\DisposableBasic\Services\DB_FleetServices;
 
 class DB_AdminController extends Controller
@@ -29,6 +30,7 @@ class DB_AdminController extends Controller
 
         return view('DBasic::admin.index', [
             'awards'   => $awards,
+            'details'  => $this->Module_Details('DisposableBasic'),
             'settings' => $settings,
             'users'    => $users,
         ]);
@@ -224,5 +226,29 @@ class DB_AdminController extends Controller
             'users_field' => $users_field,
             'rwy_errors'  => $rwy_ident_errors,
         ]);
+    }
+
+    // Read module.json file
+    // Return laravel collection
+    public function Module_Details($module_name = null)
+    {
+        $details = collect();
+        $file = isset($module_name) ? base_path().'/modules/'.$module_name.'/module.json' : null;
+
+        if (!is_file($file)) {
+            return $details;
+        }
+
+        $contents = json_decode(file_get_contents($file));
+        
+        $details->name = isset($contents->name) ? $contents->name : $module_name;
+        $details->description = isset($contents->description) ? $contents->description : null;
+        $details->version = isset($contents->version) ? $contents->version : null;
+        $details->readme_url = isset($contents->readme_url) ? $contents->readme_url : null;
+        $details->license_url = isset($contents->license_url) ? $contents->license_url : null;
+        $details->attribution = isset($contents->attribution) ? $contents->attribution : null;
+        $details->active = Module::isEnabled($contents->name);
+
+        return $details;
     }
 }
