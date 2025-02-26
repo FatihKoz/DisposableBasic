@@ -39,7 +39,7 @@ class Notams extends Widget
                 $notams = [];
 
                 try {
-                    $response = $this->httpClient->request('GET', $service_url);
+                    $response = $this->httpClient->request('GET', $service_url, ['verify' => false]);
                     if ($response->getStatusCode() !== 200) {
                         Log::error('Disposable Basic | HTTP '.$response->getStatusCode().' Error Occured During NOTAM Feed Retrieval !');
                     }
