@@ -734,6 +734,10 @@ _Not providing attribution link will result in removal of access and no support 
 
 ## Release / Update Notes
 
+27.FEB.25
+
+* Fixed Notams Widget  
+
 25.JAN.25
 
 * Added Aircraft Title/Livery/Name checks for auto rejection
