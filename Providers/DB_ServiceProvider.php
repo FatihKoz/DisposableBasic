@@ -54,7 +54,6 @@ class DB_ServiceProvider extends ServiceProvider
             // Awards
             Route::get('dawards', 'DB_AwardController@index')->name('awards');
             // Fleet
-            Route::get('dfleet', 'DB_FleetController@index')->name('fleet');
             Route::get('dfleet/{subfleet_type}', 'DB_FleetController@subfleet')->name('subfleet');
             Route::get('daircraft/{ac_reg}', 'DB_FleetController@aircraft')->name('aircraft');
             // Hubs
@@ -92,6 +91,7 @@ class DB_ServiceProvider extends ServiceProvider
             'prefix'     => '',
         ], function () {
             // Public Pages (for IVAO/VATSIM Audits)
+            Route::get('dfleet', 'DB_FleetController@index')->name('fleet');
             Route::get('dreports', 'DB_PirepController@index')->name('reports');
             Route::get('dstatistics', 'DB_StatisticController@index')->name('statistics');
             Route::get('dvatsim', 'DB_AuditController@vatsim')->name('vatsim');
