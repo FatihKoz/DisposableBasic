@@ -38,7 +38,7 @@ class DB_FleetController extends Controller
         $active_airlines = Airline::where('active', 1)->pluck('id')->toArray();
         $active_subfleets = Subfleet::whereIn('airline_id', $active_airlines)->pluck('id')->toArray();
 
-        $aircraft = Aircraft::withCount($withCount)->with($with)->when(($display_option && $user), function ($query) use ($user_based_fleet) {
+        $aircraft = Aircraft::withCount($withCount)->with($with)->when($display_option && $user, function ($query) use ($user_based_fleet) {
             return $query->whereIn('subfleet_id', $user_based_fleet);
         })->whereIn('subfleet_id', $active_subfleets)->sortable('icao', 'registration')->paginate(50);
 

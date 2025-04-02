@@ -22,38 +22,38 @@ class DB_EventProvider extends ServiceProvider
 {
     // Listen Below Events
     protected $listen =
-    [
-        NewsAdded::class => [
-            Gen_News::class,
-        ],
+        [
+            NewsAdded::class => [
+                Gen_News::class,
+            ],
 
-        PirepCancelled::class => [
-            Pirep_Cancelled::class,
-        ],
+            PirepCancelled::class => [
+                Pirep_Cancelled::class,
+            ],
 
-        PirepFiled::class => [
-            Pirep_Filed::class,
-            Gen_AutoReject::class,
-        ],
+            PirepFiled::class => [
+                Pirep_Filed::class,
+                Gen_AutoReject::class,
+            ],
 
-        PirepPrefiled::class => [
-            Pirep_Prefiled::class,
-        ],
+            PirepPrefiled::class => [
+                Pirep_Prefiled::class,
+            ],
 
-        PirepStatusChange::class => [
-            Pirep_StatusChange::class,
-        ],
+            PirepStatusChange::class => [
+                Pirep_StatusChange::class,
+            ],
 
-        PirepUpdated::class => [
-            Pirep_Updated::class,
-        ],
-    ];
+            PirepUpdated::class => [
+                Pirep_Updated::class,
+            ],
+        ];
 
     // Subscribe multiple events
     protected $subscribe =
-    [
-        Gen_Cron::class,
-    ];
+        [
+            Gen_Cron::class,
+        ];
 
     // Register Module Events
     public function boot()
