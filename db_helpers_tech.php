@@ -1,7 +1,8 @@
 <?php
 
+use App\Models\Pirep;
+use App\Models\PirepFieldValue;
 use App\Models\Enums\PirepState;
-use Illuminate\Support\Facades\DB;
 use Modules\DisposableBasic\Models\DB_Runway;
 use Modules\DisposableBasic\Models\DB_Spec;
 
@@ -18,8 +19,8 @@ if (!function_exists('DB_AvgTaxiTime')) {
             $out_in = 'taxi-out-time';
         }
 
-        $pireps = DB::table('pireps')->whereNull('deleted_at')->select('id')->where([$dep_arr => $icao, 'state' => PirepState::ACCEPTED])->pluck('id')->all();
-        $field_values = DB::table('pirep_field_values')->select('value')->whereIn('pirep_id', $pireps)->where('slug', $out_in)->orderby('created_at', 'desc')->take(100)->pluck('value')->all();
+        $pireps = Pirep::select('id')->where([$dep_arr => $icao, 'state' => PirepState::ACCEPTED])->orderBy('submitted_at', 'DESC')->take(100)->pluck('id')->toArray();
+        $field_values = PirepFieldValue::select('value')->whereIn('pirep_id', $pireps)->where('slug', $out_in)->orderby('created_at', 'desc')->take(100)->pluck('value')->toArray();
         $taxi_times = collect();
 
         foreach ($field_values as $fv) {
