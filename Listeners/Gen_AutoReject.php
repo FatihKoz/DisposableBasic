@@ -3,6 +3,7 @@
 namespace Modules\DisposableBasic\Listeners;
 
 use App\Events\PirepFiled;
+use App\Models\Aircraft;
 use App\Models\Enums\PirepSource;
 use App\Models\Enums\PirepState;
 use Carbon\Carbon;
@@ -51,6 +52,13 @@ class Gen_AutoReject
         $pirep_comments = [];
         $now = Carbon::now()->toDateTimeString();
         $default_fields = ['pirep_id' => $pirep->id, 'user_id' => $poster, 'created_at' => $now, 'updated_at' => $now];
+
+        // Reduce Fuel Burn margin for piston powered aircraft
+        $piston_powered = Aircraft::where('mtow', '<', 5000)->groupBy('icao')->pluck('icao')->toArray();
+        if (in_array(strtoupper($aircraft->icao), $piston_powered)) {
+            Log::info('Disposable Basic | Reducing Fuel Consumption Margin For Pirep:'.$pirep->id.' Reported Aircraft ICAO:'.$aircraft->icao);
+            $margin_fburn = round($margin_fburn / 10, 0);
+        }
 
         // Read Pirep Field Values
         if ($use_direct_db === true) {
