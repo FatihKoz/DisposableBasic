@@ -1,8 +1,8 @@
 <?php
 
+use App\Models\Enums\PirepState;
 use App\Models\Pirep;
 use App\Models\PirepFieldValue;
-use App\Models\Enums\PirepState;
 use Modules\DisposableBasic\Models\DB_Runway;
 use Modules\DisposableBasic\Models\DB_Spec;
 
