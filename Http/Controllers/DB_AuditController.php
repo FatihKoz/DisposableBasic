@@ -157,8 +157,7 @@ class DB_AuditController extends Controller
         $ret['date'] = $row->submitted_at->format('d.M.Y');
         $ret['dep_time'] = $row->block_off_time->format('H:i');
         $ret['arr_time'] = $row->block_on_time->format('H:i');
-        $ret['aircraft'] = $row->aircraft->icao;
-        
+        $ret['aircraft'] = $row->aircraft->icao;        
         $last_column = end($columns);
         $ret[$last_column] = $network_ids[$row->user_id] ?? '';
 
