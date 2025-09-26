@@ -115,7 +115,7 @@ class DB_AuditController extends Controller
         $network_ids = UserFieldValue::where('user_field_id', $network_field_id)->whereNotNull('value')->pluck('value', 'user_id')->toArray();
 
         $file_name = strtolower($network).'-audit-pireps-'.$start->format('dMY').'-'.$end->format('dMY').'.csv';
-        $header = ['callsign', 'orig_icao', 'dest_icao', 'date', 'dep_time', 'arr_time', 'aircraft', $id_column];];
+        $header = ['callsign', 'orig_icao', 'dest_icao', 'date', 'dep_time', 'arr_time', 'aircraft', $id_column];
         $path = $this->runExport($pireps, $header, $file_name);
 
         return response()->download($path, $file_name, ['content-type' => 'text/csv'])->deleteFileAfterSend(true);
