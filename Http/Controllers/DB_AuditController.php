@@ -116,7 +116,7 @@ class DB_AuditController extends Controller
 
         $file_name = strtolower($network).'-audit-pireps-'.$start->format('dMY').'-'.$end->format('dMY').'.csv';
         $header = ['callsign', 'orig_icao', 'dest_icao', 'date', 'dep_time', 'arr_time', 'aircraft', $id_column];
-        $path = $this->runExport($pireps, $header, $file_name);
+        $path = $this->runExport($pireps, $header, $file_name, $network_ids);
 
         return response()->download($path, $file_name, ['content-type' => 'text/csv'])->deleteFileAfterSend(true);
     }
