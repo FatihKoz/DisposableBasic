@@ -2,7 +2,7 @@
     "name": "DisposableBasic",
     "alias": "disposablebasic",
     "description": "phpVMS v7 module for Basic VA features",
-    "version": "3.7.3",
+    "version": "3.7.4",
     "readme_url": "https://github.com/FatihKoz/DisposableBasic?tab=readme-ov-file#readme",
     "license_url": "https://github.com/FatihKoz/DisposableBasic?tab=License-1-ov-file#readme",
     "attribution": {

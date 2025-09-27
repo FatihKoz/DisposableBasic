@@ -165,25 +165,39 @@ class DB_WidgetController extends Controller
 
         $price = $request->price;
         $base_price = $request->basep;
-        $current_page = $request->croute;
         $new_location = $request->newloc;
         $interim_price = ($request->interim_price == '1') ? true : false;
+        $auto_request = DB_Setting('dbasic.js_auto_request', true);
+        $pilot_request = DB_Setting('dbasic.js_pilot_request', false);
 
         // Destination Check (abort)
         if (!$new_location || $new_location == $user_location) {
             flash()->error(__('DBasic::widgets.js_err_dest'));
 
-            return redirect(url($current_page));
+            return back();
         }
 
-        // Transfer is free (Move asset, complete)
+        // Transfer is free (Move asset, record details and complete)
         if ($price === 'free') {
             $transfer_cost = 'FREE';
             $user->curr_airport_id = $new_location;
             $user->save();
+
+            $this->SaveJumpseatRequest($user->id, $user_location, $new_location, Money::createFromAmount(0), 'Automated Free Transfer', DB_RequestStates::COMPLETED);
+
             flash()->success(__('DBasic::widgets.js_ok_free', ['location' => $new_location]));
 
-            return redirect(url($current_page));
+            return back();
+        }
+
+        // Process Pilot Request
+        if ($pilot_request) {
+            $this->SaveJumpseatRequest($user->id, $user_location, $new_location, Money::createFromAmount(0), 'Pilot Request (Free transfer)', DB_RequestStates::WAITING);
+            Log::info('Disposable Basic | Jumpseat Travel > '.$user->name_private.' requested free transfer to '.$new_location);
+
+            flash()->info('JumpSeat Travel request saved. Please wait for your request to be processed.');
+
+            return back();
         }
 
         // Transfer price is auto (Calculate cost, continue)
@@ -199,16 +213,35 @@ class DB_WidgetController extends Controller
         }
 
         if ($interim_price === true) {
-            flash()->info('Aprx. Ticket Price: '.$transfer_cost.' | '.$new_location);
+            if ($transfer_cost > $user->journal->balance) {
+                if ($auto_request) {
+                    $note = ' | Not enough funds, you can request this travel.';
+                } else {
+                    $note = ' | Not enough funds.';
+                }
 
-            return back(); // return redirect(url($current_page));
+                flash()->warning('Aprx. Ticket Price: '.$transfer_cost.' | '.$new_location.$note);
+            } else {
+                $note = ' | Travel can be completed automatically.';
+
+                flash()->info('Aprx. Ticket Price: '.$transfer_cost.' | '.$new_location.$note);
+            };
+
+            return back();
         }
 
         // Check User Balance (abort or continue)
         if ($transfer_cost > $user->journal->balance) {
-            flash()->error(__('DBasic::widgets.js_err_funds', ['price' => $transfer_cost]));
+            if ($auto_request) {
+                $this->SaveJumpseatRequest($user->id, $user_location, $new_location, $transfer_cost, 'Pilot Request (Not enough funds)', DB_RequestStates::WAITING);
+                Log::info('Disposable Basic | Jumpseat Travel > '.$user->name_private.' had not enough funds, request created for transfer to '.$new_location);
 
-            return back(); // return redirect(url($current_page));
+                flash()->info('JumpSeat Travel request saved. Please wait for your request to be processed.');
+            } else {
+                flash()->error(__('DBasic::widgets.js_err_funds', ['price' => $transfer_cost]));
+            }
+
+            return back();
         }
 
         // Balance OK (Debit from User, Credit to user Airline)
@@ -241,10 +274,34 @@ class DB_WidgetController extends Controller
             flash()->success(__('DBasic::widgets.js_ok_fixed', ['location' => $new_location, 'price' => $transfer_cost]));
         }
 
-        // Move Asset (complete)
+        // Move Asset, save records and complete
         $user->curr_airport_id = $new_location;
         $user->save();
 
-        return back(); // return redirect(url($current_page));
+        $this->SaveJumpseatRequest($user->id, $user_location, $new_location, $transfer_cost, 'Pilot Self Transfer', DB_RequestStates::BYFUNDS);
+        Log::info('Disposable Basic | Jumpseat Travel > '.$user->name_private.' moved to '.$new_location.' by self transfer. Price: '.$transfer_cost);
+
+        return back();
+    }
+
+    public function SaveJumpseatRequest($user_id, $curr_airport_id, $move_airport_id, $price, $reason = null, $status = null)
+    {
+        $jumpseat = DB_Jumpseat::firstOrCreate(
+            [
+                'user_id'         => $user_id,
+                'curr_airport_id' => $curr_airport_id,
+                'move_airport_id' => $move_airport_id,
+                'status'          => isset($status) ? $status : DB_RequestStates::WAITING,
+            ],
+            [
+                'user_id'         => $user_id,
+                'curr_airport_id' => $curr_airport_id,
+                'move_airport_id' => $move_airport_id,
+                'price'           => $price,
+                'reason'          => $reason,
+                'status'          => isset($status) ? $status : DB_RequestStates::WAITING,
+            ]
+        );
+
     }
 }

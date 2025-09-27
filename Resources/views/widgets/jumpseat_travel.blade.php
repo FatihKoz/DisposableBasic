@@ -13,9 +13,15 @@
           <select style="width: 100%;" class="form-control airport_search {{ $hubs_only }}" name="newloc" id="newloc"></select>
         </div>
         <div class="card-footer p-1 text-end">
+          @if($ar_enabled && $price != 'free')
+            <i class="fas fa-paste float-start m-1" title="Auto Request System Active"></i>
+          @endif
           <i class="fas fa-money-bill-wave text-{{ $icon_color }} float-start m-1" title="{{ $icon_title }}"></i>
           @if($price === 'auto')
             <button class="btn btn-sm bg-info p-0 px-1" type="submit" name="interim_price" value="1">@lang('DBasic::widgets.js_check')</button>
+          @endif
+          @if($pr_enabled && $price != 'free')
+            <button class="btn btn-sm bg-warning p-0 px-1" type="submit" name="pilot_request" value="1">Request Travel</button>
           @endif
           <button class="btn btn-sm bg-success p-0 px-1" type="submit">@lang('DBasic::widgets.js_button')</button>
         </div>
