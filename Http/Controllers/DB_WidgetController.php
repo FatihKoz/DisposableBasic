@@ -225,7 +225,7 @@ class DB_WidgetController extends Controller
                 $note = ' | Travel can be completed automatically.';
 
                 flash()->info('Aprx. Ticket Price: '.$transfer_cost.' | '.$new_location.$note);
-            };
+            }
 
             return back();
         }
@@ -302,6 +302,5 @@ class DB_WidgetController extends Controller
                 'status'          => isset($status) ? $status : DB_RequestStates::WAITING,
             ]
         );
-
     }
 }
