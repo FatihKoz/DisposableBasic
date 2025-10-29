@@ -734,6 +734,12 @@ _Not providing attribution link will result in removal of access and no support 
 
 ## Release / Update Notes
 
+29.OCT.25
+
+* Added Auto Price discount logic for Aircraft Transfer and JumpSeat Widgets _(check module settings)_
+* Added safety and reduced fuel burn criteria for GA Aircraft at Auto Reject _(ICAO Default Definitions used)_
+* Improved Average Taxi Time calculation logic _(for better performance and less resource usage)_
+
 27.FEB.25
 
 * Fixed Notams Widget  
