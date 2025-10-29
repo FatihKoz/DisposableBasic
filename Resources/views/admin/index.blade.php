@@ -134,6 +134,13 @@
           @include('DBasic::admin.settings_table', ['group' => 'Auto Reject'])
           <span class="text-info">Set margin to 0 if you do not want to use definable items (score, landing rate etc)</span>
         </div>
+        {{-- General & Widget Settings Group --}}
+        <div class="card border-blue-bottom" style="padding:5px;">
+          <b>Generic Settings</b>
+          <br>
+          @include('DBasic::admin.settings_table', ['group' => 'General'])
+          <span class="text-info">Set 0 if you do not want to use those features</span>
+        </div>
       </div>
     </div>
   </div>
