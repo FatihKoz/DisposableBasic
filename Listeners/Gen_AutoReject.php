@@ -53,8 +53,8 @@ class Gen_AutoReject
         $now = Carbon::now()->toDateTimeString();
         $default_fields = ['pirep_id' => $pirep->id, 'user_id' => $poster, 'created_at' => $now, 'updated_at' => $now];
 
-        // Reduce Fuel Burn margin for piston powered aircraft
-        $piston_powered = Aircraft::where('mtow', '<', 5000)->groupBy('icao')->pluck('icao')->toArray();
+        // Reduce Fuel Burn margin for piston powered aircraft (12566 pounds is 5700 kg // ICAO definition max takeoff weight for small aircraft)
+        $piston_powered = Aircraft::where('mtow', '<', 12566)->groupBy('icao')->pluck('icao')->toArray();
         if (in_array(strtoupper($aircraft->icao), $piston_powered)) {
             Log::info('Disposable Basic | Reducing Fuel Consumption Margin For Pirep:'.$pirep->id.' Reported Aircraft ICAO:'.$aircraft->icao);
             $margin_fburn = round($margin_fburn / 10, 0);

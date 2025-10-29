@@ -25,16 +25,17 @@ class DB_WidgetController extends Controller
         $user = User::with('journal')->find(Auth::id());
         $user_location = filled($user->curr_airport_id) ? $user->curr_airport_id : $user->home_airport_id;
 
-        $current_page = $request->croute;
         $price = $request->price;
         $selected_ac = $request->ac_selection;
         $interim_price = ($request->interim_price == '1') ? true : false;
+        $discount_setting = DB_Setting('dbasic.actransfer_discount', 0);
+        $discount_ratio = ($discount_setting > 0 && $discount_setting < 100) ? (1 - ($discount_setting / 100)) : 1;
 
         // Aircraft NOT selected (abort)
         if (!$selected_ac) {
             flash()->error(__('DBasic::widgets.ta_err_ac'));
 
-            return back(); // return redirect(url($current_page));
+            return back();
         }
 
         $aircraft = Aircraft::with('subfleet')->where('id', $selected_ac)->first();
@@ -47,7 +48,7 @@ class DB_WidgetController extends Controller
             flash()->success(__('DBasic::widgets.ta_ok_free', ['registration' => $aircraft->registration]));
             Log::info('Disposable Basic | Free Aircraft Transfer > '.$aircraft->registration.' moved to '.$user_location.' by '.$user->name_private);
 
-            return back(); // return redirect(url($current_page));
+            return back();
         }
 
         // Transfer price is auto (Calculate cost, continue)
@@ -88,9 +89,10 @@ class DB_WidgetController extends Controller
             // Fuel Cost
             $aprx_fuelburn = round($avrg_fuelburn * (string) $transfer_distance, 3);
             $fuel_cost = round($aprx_fuelburn * $fuel_price, 3);
+            $final_transfer_cost = round(($gh_cost + $fuel_cost) * $discount_ratio, 2);
 
             // Transfer Cost
-            $transfer_cost = Money::createFromAmount(round($gh_cost + $fuel_cost, 2));
+            $transfer_cost = Money::createFromAmount($final_transfer_cost);
             Log::debug('Disposable Basic | Aircraft Transfer > Transfer Distance: '.$transfer_distance);
             Log::debug('Disposable Basic | Aircraft Transfer > Fuel Price: '.$fuel_price);
             Log::debug('Disposable Basic | Aircraft Transfer > Fuel Burn: '.$avrg_fuelburn);
@@ -109,14 +111,14 @@ class DB_WidgetController extends Controller
         if ($interim_price === true) {
             flash()->info('Aprx. Transfer Cost: '.$transfer_cost.' | '.$aircraft->registration);
 
-            return back(); // return redirect(url($current_page));
+            return back();
         }
 
         // Check User Balance (abort or continue)
         if ($transfer_cost > $user->journal->balance) {
             flash()->error(__('DBasic::widgets.ta_err_funds', ['price' => $transfer_cost]));
 
-            return back(); // return redirect(url($current_page));
+            return back();
         }
 
         // Balance OK (Debit from User, Credit to aircraft owner Airline)
@@ -154,7 +156,7 @@ class DB_WidgetController extends Controller
         $aircraft->save();
         Log::info('Disposable Basic | Aircraft Transfer > '.$aircraft->registration.' moved to '.$user_location.' by '.$user->name_private.'. Price: '.$transfer_cost);
 
-        return back(); // return redirect(url($current_page));
+        return back();
     }
 
     // JumpSeat Travel
@@ -165,15 +167,16 @@ class DB_WidgetController extends Controller
 
         $price = $request->price;
         $base_price = $request->basep;
-        $current_page = $request->croute;
         $new_location = $request->newloc;
         $interim_price = ($request->interim_price == '1') ? true : false;
+        $discount_setting = DB_Setting('dbasic.jumpseat_discount', 0);
+        $discount_ratio = ($discount_setting > 0 && $discount_setting < 100) ? (1 - ($discount_setting / 100)) : 1;
 
         // Destination Check (abort)
         if (!$new_location || $new_location == $user_location) {
             flash()->error(__('DBasic::widgets.js_err_dest'));
 
-            return redirect(url($current_page));
+            return back();
         }
 
         // Transfer is free (Move asset, complete)
@@ -183,14 +186,15 @@ class DB_WidgetController extends Controller
             $user->save();
             flash()->success(__('DBasic::widgets.js_ok_free', ['location' => $new_location]));
 
-            return redirect(url($current_page));
+            return back();
         }
 
         // Transfer price is auto (Calculate cost, continue)
         if ($price === 'auto') {
             $AirportSvc = app(AirportService::class);
             $transfer_distance = $AirportSvc->calculateDistance($user_location, $new_location);
-            $transfer_cost = Money::createFromAmount(round($base_price * (string) $transfer_distance, 2));
+            $final_transfer_cost = round(($base_price * (string) $transfer_distance) * $discount_ratio, 2);
+            $transfer_cost = Money::createFromAmount($final_transfer_cost);
         }
 
         // Transfer price is fixed (Define Cost, continue)
@@ -201,14 +205,14 @@ class DB_WidgetController extends Controller
         if ($interim_price === true) {
             flash()->info('Aprx. Ticket Price: '.$transfer_cost.' | '.$new_location);
 
-            return back(); // return redirect(url($current_page));
+            return back();
         }
 
         // Check User Balance (abort or continue)
         if ($transfer_cost > $user->journal->balance) {
             flash()->error(__('DBasic::widgets.js_err_funds', ['price' => $transfer_cost]));
 
-            return back(); // return redirect(url($current_page));
+            return back();
         }
 
         // Balance OK (Debit from User, Credit to user Airline)
