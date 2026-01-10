@@ -25,7 +25,7 @@ class DB_AdminController extends Controller
         // $settings = $settings->groupBy('group'); // This may be used to have all settings in one card like phpVMS core
 
         // Manual Awards and Bonus Payments
-        $awards = DB::table('awards')->select('id', 'name')->orderBy('name')->get();
+        $awards = DB::table('awards')->select('id', 'name')->whereNull('deleted_at')->orderBy('name')->get();
         $users = DB::table('users')->select('id', 'pilot_id', 'name')->where('state', UserState::ACTIVE)->orderBy('pilot_id')->get();
 
         return view('DBasic::admin.index', [
