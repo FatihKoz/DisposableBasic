@@ -39,7 +39,11 @@
                 <a href="{{ route('frontend.airports.show', [$booking->flight->arr_airport_id]) }}" title="{{ optional($booking->flight->arr_airport)->name }}">{{ $booking->flight->arr_airport_id }}</a>
               </td>
               <td>
-                <a href="{{ route('frontend.profile.show', [$booking->user_id]) }}">{{ $booking->user->name_private }}</a>
+                @if(filled($booking->user))
+                  <a href="{{ route('frontend.profile.show', [$booking->user_id]) }}">{{ $booking->user->name_private }}</a>
+                @else
+                  'Deleted User'
+                @endif
               </td>
               @if(!$bids)
                 <td><b>{{ date('H:i', $booking->xml->times->est_out->__toString()) }}</b></td>
