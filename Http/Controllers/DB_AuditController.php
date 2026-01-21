@@ -102,14 +102,26 @@ class DB_AuditController extends Controller
         $end = Carbon::parse($request->end);
         $pireps = Pirep::with(['aircraft', 'airline', 'user', 'field_values'])->whereIn('id', json_decode($request->pireps))->orderBy('submitted_at')->get();
 
+        if ($network === 'ivao') {
+            $network_field_name = DB_Setting('dbasic.networkcheck_fieldname_ivao', 'IVAO ID');
+            $id_column = 'ivao_id';
+        } else {
+            $network_field_name = DB_Setting('dbasic.networkcheck_fieldname_vatsim', 'VATSIM ID');
+            $id_column = 'vatsim_id';
+        }
+
+        $network_field_name = DB_Setting('dbasic.networkcheck_fieldname_vatsim', 'VATSIM ID');
+        $network_field_id = optional(UserField::select('id')->where('name', $network_field_name)->first())->id;
+        $network_ids = UserFieldValue::where('user_field_id', $network_field_id)->whereNotNull('value')->pluck('value', 'user_id')->toArray();
+
         $file_name = strtolower($network).'-audit-pireps-'.$start->format('dMY').'-'.$end->format('dMY').'.csv';
-        $header = ['callsign', 'orig_icao', 'dest_icao', 'date', 'dep_time', 'arr_time', 'aircraft'];
-        $path = $this->runExport($pireps, $header, $file_name);
+        $header = ['callsign', 'orig_icao', 'dest_icao', 'date', 'dep_time', 'arr_time', 'aircraft', $id_column];
+        $path = $this->runExport($pireps, $header, $file_name, $network_ids);
 
         return response()->download($path, $file_name, ['content-type' => 'text/csv'])->deleteFileAfterSend(true);
     }
 
-    protected function runExport(Collection $collection, $columns, $filename): string
+    protected function runExport(Collection $collection, $columns, $filename, $network_ids = []): string
     {
         // Create the directory under storage/app
         Storage::makeDirectory('export');
@@ -120,7 +132,7 @@ class DB_AuditController extends Controller
         $writer->insertOne($columns);
         // Write the rest of the rows
         foreach ($collection as $row) {
-            $writer->insertOne($this->ProcessRow($row, $columns));
+            $writer->insertOne($this->ProcessRow($row, $columns, $network_ids));
         }
 
         return $path;
@@ -134,7 +146,7 @@ class DB_AuditController extends Controller
         return $writer;
     }
 
-    protected function ProcessRow($row, $columns): array
+    protected function ProcessRow($row, $columns, $network_ids = []): array
     {
         $ret = [];
 
@@ -146,6 +158,8 @@ class DB_AuditController extends Controller
         $ret['dep_time'] = $row->block_off_time->format('H:i');
         $ret['arr_time'] = $row->block_on_time->format('H:i');
         $ret['aircraft'] = $row->aircraft->icao;
+        $last_column = end($columns);
+        $ret[$last_column] = $network_ids[$row->user_id] ?? '';
 
         return $ret;
     }
