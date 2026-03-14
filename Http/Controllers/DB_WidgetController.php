@@ -31,13 +31,19 @@ class DB_WidgetController extends Controller
         $discount_setting = DB_Setting('dbasic.actransfer_discount', 0);
         $discount_ratio = ($discount_setting > 0 && $discount_setting < 100) ? (1 - ($discount_setting / 100)) : 1;
 
-        $form_live_signature = $request->form_live_signature;
+        $form_signature = $request->ps;
         $price_signature = hash_hmac('sha256', $price, config('app.key'));
 
         // Check Price Hash
-        if ($form_live_signature != $price_signature) {
+        if (!hash_equals($form_signature, $price_signature)) {
             flash()->error('Form manipulation detected, process aborted');
-            Log::warning('FORM CHECK | '.$user->name_private.' trying to manipulate form entries...', ['id' => $user->id, 'ident' => $user->ident, 'name' => $user->name]);
+            Log::warning('FORM CHECK | '.$user->name_private.' trying to manipulate form entries...', [
+                'ID'    => $user->id, 
+                'Ident' => $user->ident,
+                'Name'  => $user->name, 
+                'Form'  => 'Aircraft Transfer', 
+                'Price' => $price,
+                ]);
 
             return back();
         }
@@ -183,15 +189,22 @@ class DB_WidgetController extends Controller
         $discount_setting = DB_Setting('dbasic.jumpseat_discount', 0);
         $discount_ratio = ($discount_setting > 0 && $discount_setting < 100) ? (1 - ($discount_setting / 100)) : 1;
 
-        $form_live_signature = $request->form_ps;
+        $form_price_signature = $request->form_ps;
         $form_base_signature = $request->form_bs;
         $price_signature = hash_hmac('sha256', $price, config('app.key'));
         $base_signature = hash_hmac('sha256', $base_price, config('app.key'));
 
         // Check Price Hash
-        if ($form_live_signature != $price_signature || $form_base_signature != $base_signature) {
+        if (!hash_equals($form_price_signature, $price_signature) || !hash_equals($form_base_signature, $base_signature)) {
             flash()->error('Form manipulation detected, process aborted');
-            Log::warning('FORM CHECK | '.$user->name_private.' trying to manipulate form entries...', ['id' => $user->id, 'ident' => $user->ident, 'name' => $user->name]);
+            Log::warning('FORM CHECK | '.$user->name_private.' trying to manipulate form entries...', [
+                'ID'      => $user->id, 
+                'Ident'   => $user->ident, 
+                'Name'    => $user->name, 
+                'Form'    => 'JumpSeat', 
+                'Price'   => $price, 
+                'Base P.' => $base_price,
+                ]);
 
             return back();
         }
