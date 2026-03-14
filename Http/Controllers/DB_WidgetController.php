@@ -38,12 +38,12 @@ class DB_WidgetController extends Controller
         if (!hash_equals($form_signature, $price_signature)) {
             flash()->error('Form manipulation detected, process aborted');
             Log::warning('FORM CHECK | '.$user->name_private.' trying to manipulate form entries...', [
-                'ID'    => $user->id, 
+                'ID'    => $user->id,
                 'Ident' => $user->ident,
-                'Name'  => $user->name, 
-                'Form'  => 'Aircraft Transfer', 
+                'Name'  => $user->name,
+                'Form'  => 'Aircraft Transfer',
                 'Price' => $price,
-                ]);
+            ]);
 
             return back();
         }
@@ -198,13 +198,13 @@ class DB_WidgetController extends Controller
         if (!hash_equals($form_price_signature, $price_signature) || !hash_equals($form_base_signature, $base_signature)) {
             flash()->error('Form manipulation detected, process aborted');
             Log::warning('FORM CHECK | '.$user->name_private.' trying to manipulate form entries...', [
-                'ID'      => $user->id, 
-                'Ident'   => $user->ident, 
-                'Name'    => $user->name, 
-                'Form'    => 'JumpSeat', 
-                'Price'   => $price, 
+                'ID'      => $user->id,
+                'Ident'   => $user->ident,
+                'Name'    => $user->name,
+                'Form'    => 'JumpSeat',
+                'Price'   => $price,
                 'Base P.' => $base_price,
-                ]);
+            ]);
 
             return back();
         }
