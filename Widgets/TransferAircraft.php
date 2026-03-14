@@ -128,6 +128,7 @@ class TransferAircraft extends Widget
             'price'       => $price,
             'fixed_ac'    => $fixed_ac,
             'ts_aircraft' => isset($ts_aircraft) ? $ts_aircraft : null,
+            'ps'          => hash_hmac('sha256', $price, config('app.key')),
         ]);
     }
 

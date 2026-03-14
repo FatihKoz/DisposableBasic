@@ -31,6 +31,17 @@ class DB_WidgetController extends Controller
         $discount_setting = DB_Setting('dbasic.actransfer_discount', 0);
         $discount_ratio = ($discount_setting > 0 && $discount_setting < 100) ? (1 - ($discount_setting / 100)) : 1;
 
+        $form_live_signature = $request->form_live_signature;
+        $price_signature = hash_hmac('sha256', $price, config('app.key'));
+
+        // Check Price Hash
+        if ($form_live_signature != $price_signature) {
+            flash()->error('Form manipulation detected, process aborted');
+            Log::warning('FORM CHECK | ' . $user->name_private . ' trying to manipulate form entries...', ['id' => $user->id, 'ident' => $user->ident, 'name' => $user->name]);
+
+            return back();
+        }
+
         // Aircraft NOT selected (abort)
         if (!$selected_ac) {
             flash()->error(__('DBasic::widgets.ta_err_ac'));
@@ -171,6 +182,19 @@ class DB_WidgetController extends Controller
         $interim_price = ($request->interim_price == '1') ? true : false;
         $discount_setting = DB_Setting('dbasic.jumpseat_discount', 0);
         $discount_ratio = ($discount_setting > 0 && $discount_setting < 100) ? (1 - ($discount_setting / 100)) : 1;
+
+        $form_live_signature = $request->form_ps;
+        $form_base_signature = $request->form_bs;
+        $price_signature = hash_hmac('sha256', $price, config('app.key'));
+        $base_signature = hash_hmac('sha256', $base_price, config('app.key'));
+
+        // Check Price Hash
+        if ($form_live_signature != $price_signature || $form_base_signature != $base_signature) {
+            flash()->error('Form manipulation detected, process aborted');
+            Log::warning('FORM CHECK | ' . $user->name_private . ' trying to manipulate form entries...', ['id' => $user->id, 'ident' => $user->ident, 'name' => $user->name]);
+
+            return back();
+        }
 
         // Destination Check (abort)
         if (!$new_location || $new_location == $user_location) {

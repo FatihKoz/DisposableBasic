@@ -48,6 +48,8 @@ class JumpSeat extends Widget
             'is_possible' => $is_possible,
             'is_visible'  => Auth::check(),
             'price'       => $price,
+            'ps'          => hash_hmac('sha256', $price, config('app.key')),
+            'bs'          => hash_hmac('sha256', $base_price, config('app.key')),
         ]);
     }
 }
