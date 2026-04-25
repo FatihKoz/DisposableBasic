@@ -734,6 +734,11 @@ _Not providing attribution link will result in removal of access and no support 
 
 ## Release / Update Notes
 
+25.APR.26
+
+* Added some form validation checks to JumpSeat and Aircraft Transfer features
+* Fixed a bug in awards backend (a function was checking soft deleted records, it should not)
+
 29.OCT.25
 
 * Added Auto Price discount logic for Aircraft Transfer and JumpSeat Widgets _(check module settings)_
