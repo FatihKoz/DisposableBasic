@@ -401,20 +401,41 @@ class DB_StatServices
         }
 
         // Count carried PAX and CGO for fancy stats
-        $allpireps = Pirep::where('state', '!=', PirepState::ACCEPTED)->when(isset($airline_id), function ($query) use ($airline_id) {
-            $query->where('airline_id', $airline_id);
-        })->when(isset($aircraft_id), function ($query) use ($aircraft_id) {
-            $query->where('aircraft_id', $aircraft_id);
-        })->pluck('id')->toArray();
+        // Aggregate the fares of the ACCEPTED pireps in scope (airline/aircraft)
+        // in a single grouped JOIN. The scope lives in the JOIN's WHERE, so nothing
+        // is materialised into a PHP id array: this keeps the figures correctly
+        // scoped (per airline/aircraft, or whole-VA when both are null) AND avoids
+        // the MySQL ~65k items "WHERE ... IN" limit for VAs with very large pirep
+        // counts, which is why the previous count() guard is no longer needed.
+        // Bare column names `count`/`type` are unambiguous because the pireps table
+        // has neither (it uses `flight_type`), so no table prefix is required.
+        // Soft-deleted pireps are excluded explicitly because join() bypasses the
+        // Pirep model's SoftDeletes global scope.
+        $fareRows = PirepFare::query()
+            ->join('pireps', 'pireps.id', '=', 'pirep_fares.pirep_id')
+            ->whereNull('pireps.deleted_at')
+            ->where('pireps.state', PirepState::ACCEPTED)
+            ->when(isset($airline_id), function ($query) use ($airline_id) {
+                $query->where('pireps.airline_id', $airline_id);
+            })
+            ->when(isset($aircraft_id), function ($query) use ($aircraft_id) {
+                $query->where('pireps.aircraft_id', $aircraft_id);
+            })
+            ->groupBy('pirep_fares.type')
+            ->get(['pirep_fares.type', DB::raw('SUM(count) as total'), DB::raw('AVG(count) as average')]);
 
-        if (count($allpireps) < 65500) {
-            $pax_amount = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->sum('count');
-            $pax_avg = PirepFare::where('type', FareType::PASSENGER)->whereNotIn('pirep_id', $allpireps)->avg('count');
-            $cgo_amount = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->sum('count');
-            $cgo_avg = PirepFare::where('type', FareType::CARGO)->whereNotIn('pirep_id', $allpireps)->avg('count');
-        } else {
-            $pax_amount = 0;
-            $cgo_amount = 0;
+        $pax_amount = 0;
+        $pax_avg = 0;
+        $cgo_amount = 0;
+        $cgo_avg = 0;
+        foreach ($fareRows as $row) {
+            if ((int) $row->type === FareType::PASSENGER) {
+                $pax_amount = $row->total;
+                $pax_avg = $row->average;
+            } elseif ((int) $row->type === FareType::CARGO) {
+                $cgo_amount = $row->total;
+                $cgo_avg = $row->average;
+            }
         }
 
         if ($pax_amount > 0) {
