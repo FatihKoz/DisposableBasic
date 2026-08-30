@@ -749,7 +749,7 @@ _Not providing attribution link will result in removal of access and no support 
 
 * Added support for Carto API Key usage in map widget
 * Added support for OpenAIP API Key usage in map widget
-* Improved stats backend with more efficient queries (Thanks to @MANFahrer-GF)
+* Improved stats backend with more efficient queries (Thanks to [Thomas Kant](https://github.com/MANFahrer-GF))
 
 25.APR.26
 
