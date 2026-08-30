@@ -160,11 +160,16 @@
             @endif
           @endforeach
         @endif
-        // Define Base Layers For Control Box
-        var DarkMatter = L.tileLayer.provider('CartoDB.DarkMatter');
+        // Define Base Layer Providers For Control Box
         var NatGeo = L.tileLayer.provider('Esri.NatGeoWorldMap');
         var OpenSM = L.tileLayer.provider('OpenStreetMap.Mapnik');
         var WorldTopo = L.tileLayer.provider('Esri.WorldTopoMap');
+        // Define Additional Base Layers
+        var DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png?key={{ $carto_apikey }}', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 20
+        });
         // Define Additional Overlay Layers
         var OpenAIP = L.
           tileLayer('http://{s}.tile.maps.openaip.net/geowebcache/service/tms/1.0.0/openaip_basemap@EPSG%3A900913@png/{z}/{x}/{y}.{ext}', {

@@ -475,6 +475,7 @@ class Map extends Widget
             'mapOTHER'     => $mapOTHER,
             'mapOverlays'  => '{'.$overlays.'}',
             'mapLayers'    => $layers,
+            'carto_apikey' => DB_Setting('dbasic.carto_api_key', null),
         ]);
     }
 

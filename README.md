@@ -3,12 +3,8 @@
 phpVMS v7 module for Basic VA features
 
 > [!IMPORTANT]
-> * Minimum required phpVMS v7 version is `phpVms 7.0.52-dev.g0421186c64` / 05.JAN.2025
-
-> [!TIP]
-> * Module supports **only** php8.1+ and laravel10
-> * _php8.0 and laravel9 compatible latest version: v3.3.1_
-> * _php7.4 and laravel8 compatible latest version: v3.0.19_
+> * Minimum required phpVMS v7 version is `phpVms 7.0.10`
+> * Minimum required PHP version is `8.1.x`
 
 Module blades are designed for themes using **Bootstrap v5.x** and **FontAwesome v5.x** icons.
 
@@ -163,6 +159,13 @@ If you are not developing your own pirep checks and/or not using Disposable Spec
 For runways, simply check `Support Files` folder. There is a world runways database shipped with the module. You can import those runways and have runway selection at SimBrief flight planning form. This is an optional feature like the maintenance details definitions. Default length for runways is meters, module provides automated conversion for runway details, also imperial and metric attributes are provided.
 
 If you want to display subfleet or aircraft images, just put images under public/image/aircraft or public/image/subfleet folders. Files should be in all lowercase including the extension (like tc-grd.jpg). Aircraft images use registration, subfleet images use subfleet type code. (Disposable Theme offers some examples)
+
+### Carto API Key (for Maps)
+
+By default Maps widget uses Carto's DarkMatter as the base layer and Carto requires an API key for access. There is a free tier option available to anyone with a domain name. Kindly check [Carto Website](https://carto.com/basemaps/apikey/), fill in the form according to their explanations with your VA domain to obtain your key.
+
+Once you have the API Key via email, add it to the module settings under `API Services` > `Carto API Key` section.  
+_Clean your browser cache (CTRL + F5) if the maps still show the notice about access._  
 
 ## API Endpoints
 
@@ -533,7 +536,9 @@ To save server resources, past time based results will be cached until the end o
 
 ### Map
 
-Generates a leaflet map according to config options defined.
+Generates a leaflet map according to config options defined. 
+_By default map widget uses "DarkMatter" as the base and an Carto API key is required. Please obtain your API key from Carto and add it to your settings._  
+_If you do not want to use Carto as your service provider, you can change the default layer in a duplicated 'widgets/map.blade.php' accordingly, other options are 'OpenSM', 'NatGeo', 'WorldTopo'_  
 
 ```php
 @widget('DBasic::Map', ['source' => 'fleet', 'airline' => $airline->id])
@@ -733,6 +738,10 @@ _Not providing attribution link will result in removal of access and no support 
 * SmartCars v3 users reported problems with some of the widgets, root cause is SC3 being not fully phpVMS v7 compatible yet and not sending proper data. So it is highly probable that more features of this module may fail when SC3 is in use too. With latest improvements done to SC3 implementation incompatibilities are reduced but still it may behave different than expected. Please follow changes/updates of SC3 modules being developed by other devs.
 
 ## Release / Update Notes
+
+30.AUG.26
+
+* Added support for Carto API Key usage in map widget
 
 25.APR.26
 
