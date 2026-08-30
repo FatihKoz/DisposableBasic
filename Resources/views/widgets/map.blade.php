@@ -170,16 +170,12 @@
           subdomains: 'abcd',
           maxZoom: 20
         });
-        // Define Additional Overlay Layers
-        var OpenAIP = L.
-          tileLayer('http://{s}.tile.maps.openaip.net/geowebcache/service/tms/1.0.0/openaip_basemap@EPSG%3A900913@png/{z}/{x}/{y}.{ext}', {
-          attribution: '<a href="https://www.openaip.net/">openAIP Data</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-NC-SA</a>)',
-          ext: 'png',
-          minZoom: 4,
-          maxZoom: 14,
-          tms: true,
-          detectRetina: true,
-          subdomains: '12'
+        // Define Additional Map Overlays
+        var OpenAIP = L.tileLayer('https://{s}.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey={{ $openaip_apikey }}', {
+          attribution: '&copy; <a href="https://www.openaip.net/">openAIP Data</a>',
+          subdomains: ['a', 'b', 'c'],
+          minZoom: 2,
+          maxZoom: 14
         });
         // Define Control Groups
         var BaseLayers = {'Dark Matter': DarkMatter, 'OpenSM Mapnik': OpenSM, 'NatGEO World': NatGeo, 'World Topo': WorldTopo};

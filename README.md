@@ -167,6 +167,12 @@ By default Maps widget uses Carto's DarkMatter as the base layer and Carto requi
 Once you have the API Key via email, add it to the module settings under `API Services` > `Carto API Key` section.  
 _Clean your browser cache (CTRL + F5) if the maps still show the notice about access._  
 
+### OpenAIP API Key (for Map Overlays)
+
+If you want to have AIP (Aviation Information Publication) data integration to your maps, you need an OpenAIP membership and API Key. Check [OpenAIP Website](https://www.openaip.net/) for more details.  
+Once you have the API Key via email, add it to the module settings under `API Services` > `OpenAIP API Key` section.  
+_Clean your browser cache (CTRL + F5) if the maps still show the notice about access or show no AIP data._  
+
 ## API Endpoints
 
 Module offers below endpoints for API Access with authorization, so data can be placed on landing pages easily. Check module admin page to define your service key, which is needed for authorization.
@@ -742,6 +748,7 @@ _Not providing attribution link will result in removal of access and no support 
 30.AUG.26
 
 * Added support for Carto API Key usage in map widget
+* Added support for OpenAIP API Key usage in map widget
 
 25.APR.26
 
